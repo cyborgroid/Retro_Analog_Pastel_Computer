@@ -63,7 +63,7 @@
     for (let c = 0; c < 8; c++) h += `<line class="ln" id="mc${c}" x1="${MX.x0 + c * MX.dx}" y1="26" x2="${MX.x0 + c * MX.dx}" y2="${MX.y0 + 7 * MX.dy + 24}"/><text class="lab" x="${MX.x0 + c * MX.dx - 8}" y="16">C${c}</text><circle id="mcl${c}" cx="${MX.x0 + c * MX.dx}" cy="${MX.y0 + 7 * MX.dy + 38}" r="5" fill="var(--line)"/>`;
     for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
       const k = GRID[r][c]; if (!k) continue;
-      h += `<g class="sw" data-k="${k}" tabindex="0" role="button" aria-label="키 ${k}"><rect id="ms-${KEYS.indexOf(k)}" x="${MX.x0 + c * MX.dx - 19}" y="${MX.y0 + r * MX.dy - 13}" width="38" height="26" rx="6" fill="var(--panel-2)"/><text x="${MX.x0 + c * MX.dx}" y="${MX.y0 + r * MX.dy + 4}" text-anchor="middle">${SHORT[k] || k}</text></g>`;
+      h += `<g class="sw" data-k="${k}" tabindex="0" role="button" aria-label="키 ${k}"><rect id="ms-${KEYS.indexOf(k)}" x="${MX.x0 + c * MX.dx - 19}" y="${MX.y0 + r * MX.dy - 13}" width="38" height="26" rx="6" fill="var(--panel-2)"/><text x="${MX.x0 + c * MX.dx}" y="${MX.y0 + r * MX.dy + 4}" text-anchor="middle">${SHORT[k] || k}</text><g class="dio" transform="translate(${MX.x0 + c * MX.dx + 25} ${MX.y0 + r * MX.dy})"><path d="M-5 -4 L3 0 L-5 4 Z"/><path d="M3 -4 V4"/></g></g>`;
     }
     h += `<text class="lab" x="${MX.x0 - 22}" y="${MX.y0 + 7 * MX.dy + 42}">SENSE</text>`;
     sv.innerHTML = h;
@@ -83,6 +83,7 @@
   }
   let scan = 0;
   PX.addFrame('circuit', dt => {
+    if (PX.circuitMode !== 'classic') return;
     const live = PX.clockOn() && !S.faults.has('pio');
     if (live) scan = mod(scan + dt * 5, 8);
     const r = Math.floor(scan);
@@ -94,7 +95,7 @@
   build();
   $('#diodes').addEventListener('click', e => {
     S.diodes = !S.diodes; const b = e.currentTarget; b.setAttribute('aria-pressed', S.diodes); b.classList.toggle('on', S.diodes);
-    b.textContent = S.diodes ? '다이오드 장착' : '다이오드 제거됨'; recompute();
+    b.textContent = S.diodes ? '다이오드 장착' : '다이오드 제거됨'; $('#matrix').classList.toggle('nodio', !S.diodes); recompute();
   });
   $('#kb-clear').addEventListener('click', () => { S.latched.clear(); recompute(); });
   $('#kb-demo').addEventListener('click', () => { if (S.diodes) $('#diodes').click(); S.latched = new Set(['1', '2', '0']); recompute(); });
