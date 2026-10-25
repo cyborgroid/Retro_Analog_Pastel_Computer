@@ -57,7 +57,7 @@
     });
     h += cpw(`M30 160 H${XQ[0][0] - 46}`, 3) + cpw(`M30 262 H${XQ[4][0] - 46}`, 3) + cpw(`M520 230 H${XQ[2][0] + 20} V${XQ[2][1] + 46}`, 3);
     [[290, 3], [150, 4], [430, 2]].forEach(([x, i]) => h += cpw(`M${x} 318 V${XQ[i][1] + 52}`, 3));
-    [[0, 1], [1, 2], [1, 3], [3, 4]].forEach(([a, b]) => { const [x1, y1] = XQ[a], [x2, y2] = XQ[b]; h += cpw(x1 === x2 ? `M${x1 + 12} ${y1 + 40} V${y2 - 40}` : `M${x1 + 40} ${y1 + 12} H${x2 - 40}`, 4); });
+    [[0, 1], [1, 2], [1, 3], [3, 4]].forEach(([a, b]) => { const [x1, y1] = XQ[a], [x2, y2] = XQ[b]; h += cpw(x1 === x2 ? `M${x1 + 12} ${Math.min(y1, y2) + 40} V${Math.max(y1, y2) - 40}` : `M${Math.min(x1, x2) + 40} ${y1 + 12} H${Math.max(x1, x2) - 40}`, 4); });
     pads.forEach(([x, y, t]) => h += `<rect x="${x - 16}" y="${y - 14}" width="32" height="28" rx="3" fill="#f3d9a0" stroke="#c9a34a"/><text class="chip-l" x="${x}" y="${y + (y > 300 ? -18 : 26)}" text-anchor="middle">${t}</text>`);
     h += `<circle cx="572" cy="128" r="62" fill="#fbf9ff" stroke="#6b5fa8" stroke-width="2"/><path d="M${XQ[2][0] + 8} ${XQ[2][1] + 42} L514 152" stroke="#6b5fa8" stroke-dasharray="3 3"/>`;
     h += `<rect x="540" y="98" width="64" height="56" fill="none" stroke="#9f95bb" stroke-width="8"/><rect x="532" y="118" width="16" height="16" fill="#3a3550"/><rect x="596" y="118" width="16" height="16" fill="#3a3550"/><text class="chip-l" x="572" y="131" text-anchor="middle">Φ</text>`;
