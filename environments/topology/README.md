@@ -21,8 +21,10 @@
 | VDP | 비디오와 동기 신호 소실, NO SIGNAL |
 | PIO / Keyboard | 키 스캔 정지, 타이핑 불가, POST `KBC FAIL` |
 | Mouse | 엔코더 출력 없음, 커서 고정 |
-| FDC / FDD | POST `FDD NOT READY`, 데스크톱에 DISK ERROR 대화상자 |
+| 저장 컨트롤러 / USB | POST `USB ... NO MEDIA`, 데스크톱에 USB ERROR 대화상자 |
 | PSG / Speaker | 무음, PSG 오디오 신호 평탄 |
 | CRT | 편향 정지, 화면 중앙 가로선 |
+
+양자 서브시스템(Q-Bus 브리지 → QCU → 냉동기 → QPU → 판독 체인)과 결합 맵은 [quantum-stack.md](quantum-stack.md)를 보세요.
 
 자세한 그래프 데이터는 [system-graph.json](system-graph.json), 주소 공간은 [memory-map.md](memory-map.md)를 보세요.

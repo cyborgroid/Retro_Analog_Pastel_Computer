@@ -1,6 +1,6 @@
 # Circuit 환경
 
-회로 단위로 동작을 시뮬레이션합니다. 신호 모델은 `src/js/core/signals.js`, 카드 UI는 `src/js/circuit/*.js`에 있습니다.
+회로 단위로 동작을 시뮬레이션합니다. 회로도는 실제 부품 기호, 참조번호(R1, C1, U1…), 부품값, 실제 품번으로 그렸고, 노란 TP 깃발은 실시간 측정값, 움직이는 점선은 관례 전류의 방향과 크기입니다. 전원부는 "실물 보드(PCB)" 보기도 있습니다. 부품은 모두 지금 구할 수 있는 것으로 골랐습니다([parts-sourcing.md](parts-sourcing.md)). 신호 모델은 `src/js/core/signals.js`, 카드 UI는 `src/js/circuit/*.js`에 있습니다.
 
 | 블록 | 모델 | 문서 |
 |---|---|---|
@@ -25,3 +25,14 @@
 | 1.0 A · 4700 µF · 없음 (45 °C/W) | 1.77 V | 9.56 V | 5.4 W | 286 °C | 열 차단 |
 | 3.0 A · 4700 µF · 대형 | 5.32 V | 6.01 V | — | — | 드롭아웃 |
 | 2.0 A · 10000 µF · 대형 | 1.67 V | 9.66 V | 11.0 W | 102 °C | 정상 |
+
+## 양자 회로 (탭 상단 "양자 회로 · QPU")
+
+| 카드 | 내용 | 문서 |
+|---|---|---|
+| 트랜스몬 큐비트 | SQUID + CΣ + 판독 공진기 회로도, 5큐비트 칩 실물 배치도, 퍼텐셜 우물과 에너지 준위, 플럭스 튜닝 곡선, 자동 보정 | [transmon.md](transmon.md), [transmon-lc.cir](transmon-lc.cir) |
+| 마이크로파 제어 체인 | AWG → LPF → IQ 믹서 ← LO → BPF → 감쇠기 −50 dB → 큐비트, 바이어스-T 플럭스선, 라비 곡선, DRAG 펄스 | [transmon.md](transmon.md) |
+| 희석 냉동기 | 단별 온도, 냉각/워밍업, 온도 기록 | [transmon.md](transmon.md) |
+| 분산 판독 | 공진기 → 아이솔레이터 → TWPA → HEMT → LNA → ADC, S21, IQ 단발 측정 구름 | [transmon.md](transmon.md) |
+
+부품 조달 표: [bom-sourcing.csv](bom-sourcing.csv) (자동 생성).

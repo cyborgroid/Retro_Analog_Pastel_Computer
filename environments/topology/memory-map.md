@@ -4,12 +4,12 @@
 
 | 범위 | 크기 | 내용 | 비고 |
 |---|---|---|---|
-| 0000H–3FFFH | 16 KB | BIOS (마스크 ROM 하위) | 리셋 벡터 0000H, IM1 인터럽트 0038H |
-| 4000H–7FFFH | 16 KB | PASTELLA OS · 8×8 폰트 | ROM 상위 |
+| 0000H–3FFFH | 16 KB | BIOS (EEPROM 하위) | 리셋 벡터 0000H, IM1 인터럽트 0038H |
+| 4000H–7FFFH | 16 KB | PASTELLA OS · 8×8 폰트 | EEPROM 상위 |
 | 8000H–BFFFH | 16 KB | RAM 뱅크 0–3 | 포트 F4H로 뱅크 전환 |
 | C000H–FFFFH | 16 KB | RAM 상주 영역 · 스택 | 스택 초기값 F380H |
 
-RAM은 4164(64K×1) 8개로 구성합니다. 리프레시는 M1 사이클의 T3–T4 동안 /RFSH와 함께 7비트 행 주소로 수행되며, 2 ms 안에 128행 전체를 돕니다.
+ROM은 AT28C256 EEPROM, RAM은 AS6C62256 SRAM 두 개(각 32 KB)로 구성합니다. 모두 생산 중인 부품이며, SRAM이라 Z80의 /RFSH 리프레시 신호는 쓰지 않습니다.
 
 ## I/O 포트
 
@@ -25,7 +25,8 @@ RAM은 4164(64K×1) 8개로 구성합니다. 리프레시는 M1 사이클의 T3�
 | AAH | PIO | R | 마우스 X 카운터 |
 | ABH | PIO | R | 마우스 Y 카운터 · 버튼 |
 | F4H | 시스템 | R/W | 리셋 상태 · 뱅크 선택 |
-| 7FF8H–7FFFH | FDC | R/W | 메모리 매핑 FDC 레지스터 |
+| 7FF8H–7FFFH | CH376S | R/W | USB/SD 저장 컨트롤러 |
+| C0H–C7H | Q-Bus 브리지 | R/W | Pico W: OpenQASM 송신 · 결과 수신 (양자 서브시스템) |
 
 ## 인터럽트
 

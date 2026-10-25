@@ -1,0 +1,29 @@
+* PASTELLA 84 — Q0 transmon as a classical small-signal LC (JoSIM / WRspice syntax)
+* This only checks the linearised resonance (plasma frequency) of the junction + shunt capacitor.
+* A classical circuit simulator cannot capture quantised levels or anharmonicity — those are computed
+* analytically in src/js/quantum/hardware.js (f01 = sqrt(8 EJ EC) - EC).
+*
+* EJ = 14 GHz  ->  Ic = 2e/h * EJ = 4*pi*e*EJ/h ≈ 28 nA per SQUID (two junctions, 14 nA each)
+* EC = 260 MHz ->  C_sigma = e^2 / (2 h EC) ≈ 74.5 fF
+* Plasma frequency sqrt(8 EJ EC) ≈ 5.40 GHz; the quantum f01 is 5.40 - 0.26 = 5.14 GHz
+
+.model jjq jj(rtype=0, cap=0.5f, icrit=14n)
+
+* drive line with weak coupling capacitor
+Vdrv  drv 0   sin(0 1u 5.14G)
+Cd    drv q   0.1f
+
+* SQUID: two junctions in parallel to ground (flux bias omitted: symmetric, Phi = 0)
+B1    q   0   jjq
+B2    q   0   jjq
+Csig  q   0   74f
+
+* coupling to the lambda/4 readout resonator (lumped equivalent at 7.05 GHz)
+Cg    q   r   5f
+Lr    r   0   0.51n
+Cr    r   0   1p
+
+.tran 0.5p 20n
+.print phase B1
+.print v(q)
+.end
