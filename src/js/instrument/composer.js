@@ -30,6 +30,7 @@
   $('#qc-undo').addEventListener('click', () => { const s = C.undo.pop(); if (!s) return; const o = JSON.parse(s); C.n = o.n; C.ops = o.ops; C.sel = null; $('#qc-n').value = C.n; changed(); });
   $('#qc-clear').addEventListener('click', () => { if (!C.ops.length) return; snapshot(); C.ops = []; C.sel = null; $('#qc-note').textContent = ''; changed(); });
   $('#qc-run').addEventListener('click', () => run());
+  $('#qc-to-scope').addEventListener('click', () => { PX.setInstMode('bench'); PX.applyPreset('qpulse'); });
   $('#qc-qasm-btn').addEventListener('click', e => { const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); b.classList.toggle('on', on); $('#qc-qasm-box').hidden = !on; qasm(); });
   $('#qc-copy').addEventListener('click', () => {
     const t = $('#qc-qasm').textContent, msg = $('#qc-copy-msg');
@@ -81,12 +82,12 @@
       h += `<circle class="qdot" cx="${x}" cy="${y}" r="7"/>`;
       if (o.g === 'CX') h += `<circle class="qtgt" cx="${x}" cy="${y2}" r="13"/><path class="qtgt-x" d="M${x - 13} ${y2} H${x + 13} M${x} ${y2 - 13} V${y2 + 13}"/>`;
       else if (o.g === 'CZ') h += `<circle class="qdot" cx="${x}" cy="${y2}" r="7"/>`;
-      else if (o.g === 'CP') h += `<circle class="qdot" cx="${x}" cy="${y2}" r="7"/><rect class="qbox bg-peach" x="${x + 6}" y="${(y + y2) / 2 - 10}" width="40" height="20" rx="5"/><text class="qangle" x="${x + 26}" y="${(y + y2) / 2 + 4}" text-anchor="middle">${DATA.angleName(o.th)}</text>`;
+      else if (o.g === 'CP') h += `<circle class="qdot" cx="${x}" cy="${y2}" r="7"/><rect class="qbox" fill="var(--peach)" x="${x + 6}" y="${(y + y2) / 2 - 10}" width="40" height="20" rx="5"/><text class="qangle" x="${x + 26}" y="${(y + y2) / 2 + 4}" text-anchor="middle">${DATA.angleName(o.th)}</text>`;
       else if (o.g === 'SWAP') [y, y2].forEach(yy => h += `<path class="qtgt-x" d="M${x - 8} ${yy - 8} L${x + 8} ${yy + 8} M${x + 8} ${yy - 8} L${x - 8} ${yy + 8}"/>`);
       if (PX.qdist(o.q, o.q2) > 1) h += `<text class="qroute" x="${x + 9}" y="${Math.min(y, y2) + 4}" >⇆${PX.qdist(o.q, o.q2) - 1}</text>`;
       if (o.g === 'SWAP') h = h.replace('<circle class="qdot" cx="' + x + '" cy="' + y + '" r="7"/>', '');
     } else {
-      h += `<rect class="qbox bg-${G.c}" x="${x - 19}" y="${y - 19}" width="38" height="38" rx="8"/>`;
+      h += `<rect class="qbox" fill="var(--${G.c})" x="${x - 19}" y="${y - 19}" width="38" height="38" rx="8"/>`;
       if (o.g === 'M') h += `<path class="qmeter" d="M${x - 11} ${y + 6} A12 12 0 0 1 ${x + 11} ${y + 6}"/><path class="qmeter" d="M${x} ${y + 7} L${x + 8} ${y - 6}"/>`;
       else if (G.p) h += `<text class="qg" x="${x}" y="${y - 1}" text-anchor="middle">${o.g}</text><text class="qangle" x="${x}" y="${y + 13}" text-anchor="middle">${DATA.angleName(o.th)}</text>`;
       else h += `<text class="qg" x="${x}" y="${y + 5}" text-anchor="middle">${GL[o.g] || o.g}</text>`;

@@ -28,12 +28,12 @@
     [[356, 410, '−20', '4 K'], [426, 480, '−10', 'Still'], [496, 550, '−20', 'MXC']].forEach(([a, b, v]) => h += sch.two('att', a, 82, b, 82, { v }));
     h += sch.wire([[336, 82], [356, 82]]) + sch.wire([[410, 82], [426, 82]]) + sch.wire([[480, 82], [496, 82]]);
     h += sch.two('cap', 550, 82, 600, 82, { ref: 'Cd' }) + sch.wire([[600, 82], [630, 82], [630, 96]]) + sch.squid(630, 126) + sch.gnd(630, 156);
-    h += sch.wire([[100, 136], [120, 136], [120, 206], [240, 206]]) + sch.text(250, 192, 'Bias-T', 'ref') + `<rect class="w part" x="240" y="196" width="46" height="20" rx="3"/>` + sch.text(263, 210, 'L ∥ C', 'tiny', 'middle');
+    h += sch.wire([[100, 136], [120, 136], [120, 206], [240, 206]]) + sch.text(263, 232, 'Bias-T', 'ref', 'middle') + `<rect class="w part" x="240" y="196" width="46" height="20" rx="3"/>` + sch.text(263, 210, 'L ∥ C', 'tiny', 'middle');
     h += sch.rail(263, 196, 'DC 바이어스') + sch.wire([[286, 206], [306, 206]]) + sch.two('lpf', 306, 206, 356, 206, { ref: 'Eccosorb' }) + sch.wire([[356, 206], [496, 206]]) + sch.two('lpf', 496, 206, 550, 206, { ref: 'LPF MXC' });
     h += sch.wire([[550, 206], [598, 206], [598, 126], [608, 126]]) + sch.text(600, 120, 'M', 'ref');
     [[346, '300 K │ 4 K'], [418, '4 K │ Still'], [488, 'Still │ MXC'], [556, '']].forEach(([x, t]) => h += `<path class="w thin dash" d="M${x} 24 V226"/>` + (t ? sch.text(x, 20, t, 'tiny', 'middle') : ''));
     h += sch.flow([[225, 82], [600, 82], [630, 82]], 'fl-drive');
-    h += sch.flag(242, 82, -10, -60, 'RF', 'qc-s-rf', 110) + sch.flag(630, 96, -24, 110, '큐비트', 'qc-s-q', 118);
+    h += sch.flag(242, 82, -10, -60, 'RF', 'qc-s-rf', 110) + sch.flag(630, 96, -180, 44, 'Q0', 'qc-s-q', 150);
     return `<svg class="schem" viewBox="0 0 660 240" role="img" aria-label="마이크로파 제어 체인 회로도">${h}</svg>`;
   }
   $('#qc-schem').innerHTML = schematic();

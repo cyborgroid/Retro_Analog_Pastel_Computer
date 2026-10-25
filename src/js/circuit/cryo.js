@@ -23,7 +23,7 @@
     h += `<rect x="146" y="${PLATES[5][0] + 12}" width="68" height="44" rx="6" fill="#ffcdb2" stroke="#d99a7a"/><text class="tiny" x="180" y="${PLATES[5][0] + 32}" text-anchor="middle">QPU</text><text class="tiny" x="180" y="${PLATES[5][0] + 45}" text-anchor="middle">샘플 박스</text>`;
     h += `<rect x="140" y="${PLATES[5][0] + 8}" width="80" height="54" rx="8" fill="none" stroke="#8c84a2" stroke-dasharray="3 3"/>`;
     h += `<rect id="cryo-frost" x="40" y="46" width="280" height="320" fill="url(#frost)" opacity="0"/><rect id="cryo-warm" x="40" y="46" width="280" height="320" fill="url(#warmg)" opacity="0"/>`;
-    PLATES.forEach(([y, , n], i) => h += `<path class="w thin dash" d="M${180 + PLATES[i][1] / 2 + 4} ${y + 5} H330"/><text class="lab" x="336" y="${y + 9}">${n}</text><text class="val" id="cryo-t${i}" x="420" y="${y + 9}">—</text>`);
+    PLATES.forEach(([y, , n], i) => h += `<path class="w thin dash" d="M${180 + PLATES[i][1] / 2 + 4} ${y + 5} H330"/><text class="lab" x="336" y="${y + 9}">${n}</text><text class="val" id="cryo-st${i}" x="420" y="${y + 9}">—</text>`);
     h += sch.text(336, 392, '구동선 −50 dB 감쇠 · 플럭스선 저역통과 · 판독선 증폭', 'tiny');
     return `<svg class="schem" viewBox="0 0 520 400" role="img" aria-label="희석 냉동기 단면">${h}</svg>`;
   }
@@ -36,8 +36,8 @@
   const fmtT = T => T >= 1 ? T.toFixed(T >= 10 ? 0 : 2) + ' K' : (T * 1000).toFixed(T < 0.1 ? 1 : 0) + ' mK';
   function live() {
     const H = PX.QH;
-    DATA.QSTAGES.forEach((_, i) => sch.set('cryo-t' + i, fmtT(PX.stageT(i))));
-    const fr = $('#cryo-frost'), wm = $('#cryo-warm'); if (fr) { fr.setAttribute('opacity', (Q.cool * 0.9).toFixed(2)); wm.setAttribute('opacity', ((1 - Q.cool) * 0.9).toFixed(2)); }
+    DATA.QSTAGES.forEach((_, i) => sch.set('cryo-st' + i, fmtT(PX.stageT(i))));
+    const fr = $('#cryo-frost'), wm = $('#cryo-warm'); if (fr) { fr.setAttribute('opacity', (Q.cool * 0.35).toFixed(2)); wm.setAttribute('opacity', ((1 - Q.cool) * 0.5).toFixed(2)); }
     $('#cryo-mxc').textContent = fmtT(H.T); $('#cryo-pth').textContent = (H.pth * 100).toFixed(H.pth < 0.001 ? 4 : 1) + ' %';
     $('#cryo-t1').textContent = (H.qubits[0].T1 >= 1 ? H.qubits[0].T1.toFixed(0) : H.qubits[0].T1.toFixed(3)) + ' µs';
     const p = $('#cryo-pill'), broken = S.faults.has('cryoctl');

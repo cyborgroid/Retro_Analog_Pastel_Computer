@@ -1,0 +1,86 @@
+{
+  "H": {
+    "c": "lav",
+    "d": "아다마르: 중첩 생성",
+    "kind": "phys"
+  },
+  "X": {
+    "c": "mint",
+    "d": "π 펄스 (비트 반전)",
+    "kind": "phys"
+  },
+  "Y": {
+    "c": "mint",
+    "d": "Y축 π 펄스",
+    "kind": "phys"
+  },
+  "Z": {
+    "c": "butter",
+    "d": "위상 반전 (가상 Z)",
+    "kind": "vz"
+  },
+  "S": {
+    "c": "butter",
+    "d": "π/2 위상 (가상 Z)",
+    "kind": "vz"
+  },
+  "T": {
+    "c": "butter",
+    "d": "π/4 위상 (가상 Z)",
+    "kind": "vz"
+  },
+  "SX": {
+    "c": "mint",
+    "d": "√X: π/2 펄스",
+    "kind": "phys"
+  },
+  "RX": {
+    "c": "sky",
+    "d": "X축 회전 θ",
+    "kind": "phys",
+    "p": true
+  },
+  "RY": {
+    "c": "sky",
+    "d": "Y축 회전 θ",
+    "kind": "phys",
+    "p": true
+  },
+  "RZ": {
+    "c": "butter",
+    "d": "Z축 회전 θ (가상 Z)",
+    "kind": "vz",
+    "p": true
+  },
+  "CX": {
+    "c": "peach",
+    "d": "CNOT: 제어 큐비트가 1이면 대상 반전",
+    "kind": "two"
+  },
+  "CZ": {
+    "c": "peach",
+    "d": "제어-Z: 둘 다 1이면 위상 반전",
+    "kind": "two"
+  },
+  "CP": {
+    "c": "peach",
+    "d": "제어-위상 θ",
+    "kind": "two",
+    "p": true
+  },
+  "SWAP": {
+    "c": "peach",
+    "d": "두 큐비트 상태 교환",
+    "kind": "two"
+  },
+  "M": {
+    "c": "rose",
+    "d": "측정 (분산 판독)",
+    "kind": "meas"
+  },
+  "RST": {
+    "c": "rose",
+    "d": "능동 리셋 (측정 + 조건부 π)",
+    "kind": "meas"
+  }
+}

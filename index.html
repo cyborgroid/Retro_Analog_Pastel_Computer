@@ -10,7 +10,9 @@
 <link rel="stylesheet" href="src/css/chassis.css">
 <link rel="stylesheet" href="src/css/assembly.css">
 <link rel="stylesheet" href="src/css/instrument.css">
+<link rel="stylesheet" href="src/css/quantum.css">
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="bnc-sym" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#d7d3df" stroke="#8c84a2" stroke-width="2"/><circle cx="20" cy="20" r="12" fill="#efeaf8" stroke="#9f95bb"/><circle cx="20" cy="20" r="7" fill="#f6f2e4" stroke="#c9b98a"/><circle cx="20" cy="20" r="2.4" fill="#c9a34a"/><rect x="1" y="17" width="5" height="6" rx="1.5" fill="#8c84a2"/><rect x="34" y="17" width="5" height="6" rx="1.5" fill="#8c84a2"/></symbol></svg>
 <header class="top">
   <div class="wrap">
     <div class="brand">
@@ -31,11 +33,11 @@
 
 <div class="wrap">
   <nav class="tabs" role="tablist" aria-label="프로토타이핑 환경">
-    <button class="tab" role="tab" id="tab-topology" data-tab="topology" aria-controls="topology"><span class="chip bg-lav"></span><b>Topology</b><small>블록 · 버스 · 전원망 · 고장 주입</small></button>
-    <button class="tab" role="tab" id="tab-circuit" data-tab="circuit" aria-controls="circuit"><span class="chip bg-mint"></span><b>Circuit</b><small>전원 · CRT · 키 매트릭스 · 엔코더 · PSG</small></button>
+    <button class="tab" role="tab" id="tab-topology" data-tab="topology" aria-controls="topology"><span class="chip bg-lav"></span><b>Topology</b><small>시스템 · 양자 서브시스템 · 고장 주입</small></button>
+    <button class="tab" role="tab" id="tab-circuit" data-tab="circuit" aria-controls="circuit"><span class="chip bg-mint"></span><b>Circuit</b><small>실물 회로도 · 양자 큐비트 · 부품 조달</small></button>
     <button class="tab" role="tab" id="tab-chassis" data-tab="chassis" aria-controls="chassis"><span class="chip bg-peach"></span><b>Chassis</b><small>3D 외형 · 와이드 모니터 · 분해도</small></button>
     <button class="tab" role="tab" id="tab-assembly" data-tab="assembly" aria-controls="assembly"><span class="chip bg-rose"></span><b>Assembly</b><small>20단계 조립 · 체결 · 검수</small></button>
-    <button class="tab" role="tab" id="tab-instrument" data-tab="instrument" aria-controls="instrument"><span class="chip bg-sky"></span><b>Instrument</b><small>스코프 · 스펙트럼 · 미터 · 로직</small></button>
+    <button class="tab" role="tab" id="tab-instrument" data-tab="instrument" aria-controls="instrument"><span class="chip bg-sky"></span><b>Instrument</b><small>양자 블록 작곡기 · 벤치 계측기</small></button>
   </nav>
 
   <main>
@@ -84,39 +86,44 @@
         <ul class="tree" id="clocks"></ul>
       </div>
     </div>
+    <div class="topo-grid">
+      <div class="card">
+        <h3>양자 서브시스템 <span class="tag bg-peach">5Q 초전도 · 희석 냉동기</span> <span class="pill" id="qstatus">—</span></h3>
+        <p class="desc">PX-80 버스에 Q-Bus 브리지가 붙고, QCU 시퀀서가 회로를 마이크로파 펄스로 바꿔 냉동기 안의 QPU로 보냅니다. 판독 신호는 TWPA → HEMT → 상온 증폭 → ADC를 거쳐 0/1로 판정됩니다. 노드를 눌러 사양을 보거나 고장을 주입해 보세요.</p>
+        <div class="svg-wrap"><svg id="qtopo" viewBox="0 0 1000 560" role="img" aria-label="양자 서브시스템 다이어그램"></svg></div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <h3 id="qnode-title">QPU</h3>
+          <p class="desc" id="qnode-sub"></p>
+          <dl class="kv" id="qnode-kv"></dl>
+          <p class="fault-text" id="qnode-fault-text"></p>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="qnode-run">블록 작곡기로 →</button>
+            <button class="btn danger" id="qnode-fault" aria-pressed="false">고장 주입</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>큐비트 결합 맵 <span class="tag bg-mint">T자형</span></h3>
+          <svg id="qmap" class="qmap" viewBox="0 0 320 290" role="img" aria-label="큐비트 결합 맵"></svg>
+          <p class="note" style="margin:6px 0 0">원 색 = T1 상태 (민트 정상 · 노랑 저하 · 분홍 위험). 선 = CZ 게이트를 직접 걸 수 있는 쌍. 이웃하지 않은 쌍은 SWAP 라우팅이 필요합니다.</p>
+        </div>
+      </aside>
+    </div>
   </section>
 
   <!-- ================= CIRCUIT ================= -->
   <section class="view" id="circuit" role="tabpanel" aria-labelledby="tab-circuit" hidden>
-    <div class="circ-grid">
-      <div class="card">
-        <h3>선형 전원부 <span class="tag bg-butter">9 Vrms → 7805 → +5 V</span></h3>
+    <div class="card mode-bar">
+      <div class="seg big" id="circ-mode"><button data-m="classic" aria-pressed="true">고전 회로 · PX-80 본체</button><button data-m="quantum" aria-pressed="false">양자 회로 · QPU</button></div>
+      <p class="note">회로도는 실제 부품 기호, 참조번호(R1, C1, U1…), 부품값으로 그렸습니다. 노란 TP 깃발은 실시간 측정값이고, 움직이는 점선은 전류가 흐르는 방향(관례 전류)이며 빠를수록 전류가 큽니다.</p>
+    </div>
+    <div class="circ-grid" id="circ-classic">
+      <div class="card span2">
+        <h3>선형 전원부 <span class="tag bg-butter">9 Vrms → KBP206 → L7805CV → +5 V</span></h3>
         <p class="desc">부하 전류, 평활 콘덴서 C1, 방열판을 바꿔 보세요. C1 최저 전압이 7 V 아래면 드롭아웃이 일어나고 CRT가 120 Hz로 깜빡입니다. 7805 접합 온도가 125 °C를 넘으면 열 차단으로 +5V가 꺼지고, 95 °C로 식으면 재부팅합니다.</p>
-        <svg class="schem" viewBox="0 0 520 150" aria-label="전원부 회로도">
-          <text x="8" y="20">AC 220V 60Hz</text>
-          <circle class="w" cx="30" cy="75" r="16"/><path class="w" d="M20 75 q5 -10 10 0 t10 0"/>
-          <path class="w" d="M30 59 V40 H70 M30 91 V110 H70"/>
-          <path class="w" d="M70 40 v10 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 v12"/>
-          <path class="w" d="M84 40 v10 a6 6 0 0 0 0 12 a6 6 0 0 0 0 12 a6 6 0 0 0 0 12 a6 6 0 0 0 0 12 v12"/>
-          <path class="w" d="M76 44 V106 M79 44 V106"/>
-          <text x="58" y="132">T1 9V</text>
-          <path class="w" d="M84 40 H130 M84 110 H130"/>
-          <path class="w" d="M150 45 L180 75 L150 105 L120 75 Z"/>
-          <path class="w" d="M130 40 L135 55 M130 110 L135 95"/>
-          <path class="w" d="M143 52 l8 8 M157 52 l-8 8 M143 98 l8 -8 M157 98 l-8 -8"/>
-          <text x="120" y="132">BR1</text>
-          <path class="w hot" d="M180 75 H250 V40 H300"/>
-          <path class="w" d="M120 75 H105 V130 H470"/>
-          <path class="w" d="M240 75 V92 M228 92 H252 M228 99 H252 M240 99 V130"/>
-          <text x="256" y="100" id="sch-c1">C1 4700µF</text>
-          <rect class="w" x="300" y="25" width="70" height="36" rx="4"/><text x="312" y="48">7805</text>
-          <path class="w" d="M335 61 V130"/>
-          <path class="w hot" d="M370 40 H470"/>
-          <path class="w" d="M405 40 V92 M395 92 H415 M395 99 H415 M405 99 V130"/><text x="420" y="100">C2</text>
-          <rect class="w" x="458" y="62" width="24" height="44" rx="3"/><path class="w" d="M470 40 V62 M470 106 V130"/>
-          <text x="486" y="88" id="sch-load">1.0A</text>
-          <text x="440" y="30">+5V</text>
-        </svg>
+        <div class="row between" style="margin-bottom:6px"><span class="note">보기 전환</span><div class="seg" id="psu-view"><button data-v="sch" aria-pressed="true">회로도</button><button data-v="pcb" aria-pressed="false">실물 보드</button></div></div>
+        <div id="psu-schem" class="schem-host"></div>
         <div class="ctl"><label for="s-load">부하 전류</label><input type="range" id="s-load" min="0.1" max="3" step="0.05" value="1"><output id="o-load">1.00 A</output></div>
         <div class="ctl"><label for="s-cap">C1 용량</label><input type="range" id="s-cap" min="0" max="5" step="1" value="3"><output id="o-cap">4700 µF</output></div>
         <div class="ctl"><label for="s-hs-sink">방열판</label><select class="sel" id="s-hs-sink"></select><span></span></div>
@@ -132,9 +139,11 @@
         <canvas class="mini" id="mini-psu"></canvas>
       </div>
 
-      <div class="card">
-        <h3>CRT 편향 회로 <span class="tag bg-sky" id="crt-size">19" 16:10</span></h3>
+      <div class="card span2">
+        <h3>CRT 수평 편향 <span class="tag bg-sky" id="crt-size">19" 16:10</span></h3>
         <p class="desc">모니터의 아날로그 다이얼입니다. 수평 발진이 동기 범위(±250 Hz)를 벗어나면 화면이 찢어지고, V-HOLD를 돌리면 화면이 위아래로 흐릅니다. 변경 사항은 3D 모니터에도 그대로 반영됩니다.</p>
+        <p class="note" style="margin:-6px 0 8px">CRT 신품은 더 이상 생산되지 않습니다. 실제 제작은 19" 16:10 LCD + 컴포지트 입력 보드를 레트로 셸에 넣는 방식이 쉽고, 이 편향 회로는 중고 CRT를 쓸 때의 참고 회로입니다.</p>
+        <div id="crt-schem" class="schem-host"></div>
         <div class="crt-box"><canvas class="crt-prev" id="crt-prev" width="640" height="400"></canvas></div>
         <div class="ctl"><label for="s-hf">H-FREQ</label><input type="range" id="s-hf" min="15000" max="16500" step="2" value="15734"><output id="o-hf">15.734 kHz</output></div>
         <div class="ctl"><label for="s-hsz">H-SIZE</label><input type="range" id="s-hsz" min="0.7" max="1.15" step="0.01" value="1"><output id="o-hsz">100 %</output></div>
@@ -160,8 +169,9 @@
       </div>
 
       <div class="card">
-        <h3>볼 마우스 엔코더 <span class="tag bg-rose">광학 초퍼 · 직교 A/B</span></h3>
+        <h3>볼 마우스 엔코더 <span class="tag bg-rose">ITR9608 포토인터럽터 · 74HC14</span></h3>
         <p class="desc">패드 위를 드래그하면 볼이 굴러 X/Y 초퍼 휠을 돌리고, A/B 위상차로 방향을 판정합니다. CRT의 커서도 같이 움직입니다.</p>
+        <div id="ms-schem" class="schem-host"></div>
         <div class="pad" id="pad">여기를 드래그하세요<br>(볼 마우스 패드)</div>
         <div class="enc-row">
           <svg viewBox="0 0 100 100" aria-label="X 엔코더 휠"><g id="encx"></g><text x="50" y="98" text-anchor="middle" font-size="10" fill="currentColor" font-family="IBM Plex Mono">X WHEEL</text></svg>
@@ -178,10 +188,10 @@
       </div>
 
       <div class="card span2">
-        <h3>PSG 사운드 <span class="tag bg-lav">3ch 구형파 + 노이즈 · 3.58 MHz</span></h3>
+        <h3>PSG 사운드 <span class="tag bg-lav">RP2040 PWM → LM386</span></h3>
         <div class="psg-grid">
           <div>
-            <p class="desc">PSG 칩의 톤 채널 3개와 노이즈 발생기입니다. 스피커를 켜면 실제 소리가 나고, 같은 파형이 Instrument의 PSG 오디오 신호로 나옵니다.</p>
+            <p class="desc">단종된 AY-3-8910 대신 Raspberry Pi Pico가 같은 3채널 구형파와 노이즈를 PWM으로 만듭니다. 스피커를 켜면 실제 소리가 나고, 같은 파형이 Instrument의 PSG 오디오 신호로 나옵니다.</p>
             <div id="psg-chans"></div>
             <div class="row" style="margin-top:10px">
               <button class="btn" id="psg-audio" aria-pressed="false">스피커 켜기</button>
@@ -189,9 +199,85 @@
             </div>
             <p class="note" id="psg-msg" style="margin-top:8px"></p>
           </div>
-          <div><canvas class="mini" id="mini-psg" style="height:180px"></canvas></div>
+          <div><div id="psg-schem" class="schem-host"></div><canvas class="mini" id="mini-psg" style="height:120px;margin-top:8px"></canvas></div>
         </div>
       </div>
+    </div>
+    <div class="circ-grid" id="circ-quantum" hidden>
+      <div class="card span2 callout">
+        <h3>현실에서 만들 때 <span class="tag bg-butter">구하기 쉬운 경로</span></h3>
+        <p class="desc" style="margin-bottom:6px">아래 네 카드는 실제 초전도 양자컴퓨터의 구조를 그대로 시뮬레이션합니다. 다만 트랜스몬 칩과 희석 냉동기는 연구소급 장비라 개인이 구하기 어렵습니다. 실제로 손에 넣을 수 있는 경로는 다음과 같습니다.</p>
+        <ul class="easy-list">
+          <li><b>클라우드 QPU</b> 블록 작곡기의 OpenQASM을 IBM Quantum에 붙여 넣으면 실제 초전도 QPU에서 실행됩니다(Open Plan 무료 사용 시간). 본체와는 Raspberry Pi Pico W 브리지로 잇습니다.</li>
+          <li><b>큐비트 제어기</b> AWG·LO·IQ·ADC 자리는 Fermilab 오픈소스 QICK와 RFSoC 4x2 보드로 구성할 수 있습니다.</li>
+          <li><b>상온 양자컴퓨터</b> 냉동기 없이 동작하는 NMR 교육용 기기(SpinQ Gemini Mini, 2큐비트)는 상용으로 판매됩니다.</li>
+          <li><b>1큐비트 광학 실습</b> 레이저 다이오드, 편광판, λ/2·λ/4 파장판으로 H·X·위상 회전을 눈으로 확인합니다(고전 빛을 쓴 원리 실습이며 양자 컴퓨팅 자체는 아닙니다).</li>
+        </ul>
+      </div>
+
+      <div class="card span2">
+        <h3>트랜스몬 큐비트 <span class="tag bg-lav">초전도 · 플럭스 가변 · Q0</span> <span class="pill ok" id="q-pill">—</span></h3>
+        <p class="desc">조지프슨 접합 두 개로 만든 SQUID와 커패시터가 비선형 공진기(인공 원자)를 이룹니다. 플럭스 Φ로 E<sub>J</sub>가 바뀌어 큐비트 주파수가 움직이고, 구동 주파수와 어긋나면 블록 작곡기의 게이트가 틀어집니다.</p>
+        <div class="row between" style="margin-bottom:8px"><div class="seg" id="q-view"><button data-v="sch" aria-pressed="true">회로도</button><button data-v="chip" aria-pressed="false">칩 실물</button></div><button class="btn" id="q-cal">자동 보정 (분광 + 라비)</button></div>
+        <div class="qsplit">
+          <div id="q-schem" class="schem-host"></div>
+          <div>
+            <div class="ctl"><label for="q-flux">플럭스 Φ</label><input type="range" id="q-flux" min="-0.5" max="0.5" step="0.005"><output id="o-q-flux"></output></div>
+            <div class="ctl"><label for="q-ej">E<sub>J</sub> max</label><input type="range" id="q-ej" min="8" max="25" step="0.1"><output id="o-q-ej"></output></div>
+            <div class="ctl"><label for="q-ec">E<sub>C</sub></label><input type="range" id="q-ec" min="0.15" max="0.4" step="0.005"><output id="o-q-ec"></output></div>
+            <div class="readouts">
+              <div class="ro"><small>f01</small><b id="q-f01">—</b></div><div class="ro"><small>비조화성 α</small><b id="q-alpha">—</b></div>
+              <div class="ro"><small>구동 이조 Δ</small><b id="q-det">—</b></div><div class="ro"><small>EJ/EC</small><b id="q-ratio">—</b></div>
+              <div class="ro"><small>T1</small><b id="q-t1">—</b></div><div class="ro"><small>T2</small><b id="q-t2">—</b></div>
+            </div>
+            <div class="plots2"><canvas class="plot" id="q-levels"></canvas><canvas class="plot" id="q-tune"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span2">
+        <h3>마이크로파 제어 체인 <span class="tag bg-sky">AWG → IQ 업컨버전 → −50 dB → 큐비트</span> <span class="pill ok" id="qc-pill">—</span></h3>
+        <p class="desc">AWG가 50 MHz IF의 가우시안 펄스를 I/Q로 내보내고, IQ 믹서가 4.95 GHz LO와 섞어 큐비트 주파수로 올립니다. 냉동기 단마다 감쇠기를 두어 열잡음을 막습니다. 플럭스선은 바이어스-T와 저역통과 필터를 거칩니다.</p>
+        <div id="qc-schem" class="schem-host"></div>
+        <div class="qsplit">
+          <div>
+            <div class="ctl"><label for="qc-amp">펄스 진폭</label><input type="range" id="qc-amp" min="0" max="2" step="0.01"><output id="o-qc-amp"></output></div>
+            <div class="ctl"><label for="qc-off">구동 미세조정</label><input type="range" id="qc-off" min="-30" max="30" step="0.5"><output id="o-qc-off"></output></div>
+            <div class="row" style="margin-block:6px 8px"><button class="btn on" id="qc-drag" aria-pressed="true">DRAG 보정 켜짐</button><button class="btn" id="qc-cal">π 펄스 자동 보정</button></div>
+            <div class="readouts">
+              <div class="ro"><small>X 게이트 회전각</small><b id="qc-theta">—</b></div><div class="ro"><small>이조</small><b id="qc-det">—</b></div>
+              <div class="ro"><small>최대 전이확률</small><b id="qc-pmax">—</b></div><div class="ro"><small>1Q 충실도</small><b id="qc-f1">—</b></div>
+            </div>
+          </div>
+          <div class="plots2"><canvas class="plot" id="qc-rabi"></canvas><canvas class="plot dark" id="qc-pulse"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>희석 냉동기 <span class="tag bg-butter">300 K → 10 mK</span> <span class="pill ok" id="cryo-pill">—</span></h3>
+        <p class="desc">펄스 튜브가 4 K까지, ³He/⁴He 희석 유닛이 혼합실(MXC)을 10 mK까지 식힙니다. 온도가 오르면 큐비트가 열적으로 들뜨고 준입자가 T1을 무너뜨립니다. 벤치에서는 실제 이틀 걸리는 냉각을 40초로 가속합니다.</p>
+        <div id="cryo-svg" class="schem-host"></div>
+        <div class="row" style="margin-block:8px"><button class="btn on" id="cryo-cool" aria-pressed="true">냉각</button><button class="btn" id="cryo-warm-btn" aria-pressed="false">워밍업</button></div>
+        <div class="readouts"><div class="ro"><small>혼합실</small><b id="cryo-mxc">—</b></div><div class="ro"><small>열적 들뜸</small><b id="cryo-pth">—</b></div><div class="ro"><small>Q0 T1</small><b id="cryo-t1">—</b></div></div>
+        <canvas class="plot" id="cryo-hist" style="height:130px"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>분산 판독 <span class="tag bg-mint">공진기 → TWPA → HEMT → ADC</span> <span class="pill ok" id="ro-pill">—</span></h3>
+        <p class="desc">큐비트 상태에 따라 판독 공진기 주파수가 2χ만큼 이동합니다. 그 사이 주파수로 톤을 보내 위상차를 읽고, IQ 평면에서 임계값으로 0/1을 가릅니다. 광자가 너무 많으면 측정이 큐비트를 흔듭니다.</p>
+        <div id="ro-schem" class="schem-host"></div>
+        <div class="ctl"><label for="ro-pow">판독 전력</label><input type="range" id="ro-pow" min="-140" max="-95" step="1"><output id="o-ro-pow"></output></div>
+        <div class="ctl"><label for="ro-tau">적분 시간</label><input type="range" id="ro-tau" min="0.2" max="3" step="0.1"><output id="o-ro-tau"></output></div>
+        <div class="row" style="margin-block:6px 8px"><button class="btn on" id="ro-twpa" aria-pressed="true">TWPA 펌프 켜짐</button></div>
+        <div class="readouts"><div class="ro"><small>광자 / n_crit</small><b id="ro-n">—</b></div><div class="ro"><small>SNR</small><b id="ro-snr">—</b></div><div class="ro"><small>판정 오류</small><b id="ro-err">—</b></div><div class="ro"><small>2χ</small><b id="ro-chi">—</b></div></div>
+        <div class="plots2"><canvas class="plot" id="ro-s21"></canvas><canvas class="plot dark" id="ro-iq"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>부품 조달 <span class="tag bg-mint">실제 품번 · 구하기 쉬운 재료</span></h3>
+      <p class="desc">회로에 쓴 부품을 지금 구할 수 있는 품번으로 정리했습니다. 단종된 칩(DRAM, 마스크 ROM, TMS9918A, AY-3-8910, 플로피 컨트롤러)은 생산 중인 부품으로 바꿨습니다. 구하기 어려운 것은 그렇다고 표시하고 쉬운 대안을 적었습니다.</p>
+      <div class="row between" style="margin-bottom:10px"><div class="seg" id="src-filter"></div><div class="row" id="src-sum"></div></div>
+      <div class="tbl-wrap"><table class="src"><thead><tr><th>블록</th><th>부품</th><th>실제 품번</th><th>상태</th><th>쉬운 대안 · 메모</th><th>구할 곳</th></tr></thead><tbody id="src-body"></tbody></table></div>
     </div>
   </section>
 
@@ -302,6 +388,61 @@
 
   <!-- ================= INSTRUMENT ================= -->
   <section class="view" id="instrument" role="tabpanel" aria-labelledby="tab-instrument" hidden>
+    <div class="card mode-bar">
+      <div class="seg big" id="inst-mode"><button data-m="quantum" aria-pressed="true">양자 블록 작곡기 · 펄스 시퀀서</button><button data-m="bench" aria-pressed="false">벤치 계측기</button></div>
+      <p class="note">양자 회로는 블록으로 짜고, 실제 하드웨어에서는 그 블록이 마이크로파 펄스 시퀀스로 바뀝니다. 벤치 계측기의 오실로스코프로 그 펄스(AWG 출력)를 직접 볼 수 있습니다.</p>
+    </div>
+    <div class="view" id="inst-quantum">
+      <div class="card">
+        <h3>양자 블록 작곡기 <span class="tag bg-lav">블록 → 펄스 시퀀스 → QPU</span> <span class="pill" id="qc-status">—</span></h3>
+        <p class="desc">블록을 큐비트 선 위에 놓아 회로를 짭니다. 흔히 "코딩"이라 부르지만, 아날로그 하드웨어에서 실제로 일어나는 일의 정확한 이름은 <b>펄스 시퀀싱(pulse sequencing)</b>입니다. 블록 하나가 아래 펄스 시퀀스의 마이크로파 펄스나 플럭스 펄스 하나로 바뀝니다.</p>
+        <p class="note bad-t" id="qc-why"></p>
+        <div class="row qc-toolbar">
+          <select class="sel" id="qc-preset" aria-label="예제 회로"></select>
+          <label class="note">큐비트 <select class="sel" id="qc-n"></select></label>
+          <label class="note">샷 <select class="sel" id="qc-shots"></select></label>
+          <label class="note">새 회전 각도 <select class="sel" id="qc-angle"></select></label>
+          <button class="btn on" id="qc-run">▶ QPU 실행</button>
+          <button class="btn" id="qc-undo">되돌리기</button>
+          <button class="btn" id="qc-clear">비우기</button>
+          <button class="btn" id="qc-qasm-btn" aria-pressed="false">OpenQASM</button>
+        </div>
+        <p class="note" id="qc-note"></p>
+        <div class="qc-body">
+          <div class="qc-palette" id="qc-palette"></div>
+          <div class="qc-gridwrap"><svg id="qc-grid" role="application" aria-label="양자 회로 그리드"></svg></div>
+        </div>
+        <div class="row between" style="margin-top:6px"><span class="note mono" id="qc-depth"></span><span class="note" id="qc-msg"></span></div>
+        <div class="qc-inspect" id="qc-inspect"></div>
+        <div id="qc-qasm-box" hidden>
+          <div class="row between" style="margin-top:10px"><span class="note">OpenQASM 2.0 · IBM Quantum Composer 같은 클라우드 도구에 붙여 넣으면 실제 QPU에서 실행됩니다.</span><button class="btn" id="qc-copy">복사</button></div>
+          <pre class="qasm" id="qc-qasm"></pre><span class="note" id="qc-copy-msg"></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>펄스 시퀀스 <span class="tag bg-sky">아날로그 표현 · AWG 출력</span></h3>
+        <p class="desc">위 회로를 하드웨어가 실제로 재생하는 모습입니다. D = 구동(XY) 마이크로파, F = 플럭스(Z) 펄스, M = 판독 톤. 위상 게이트(Z·S·T·RZ)는 펄스 없이 위상 기준만 돌리는 가상 Z입니다.</p>
+        <canvas id="qc-sched" class="sched"></canvas>
+        <div class="row between" style="margin-top:6px"><p class="note" id="qc-sched-info" style="margin:0"></p><button class="btn" id="qc-to-scope">오실로스코프로 보기 →</button></div>
+      </div>
+      <div class="qres-grid">
+        <div class="card"><h3>측정 결과 <span class="pill warn" id="qc-stale" hidden>회로가 바뀜 · 다시 실행</span></h3><canvas id="qc-hist" class="hist"></canvas><div class="legend" id="qc-legend"></div></div>
+        <div class="card"><h3>블로흐 구</h3><p class="note" style="margin:0 0 6px">점선 = 이상적 상태 · 실선 = 노이즈를 포함한 평균 (짧을수록 결맞음을 잃음)</p><div class="bloch-row" id="qc-bloch"></div></div>
+        <div class="card"><h3>상태벡터 <span class="tag bg-lav">이상적</span></h3><div id="qc-sv" class="tbl-wrap"></div></div>
+        <div class="card"><h3>오류 예산 <span class="tag bg-rose">하드웨어 모델</span></h3><div id="qc-budget"></div></div>
+        <div class="card span2">
+          <h3>용어: 코딩? 작곡? 펄스 시퀀싱?</h3>
+          <dl class="kv terms">
+            <dt>양자 회로 작성 (Composing)</dt><dd>블록(게이트)을 큐비트 선 위에 배치하는 일. IBM은 이 도구를 Composer(작곡기)라고 부릅니다. 디지털 관점의 표현입니다.</dd>
+            <dt>펄스 시퀀싱 (Pulse sequencing)</dt><dd>하드웨어에서 실제로 일어나는 일. 각 게이트가 정해진 시각·진폭·위상·주파수의 마이크로파 펄스로 바뀌어 재생됩니다. 이 작곡기가 말하는 "코딩"의 정확한 아날로그 표현입니다.</dd>
+            <dt>패칭 (Patching)</dt><dd>옛 아날로그 컴퓨터를 프로그래밍하던 방식. 패치 패널에 코드를 꽂아 연산 블록을 배선했습니다. 블록을 선 위에 꽂는 이 화면의 조작감이 바로 이것에 가깝습니다.</dd>
+            <dt>해밀토니안 프로그래밍</dt><dd>양자 어닐링이나 아날로그 양자 시뮬레이션에서 게이트 대신 에너지 함수(해밀토니안)와 그 시간표를 정하는 방식입니다.</dd>
+          </dl>
+          <p class="note" style="margin:10px 0 0">실제 QPU에서 돌리려면: OpenQASM 버튼 → 복사 → <a href="https://quantum.cloud.ibm.com/" target="_blank" rel="noopener">IBM Quantum</a>의 Composer에서 OpenQASM 편집기에 붙여 넣고 실행합니다. 결과 막대그래프를 이 화면의 측정 결과와 비교해 보세요.</p>
+        </div>
+      </div>
+    </div>
+    <div class="view" id="inst-bench" hidden>
     <div class="inst-grid">
       <div class="card scope-card">
         <h3>오실로스코프 <span class="tag bg-sky">PX-OSC 2ch · 아날로그 형광</span></h3>
@@ -309,6 +450,7 @@
         <div class="presets" id="scope-presets" style="margin-bottom:6px"></div>
         <p class="note" id="scope-hint" style="margin:0 0 8px;min-height:1.4em"></p>
         <div class="bezel">
+          <div class="instr-head"><span class="brand">PASTELLA</span><span class="model">PX-OSC 2020</span><span class="spec">20 MHz · 2 CH · 100 MS/s · CRT 형광</span><i class="pwr-led"></i></div>
           <div class="scope-screen">
             <canvas id="scope"></canvas>
             <div class="scope-read" id="scope-read"></div>
@@ -319,13 +461,24 @@
             <div class="grp"><h4>HORIZONTAL</h4><div class="knobs"><div id="k-t"></div></div><div class="bz-row"><button class="bz-btn" id="run">RUN</button><button class="bz-btn" id="single">SINGLE</button><button class="bz-btn" id="xy">XY</button></div></div>
             <div class="grp"><h4><i style="background:var(--ph3)"></i>TRIGGER</h4><div class="knobs"><div id="k-tl"></div></div><div class="bz-row"><button class="bz-btn on" id="trg1">CH1</button><button class="bz-btn" id="trg2">CH2</button><button class="bz-btn" id="slope">↑ 상승</button></div></div>
           </div>
+          <div class="jacks">
+            <figure class="bnc"><svg viewBox="0 0 40 40"><use href="#bnc-sym"/></svg><figcaption>CH1 (X)<br>1MΩ 20pF</figcaption><i class="lead" style="background:var(--ph1)"></i></figure>
+            <figure class="bnc"><svg viewBox="0 0 40 40"><use href="#bnc-sym"/></svg><figcaption>CH2 (Y)<br>1MΩ 20pF</figcaption><i class="lead" style="background:var(--ph2)"></i></figure>
+            <figure class="bnc"><svg viewBox="0 0 40 40"><use href="#bnc-sym"/></svg><figcaption>EXT TRIG</figcaption></figure>
+            <figure class="bnc cal"><svg viewBox="0 0 40 40"><path d="M8 28 V12 H20 V28 H32 V12" fill="none" stroke="#3a3550" stroke-width="2.5"/></svg><figcaption>PROBE ADJ<br>1 kHz 0.5 V</figcaption></figure>
+            <span class="probe-note">프로브 ×10 · 측정점은 Circuit 탭의 TP 깃발과 같습니다</span>
+          </div>
         </div>
       </div>
       <div class="card">
-        <h3>아날로그 멀티미터 <span class="tag bg-butter">DCV 20 V · ACV 2 V</span></h3>
+        <h3>아날로그 멀티미터 <span class="tag bg-butter">DCV 2/20/200 · ACV 2/20</span></h3>
         <p class="desc">측정점과 모드를 고르세요. 바늘은 실제 계기처럼 관성을 가집니다.</p>
-        <canvas id="meter"></canvas>
-        <div class="row" style="margin-top:10px"><div class="seg" id="meter-mode"><button data-mm="dc" aria-pressed="true">DC V</button><button data-mm="ac" aria-pressed="false">AC V</button></div></div>
+        <div class="instr-case">
+          <div class="instr-head"><span class="brand">PASTELLA</span><span class="model">PM-20</span><span class="spec">아날로그 멀티테스터 · 20 kΩ/V</span></div>
+          <canvas id="meter"></canvas>
+          <svg id="meter-sel" class="meter-sel" viewBox="0 0 300 168" role="group" aria-label="측정 범위 선택 스위치"></svg>
+        </div>
+        <p class="note" style="margin:8px 0 0">로터리 스위치의 범위 글자를 눌러 고르세요. 범위보다 큰 전압은 OL로 표시됩니다.</p>
         <div class="row" id="meter-probes" style="margin-top:8px"></div>
       </div>
       <div class="card">
@@ -336,13 +489,15 @@
     <div class="card">
       <h3>스펙트럼 분석기 <span class="tag bg-rose">FFT · CH1</span></h3>
       <p class="desc" id="fft-info">CH1 기록을 FFT로 변환합니다.</p>
-      <canvas id="fft"></canvas>
+      <div class="instr-case dark"><div class="instr-head"><span class="brand">PASTELLA</span><span class="model">SA-1</span><span class="spec">FFT 1024 · Hann 창</span></div><canvas id="fft"></canvas></div>
     </div>
     <div class="card">
       <h3>로직 분석기 <span class="tag bg-lav">8 ch · 상태 디코딩</span></h3>
       <p class="desc">CPU 버스 사이클(M1 페치, 메모리 읽기/쓰기, I/O), 키보드 스캔, 마우스 직교 신호를 디지털 파형으로 봅니다.</p>
       <div class="row" id="la-modes" style="margin-bottom:10px"></div>
-      <canvas id="la"></canvas>
+      <div class="instr-case dark"><div class="instr-head"><span class="brand">PASTELLA</span><span class="model">LA-8</span><span class="spec">8 ch · 100 MHz 샘플 · 프로브 포드</span></div>
+      <div class="pod"><span class="clip" style="--c:#9ff3cc"><i></i>D0</span><span class="clip" style="--c:#ffb3d6"><i></i>D1</span><span class="clip" style="--c:#ffe39a"><i></i>D2</span><span class="clip" style="--c:#b6c8ff"><i></i>D3</span><span class="clip" style="--c:#9ff3cc"><i></i>D4</span><span class="clip" style="--c:#ffb3d6"><i></i>D5</span><span class="clip" style="--c:#ffe39a"><i></i>D6</span><span class="clip" style="--c:#b6c8ff"><i></i>D7</span><span class="clip gnd" style="--c:#3a3550"><i></i>GND</span></div><canvas id="la"></canvas></div>
+    </div>
     </div>
   </section>
   </main>
@@ -357,18 +512,30 @@
 <script src="src/js/data/parts.js"></script>
 <script src="src/js/data/assembly.js"></script>
 <script src="src/js/data/instrument.js"></script>
+<script src="src/js/data/quantum.js"></script>
+<script src="src/js/data/sourcing.js"></script>
 <script src="src/js/core/state.js"></script>
 <script src="src/js/core/signals.js"></script>
 <script src="src/js/core/knob.js"></script>
 <script src="src/js/core/audio.js"></script>
 <script src="src/js/core/trace.js"></script>
 <script src="src/js/core/screen.js"></script>
+<script src="src/js/core/schematic.js"></script>
+<script src="src/js/quantum/hardware.js"></script>
+<script src="src/js/quantum/sim.js"></script>
+<script src="src/js/quantum/pulses.js"></script>
 <script src="src/js/topology/topology.js"></script>
+<script src="src/js/topology/qtopology.js"></script>
 <script src="src/js/circuit/psu.js"></script>
 <script src="src/js/circuit/crt.js"></script>
 <script src="src/js/circuit/keyboard.js"></script>
 <script src="src/js/circuit/mouse.js"></script>
 <script src="src/js/circuit/psg.js"></script>
+<script src="src/js/circuit/qubit.js"></script>
+<script src="src/js/circuit/qcontrol.js"></script>
+<script src="src/js/circuit/cryo.js"></script>
+<script src="src/js/circuit/readout.js"></script>
+<script src="src/js/circuit/sourcing.js"></script>
 <script src="src/js/chassis/geometry.js"></script>
 <script src="src/js/chassis/model.js"></script>
 <script src="src/js/chassis/viewer.js"></script>
@@ -378,4 +545,6 @@
 <script src="src/js/instrument/spectrum.js"></script>
 <script src="src/js/instrument/meter.js"></script>
 <script src="src/js/instrument/logic.js"></script>
+<script src="src/js/instrument/qresults.js"></script>
+<script src="src/js/instrument/composer.js"></script>
 <script src="src/js/main.js"></script>

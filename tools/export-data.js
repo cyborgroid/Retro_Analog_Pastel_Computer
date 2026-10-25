@@ -6,7 +6,7 @@
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const root = path.join(__dirname, '..');
 const ctx = { window: {} }; ctx.window.PX = { DATA: {} }; vm.createContext(ctx);
-['palettes', 'keyboard', 'topology', 'parts', 'assembly', 'instrument'].forEach(f =>
+['palettes', 'keyboard', 'topology', 'parts', 'assembly', 'instrument', 'quantum', 'sourcing'].forEach(f =>
   vm.runInContext(fs.readFileSync(path.join(root, 'src/js/data', f + '.js'), 'utf8'), ctx, { filename: f + '.js' }));
 const D = ctx.window.PX.DATA;
 const out = (rel, text) => { const p = path.join(root, 'environments', rel); fs.writeFileSync(p, text.endsWith('\n') ? text : text + '\n'); console.log('wrote environments/' + rel); };
@@ -44,3 +44,14 @@ out('assembly/qc-checklist.md', '# 출하 검수 체크리스트 (자동 생성)
 
 /* instrument */
 out('instrument/scope-presets.json', JSON.stringify({ timebase_s: D.TB, volts_per_div: D.VD, presets: D.PRESETS, logicAnalyzerModes: D.LA_MODES, busCycle: D.CYC.map(([type, tstates, label]) => ({ type, tstates, label })) }, null, 2));
+
+/* quantum */
+out('topology/quantum-stack.json', JSON.stringify({
+  nodes: Object.entries(D.QNODES).map(([id, n]) => ({ id, label: n.t, title: n.title, summary: n.sub, spec: Object.fromEntries(n.kv), faultSymptom: n.fault })),
+  cryostatStages: D.QSTAGES.map(([name, baseK]) => ({ name, baseK })),
+  couplingMap: D.QCOUPLING, qubitOffsets: D.QOFFS
+}, null, 2));
+out('instrument/presets.qasm', Object.entries(D.QPRESETS).map(([k, p]) => `// ===== ${k}: ${p.n}\n// ${p.note}\n${D.toQASM(p.ops, p.q)}\n`).join('\n'));
+out('instrument/gates.json', JSON.stringify(D.GATES, null, 2));
+/* sourcing */
+out('circuit/bom-sourcing.csv', csv([['group', 'block', 'part', 'part_number', 'status', 'status_label', 'easy_alternative_or_note', 'where']].concat(D.SOURCING.map(r => [r[0], r[1], r[2], r[3], r[4], D.SRC_STATUS[r[4]][0], r[5], r[6]]))));

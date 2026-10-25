@@ -50,19 +50,19 @@
       const bi = res.blochIdeal[q], bn = res.blochNoisy[q];
       arrow(bi, U.css('--accent'), true); arrow(bn, '#d94a74', false);
       const r = Math.hypot(...bn), th = Math.acos(U.clamp(bi[2] / (Math.hypot(...bi) || 1), -1, 1)) * 180 / Math.PI, ph = Math.atan2(bi[1], bi[0]) * 180 / Math.PI;
-      $('#blc-' + q).textContent = `Q${q} · θ ${th.toFixed(0)}° φ ${ph.toFixed(0)}° · 순도 |r| ${r.toFixed(2)}`;
+      $('#blc-' + q).textContent = Math.hypot(...bi) < 0.05 ? `Q${q} · 얽힘: 혼자서는 방향 없음 (|r| ${r.toFixed(2)})` : `Q${q} · θ ${th.toFixed(0)}° φ ${ph.toFixed(0)}° · 순도 |r| ${r.toFixed(2)}`;
     }
   }
 
   function sv(res) {
     const host = $('#qc-sv'); if (!res) { host.innerHTML = ''; return; }
     const st = res.sv, n = st.n, rows = [];
-    for (let i = 0; i < st.N; i++) { const p = st.re[i] ** 2 + st.im[i] ** 2; if (p > 1e-4) rows.push([i, p, Math.atan2(st.im[i], st.re[i])]); }
+    let g0 = null; for (let i = 0; i < st.N; i++) { const p = st.re[i] ** 2 + st.im[i] ** 2; if (p > 1e-4) { const a = Math.atan2(st.im[i], st.re[i]); if (g0 == null) g0 = a; rows.push([i, p, Math.atan2(Math.sin(a - g0), Math.cos(a - g0))]); } }
     host.innerHTML = `<table class="svt"><thead><tr><th>기저 |${[...Array(n)].map((_, q) => 'q' + (n - 1 - q)).join('')}⟩</th><th>진폭</th><th>확률</th><th>위상</th></tr></thead><tbody>` + rows.slice(0, 32).map(([i, p, a]) => {
       const deg = a * 180 / Math.PI, hue = U.mod(deg, 360);
       return `<tr><td class="num">|${i.toString(2).padStart(n, '0')}⟩</td><td class="num">${Math.sqrt(p).toFixed(3)}∠${deg.toFixed(0)}°</td><td><span class="pbar"><i style="width:${(p * 100).toFixed(1)}%"></i></span> <span class="num">${(p * 100).toFixed(1)}%</span></td>
         <td><svg width="22" height="22" viewBox="-11 -11 22 22"><circle r="9" fill="hsl(${hue} 70% 82%)" stroke="var(--on-pastel)"/><line x1="0" y1="0" x2="${(8 * Math.cos(a)).toFixed(1)}" y2="${(-8 * Math.sin(a)).toFixed(1)}" stroke="var(--on-pastel)" stroke-width="2"/></svg></td></tr>`;
-    }).join('') + '</tbody></table>' + (res.midCirc ? '<p class="note">중간 측정·리셋이 있는 회로라 측정을 무시한 상태벡터를 보여 줍니다.</p>' : '');
+    }).join('') + '</tbody></table><p class="note">전역 위상은 첫 성분이 0°가 되도록 맞췄습니다(측정에 영향 없음).</p>' + (res.midCirc ? '<p class="note">중간 측정·리셋이 있는 회로라 측정을 무시한 상태벡터를 보여 줍니다.</p>' : '');
   }
 
   function budget(res) {
