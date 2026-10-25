@@ -1,0 +1,42 @@
+/* Parts sourcing: real part numbers, availability, easy alternatives — mirrored in environments/circuit/bom-sourcing.csv
+   status: prod = 생산 중 · stock = 단종이나 재고 풍부 · used = 중고만 · buy = 상용 구매 가능(고가) · svc = 온라인 서비스 · lab = 연구소급 */
+(function (PX) {
+  PX.DATA.SRC_STATUS = { prod: ['생산 중', 'ok'], stock: ['단종 · 재고 풍부', 'warn'], used: ['중고만', 'warn'], buy: ['상용 · 고가', 'warn'], svc: ['온라인 서비스', 'ok'], lab: ['연구소급 · 구하기 어려움', 'bad'] };
+  PX.DATA.SOURCING = [
+    /* [group, block, part, part number, status, easy alternative / note, where] */
+    ['main', '전원', '전원 트랜스 9V 30VA (EI형, 1차 220V)', '국산 EI 30VA · Myrra 44121', 'prod', '—', '디바이스마트 · 엘레파츠 · Mouser'],
+    ['main', '전원', '브리지 다이오드 2A', 'KBP206', 'prod', 'W04M, 1N5400 ×4', 'LCSC · 디바이스마트'],
+    ['main', '전원', '평활 콘덴서 4700µF 25V 105°C', 'Nichicon UVR1E472 · 삼화 SD', 'prod', '—', 'Mouser · 디바이스마트'],
+    ['main', '전원', '5V 레귤레이터 1.5A', 'L7805CV (ST)', 'prod', '열이 걱정되면 스위칭 모듈 LM2596 · R-78E5.0', 'LCSC · 디바이스마트'],
+    ['main', '전원', 'TO-220 방열판', 'Aavid 530002B · 범용 압출 4 °C/W', 'prod', '—', '디바이스마트 · 엘레파츠'],
+    ['main', 'CPU', 'Z80 CPU 10 MHz (DIP-40)', 'Z84C0010PEG', 'stock', '2024년 단종 발표, 재고·호환품 흔함 (RC2014 키트 등). 생산 중 대안: W65C02S', 'Mouser 재고 · eBay · AliExpress'],
+    ['main', '메모리', '32KB EEPROM (BIOS/OS)', 'AT28C256-15PU (Microchip)', 'prod', 'SST39SF010A (128KB 플래시)', 'Mouser · DigiKey'],
+    ['main', '메모리', '32KB SRAM ×2 (64KB)', 'AS6C62256-55PCN (Alliance)', 'prod', '62256 호환품', 'Mouser · DigiKey · LCSC'],
+    ['main', '클럭', '14.31818 MHz 오실레이터 (DIP-8)', 'ECS-100AX-143 · 범용 캔 오실레이터', 'prod', '÷4는 74HC74 두 단', 'Mouser · LCSC'],
+    ['main', '비디오', '비디오 생성 MCU (TMS9918A 호환 펌웨어)', 'Raspberry Pi Pico (RP2040)', 'prod', '원본 TMS9918A는 단종·중고. Pico PIO + 저항 DAC로 컴포지트 출력', '디바이스마트 · 엘레파츠 · 공식 리셀러'],
+    ['main', '사운드', 'PSG 에뮬레이션 MCU', 'Raspberry Pi Pico (RP2040)', 'prod', '원본 AY-3-8910/YM2149는 단종·중고', '디바이스마트 · 엘레파츠'],
+    ['main', '사운드', '오디오 앰프', 'LM386N-1 (TI)', 'prod', 'PAM8403 모듈', 'LCSC · 디바이스마트'],
+    ['main', '인터페이스', '5V↔3.3V 레벨 시프터 (Pico 버스 연결)', '74LVC245A', 'prod', '—', 'LCSC · Mouser'],
+    ['main', '인터페이스', '키 스캔 디코더 / 열 버퍼', '74HC138 · 74HC541', 'prod', '82C55A (생산 중, 더 비쌈)', 'LCSC · 디바이스마트'],
+    ['main', '인터페이스', '마우스 직교 디코더', 'ATmega328P-PU (Arduino Nano)', 'prod', '—', '디바이스마트 · 엘레파츠'],
+    ['main', '저장장치', 'USB/SD 파일 컨트롤러 (플로피 대체)', 'CH376S 모듈', 'prod', '전면은 Gotek 형태 3.5" 베이 패널. 실제 3.5" FDD는 중고만', 'AliExpress · 디바이스마트'],
+    ['display', '모니터', '19" 16:10 화면', '1440×900 LCD 패널 + AV(컴포지트) 입력 컨트롤러 보드', 'prod', 'CRT 신품은 생산되지 않음. 레트로 외형 셸 안에 LCD를 넣는 방식 권장', 'AliExpress · 중고 모니터 분해'],
+    ['display', '모니터', '빈티지 CRT (CRT 회로 그대로 쓰려면)', '중고 15–19" CRT 모니터/TV', 'used', '튜브·요크는 중고 재사용만 가능', '중고 장터'],
+    ['display', 'CRT 편향', '수평 출력 트랜지스터 / 플라이백', '2SC5144 · 수리용 FBT', 'stock', 'CRT 수리 부품으로 유통', 'AliExpress · 수리 부품상'],
+    ['display', 'CRT 편향', '수평 발진/PLL IC', 'TDA2595', 'used', 'CRT 경로에서만 필요', 'eBay · AliExpress'],
+    ['input', '키보드', '기계식 스위치 ×49', 'Gateron / Cherry MX 호환', 'prod', '—', '국내 키보드 샵 · AliExpress'],
+    ['input', '키보드', '스위치용 다이오드 ×49', '1N4148', 'prod', '—', 'LCSC · 디바이스마트'],
+    ['input', '키보드', 'PBT 키캡 세트 (파스텔)', '체리 프로파일 PBT', 'prod', '—', '키보드 샵'],
+    ['input', '마우스', '슬롯형 포토인터럽터 ×4', 'Everlight ITR9608 · Vishay TCST2103', 'prod', '—', 'LCSC · Mouser'],
+    ['input', '마우스', '슈미트 트리거 인버터', '74HC14', 'prod', '—', 'LCSC · 디바이스마트'],
+    ['input', '마우스', '마우스 볼 Ø22', '볼 마우스 교체용 고무 볼', 'stock', '중고 PS/2 볼 마우스 분해', 'AliExpress · 중고'],
+    ['input', '케이스', '외장 셸 (본체·모니터·키보드)', '3D 프린팅 PETG/ABS · 레이저 아크릴', 'prod', '사출 금형은 소량 제작에 비현실적', '3D 프린팅 서비스'],
+    ['quantum', 'QPU', '초전도 트랜스몬 칩', '나노팹 공정 (Al/AlOx/Al 접합)', 'lab', '쉬운 경로: 클라우드 QPU (IBM Quantum Open Plan, 무료 월 사용 시간)', 'quantum.cloud.ibm.com'],
+    ['quantum', '냉각', '희석 냉동기 10 mK', 'Bluefors · Oxford Instruments', 'lab', '쉬운 경로: 클라우드 · 상온 동작 NMR 교육용 양자컴퓨터 (SpinQ Gemini Mini, 2큐비트)', '제조사 견적 · SpinQ'],
+    ['quantum', '제어', 'AWG · LO · IQ 믹서 · ADC', 'QICK (Fermilab 오픈소스) + RFSoC 4x2 보드', 'buy', '상용 계측기(Zurich, Keysight)보다 훨씬 저렴한 교육·연구용 큐비트 제어기', 'GitHub openquantumhardware/qick · Real Digital'],
+    ['quantum', '판독', 'HEMT 극저온 증폭기', 'Low Noise Factory LNF-LNC4_8C', 'lab', '클라우드 사용 시 불필요', '제조사'],
+    ['quantum', '판독', 'TWPA', '연구용 시제품', 'lab', '클라우드 사용 시 불필요', '연구기관'],
+    ['quantum', '인터페이스', 'Q-Bus 브리지 (본체 ↔ PC ↔ 클라우드)', 'Raspberry Pi Pico W', 'prod', 'PX-80 버스에서 OpenQASM을 받아 USB/Wi-Fi로 PC에 전달 → PC가 클라우드 QPU에 제출', '디바이스마트 · 엘레파츠'],
+    ['quantum', '실습', '1큐비트 광학 실습 키트', '레이저 다이오드 + 편광판 + λ/2·λ/4 파장판', 'prod', '고전 빛으로 큐비트 회전(H, X, 위상)의 원리를 눈으로 확인 (양자 컴퓨팅 자체는 아님)', 'Thorlabs · AliExpress 광학 부품']
+  ];
+})(window.PX);
