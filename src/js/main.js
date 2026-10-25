@@ -12,6 +12,7 @@
     try { history.replaceState(null, '', '#' + tab); } catch (e) { }
     U.store.set('tab', tab);
     if (PX.onShow && PX.onShow[tab]) PX.onShow[tab]();
+    if (tab === 'instrument' && PX.instMode === 'quantum' && PX.qresults) requestAnimationFrame(() => { PX.qresults.render(PX.composer && PX.composer.result); PX.qresults.schedule(); });
   };
   $$('.tab').forEach(b => {
     b.addEventListener('click', () => PX.show(b.dataset.tab));
@@ -21,6 +22,25 @@
       PX.show(n); $('#tab-' + n).focus();
     });
   });
+
+  /* sub-modes: Circuit (classic / quantum), Instrument (quantum composer / bench) */
+  PX.circuitMode = U.store.get('circ-mode', 'classic');
+  PX.instMode = U.store.get('inst-mode', 'quantum');
+  PX.setCircuitMode = m => {
+    PX.circuitMode = m; U.store.set('circ-mode', m);
+    $('#circ-classic').hidden = m !== 'classic'; $('#circ-quantum').hidden = m !== 'quantum';
+    $$('#circ-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === m));
+    PX.setSourcingGroup && PX.setSourcingGroup(m === 'quantum' ? 'quantum' : 'all');
+  };
+  PX.setInstMode = m => {
+    PX.instMode = m; U.store.set('inst-mode', m);
+    $('#inst-quantum').hidden = m !== 'quantum'; $('#inst-bench').hidden = m !== 'bench';
+    $$('#inst-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === m));
+    if (m === 'quantum' && PX.qresults) requestAnimationFrame(() => { PX.qresults.render(PX.composer && PX.composer.result); PX.qresults.schedule(); });
+  };
+  $('#circ-mode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) PX.setCircuitMode(b.dataset.m); });
+  $('#inst-mode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) PX.setInstMode(b.dataset.m); });
+  PX.setCircuitMode(PX.circuitMode); PX.setInstMode(PX.instMode);
 
   function status() {
     const l5 = $('#led-5v'), lh = $('#led-h'), lt = $('#led-t');

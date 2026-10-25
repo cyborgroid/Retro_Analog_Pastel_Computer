@@ -20,23 +20,26 @@
   const sch = PX.sch;
   function schematic() {
     const G = 188; let h = '';
-    h += sch.box(40, 34, 120, 136, 'AY-3-8910', 'U3 PSG');
-    [['37–30', 'DA0–7', 64], ['27', 'BDIR', 92], ['29', 'BC1', 116], ['22', 'CLK', 146]].forEach(([n, l, y]) => h += sch.pin(40, y, n, l, 'l'));
-    [['4', 'A', 66], ['3', 'B', 100], ['38', 'C', 134]].forEach(([n, l, y]) => h += sch.pin(160, y, n, l, 'r'));
-    h += sch.text(26, 150, '1.79MHz', 'tiny', 'end') + sch.text(26, 68, 'CPU', 'tiny', 'end');
-    [66, 100, 134].forEach((y, i) => h += sch.two('res', 170, y, 226, y, { ref: 'R' + (5 + i), v: '1kΩ' }));
-    h += sch.wire([[226, 66], [236, 66], [236, 134], [226, 134]]) + sch.wire([[226, 100], [236, 100]]) + sch.dot(236, 100) + sch.wire([[236, 108], [250, 108]]);
-    h += sch.two('pot', 250, 108, 310, 108, { ref: 'VR2', v: 'VOL 10kA', vid: 'psg-s-vol' });
-    h += sch.two('ecap', 310, 108, 370, 108, { ref: 'C5', v: '10µF' }) + sch.wire([[370, 108], [414, 108]]);
+    h += sch.box(14, 52, 64, 60, '74LVC245', 'U6 5V→3.3V');
+    h += sch.text(46, 40, 'Z80 D0–7', 'tiny', 'middle') + sch.wire([[46, 44], [46, 52]]);
+    h += sch.box(110, 34, 112, 136, 'Pico', 'U3 RP2040 PSG');
+    [['1–10', 'GP0–7', 70], ['11', 'GP8 BDIR', 100], ['12', 'GP9 BC1', 124]].forEach(([n, l, y]) => h += sch.pin(110, y, n, l, 'l'));
+    h += sch.wire([[78, 70], [100, 70]]) + sch.text(84, 96, 'BDIR', 'tiny') + sch.wire([[78, 100], [100, 100]]) + sch.wire([[86, 124], [100, 124]]) + sch.text(30, 128, 'BC1', 'tiny');
+    [['20', 'GP15 PWM', 80], ['38', 'GND', 140]].forEach(([n, l, y]) => h += sch.pin(222, y, n, l, 'r'));
+    h += sch.wire([[232, 140], [244, 140], [244, 150]]) + sch.gnd(244, 150);
+    h += sch.two('res', 232, 80, 282, 80, { ref: 'R5', v: '1kΩ' }) + sch.dot(292, 80) + sch.wire([[282, 80], [304, 80], [304, 108], [314, 108]]);
+    h += sch.two('cap', 292, 80, 292, 140, { ref: 'C9', v: '10nF', side: 'l' }) + sch.gnd(292, 140) + sch.text(260, 168, 'RC 저역통과 fc ≈ 16 kHz', 'tiny');
+    h += sch.two('pot', 314, 108, 364, 108, { ref: 'VR2', v: 'VOL 10kA', vid: 'psg-s-vol' });
+    h += sch.two('ecap', 364, 108, 414, 108, { ref: 'C5', v: '10µF' });
     h += sch.opamp(430, 100, { ref: 'U4 LM386', v: 'G = 200' }) + sch.wire([[414, 92], [400, 92]]) + sch.gnd(400, 92);
-    h += sch.text(430, 74, 'pin 6 ← +12V', 'tiny', 'middle');
+    h += sch.text(430, 74, 'pin 6 ← +5V', 'tiny', 'middle');
     h += sch.wire([[446, 100], [480, 100]]) + sch.dot(460, 100);
     h += sch.two('res', 460, 100, 460, 146, { ref: 'R8', v: '10Ω', side: 'l' }) + sch.two('cap', 460, 146, 460, G, { ref: 'C8', v: '0.047µF', side: 'l' });
     h += sch.two('ecap', 480, 100, 540, 100, { ref: 'C7', v: '220µF' }) + sch.wire([[540, 100], [560, 100]]);
     h += sch.speaker(570, 106, { ref: 'LS1', v: '8Ω 0.5W' }) + sch.wire([[560, 112], [560, G]]);
     h += sch.wire([[460, G], [560, G]]) + sch.gnd(510, G);
     h += sch.flow([[446, 100], [480, 100], [540, 100], [560, 100]], 'fl-psg');
-    h += sch.flag(236, 100, 30, -62, 'MIX', 'psg-s-mix', 96) + sch.flag(560, 100, 20, -60, 'OUT', 'psg-s-out', 92);
+    h += sch.flag(292, 80, 20, -54, 'PWM', 'psg-s-mix', 100) + sch.flag(560, 100, 20, -60, 'OUT', 'psg-s-out', 92);
     return `<svg class="schem" viewBox="0 0 660 210" role="img" aria-label="PSG 오디오 회로도">${h}</svg>`;
   }
   $('#psg-schem').innerHTML = schematic();

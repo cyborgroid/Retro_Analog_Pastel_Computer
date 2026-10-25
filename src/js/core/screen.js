@@ -108,7 +108,7 @@
       const dw = 260, dh = 92, dx = W / 2 - dw / 2, dy = H / 2 - 30;
       c.fillStyle = PAPER; c.fillRect(dx, dy, dw, dh); c.strokeStyle = INK; c.lineWidth = 3; c.strokeRect(dx, dy, dw, dh); c.lineWidth = 1; c.strokeRect(dx + 5, dy + 5, dw - 10, dh - 10);
       c.fillStyle = '#d94a74'; c.fillRect(dx + 16, dy + 22, 26, 26); c.fillStyle = PAPER; c.font = '26px VT323, monospace'; c.fillText('!', dx + 25, dy + 44);
-      c.font = '18px VT323, monospace'; c.fillStyle = INK; c.fillText('DISK ERROR: DRIVE A NOT READY', dx + 52, dy + 34); c.fillText('[ RETRY ]   [ CANCEL ]', dx + 62, dy + 70);
+      c.font = '18px VT323, monospace'; c.fillStyle = INK; c.fillText('USB ERROR: NO MEDIA IN A:', dx + 52, dy + 34); c.fillText('[ RETRY ]   [ CANCEL ]', dx + 62, dy + 70);
     }
     /* status bar */
     c.fillStyle = PAPER; c.fillRect(0, H - 18, W, 18); c.fillStyle = INK; c.fillRect(0, H - 20, W, 2);
@@ -133,12 +133,12 @@
     const L = [
       ['PASTELLA BIOS v1.4   (C) 1984 PASTELLA LABS', '#ffb3d6'], ['', ''],
       ['CPU  PX-80 @ 3.58 MHz ............ OK', '#9ff3cc'],
-      ['ROM  32768 BYTES CHECKSUM ........ OK', '#9ff3cc'],
+      ['EEPROM AT28C256 CHECKSUM ........ OK', '#9ff3cc'],
       ['RAM  TEST ' + String(shownRam).padStart(5, ' ') + ' BYTES ' + (shownRam >= 65536 ? '...... OK' : ramFault && ramCount >= 49152 ? '' : ''), '#9ff3cc'],
-      ['VDP  256x192 PASTEL-16 ........... OK', '#9ff3cc'],
+      ['VDP  PICO TMS9918 COMPAT ......... OK', '#9ff3cc'],
       ['KBC  8x8 MATRIX .................. ' + ok(S.faults.has('pio') || S.faults.has('kbd'), 'FAIL'), S.faults.has('pio') || S.faults.has('kbd') ? '#ff7d9c' : '#9ff3cc'],
-      ['FDD  3.5" 720K ................... ' + ok(S.faults.has('fdc') || S.faults.has('fdd'), 'NOT READY'), S.faults.has('fdc') || S.faults.has('fdd') ? '#ff7d9c' : '#9ff3cc'],
-      ['PSG  3CH + NOISE ................. ' + ok(S.faults.has('psg'), 'NO ACK'), S.faults.has('psg') ? '#ff7d9c' : '#9ff3cc'],
+      ['USB  CH376S STORAGE .............. ' + ok(S.faults.has('fdc') || S.faults.has('fdd'), 'NO MEDIA'), S.faults.has('fdc') || S.faults.has('fdd') ? '#ff7d9c' : '#9ff3cc'],
+      ['PSG  PICO AY COMPAT .............. ' + ok(S.faults.has('psg'), 'NO ACK'), S.faults.has('psg') ? '#ff7d9c' : '#9ff3cc'],
       ['', ''], ['BOOTING PASTELLA OS ...', '#ffe39a']
     ];
     const step = [0, 0, 0.3, 0.55, 0.9, 2.1, 2.35, 2.6, 2.85, 3.0, 3.1];
