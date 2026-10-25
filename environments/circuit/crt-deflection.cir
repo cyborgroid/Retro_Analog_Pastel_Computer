@@ -1,0 +1,25 @@
+* PASTELLA 84 — CRT deflection timing reference (behavioural)
+* Horizontal: 15.734 kHz sawtooth, 84 % trace / 16 % retrace, retrace aligned to H-SYNC (4.7 us low)
+* Vertical:   59.94 Hz sawtooth, 94 % trace / 6 % retrace
+* H-HOLD pull-in range +-250 Hz (outside it the picture tears, as in the Circuit tab)
+
+.title PASTELLA84 deflection
+
+.param FH=15734 FV=59.94 HSIZE=1.0
+.param TH={1/FH} TV={1/FV}
+
+* H-SYNC from VDP (TTL, active low 4.7 us)
+Vhs  hsync 0 PULSE(5 0 0 10n 10n 4.7u {TH})
+
+* Horizontal yoke current, normalised to +-1 (x HSIZE)
+Vhd  hdef 0 PULSE({-HSIZE} {HSIZE} {-0.14*TH} {0.84*TH} {0.16*TH} 1n {TH})
+
+* Vertical yoke current, normalised to +-0.9
+Vvd  vdef 0 PULSE(-0.9 0.9 0 {0.94*TV} {0.06*TV} 1n {TV})
+
+* Flyback: retrace pulse stepped up to the anode (11 kV nominal), crude ideal transformer
+Bfb  anode 0 V = 11k * (V(hsync) < 2.5 ? 1 : 0.02)
+Rfb  anode 0 100Meg
+
+.tran 0.1u 200u
+.end

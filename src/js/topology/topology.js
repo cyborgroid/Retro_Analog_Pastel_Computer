@@ -31,7 +31,7 @@
     BUS_SIDE.forEach(b => { const p = pathFor('cpu', b); h += `<path class="edge" d="M${p[2]} L${p[3]}"/>`; });
     { const p = pathFor('pio', 'cpu'); h += `<path class="edge" d="M${p[0]} L${p[1]}"/>`; }
     h += `<path class="edge" d="M${portR('cpu')} L${BUSX},${portR('cpu')[1]}" style="stroke-width:5"/>`;
-    [['vdp', 'crt', 'VIDEO · SYNC'], ['fdc', 'fdd', '34P'], ['psg', 'spk', 'AUDIO'], ['xtal', 'cpu', 'CLK'], ['kbd', 'pio', 'DIN-5'], ['mouse', 'pio', 'DE-9']].forEach(([a, b, l]) => {
+    [['vdp', 'crt', 'VIDEO'], ['fdc', 'fdd', '34P'], ['psg', 'spk', 'AUDIO'], ['xtal', 'cpu', 'CLK'], ['kbd', 'pio', 'DIN-5'], ['mouse', 'pio', 'DE-9']].forEach(([a, b, l]) => {
       const p = pathFor(a, b); h += `<path class="edge sig" d="M${p.map(q => q.join(',')).join(' L')}"/>`;
       const m0 = p[0], m1 = p[1]; h += `<text class="lbl" x="${(m0[0] + m1[0]) / 2 + 6}" y="${(m0[1] + m1[1]) / 2 - 6}">${l}</text>`;
     });

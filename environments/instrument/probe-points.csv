@@ -1,0 +1,15 @@
+probe,net,signal_id,instrument,expected,tolerance,notes
+TP1,C1 (+),psu_raw,scope / meter DCV,11.33 V peak; ripple 1.77 Vpp @ 1 A,±5 %,120 Hz sawtooth-like ripple
+TP2,+5V,psu_5v,scope / meter DCV,5.00 V,4.90–5.10 V,drops when C1 min < 7 V; 0 V on thermal trip
+TP3,+12V,-,meter DCV,12.0 V,±0.3 V,7812 rail for CRT and FDD motor
+TP4,-12V,-,meter DCV,-11.9 V,±0.3 V,7912 rail for audio amp
+TP5,H-SYNC,hsync,scope,15.734 kHz; 4.7 us low,±0.1 %,from VDP
+TP6,H-DEF,hdef,scope,sawtooth 84/16 %,locked to TP5,tears when H-FREQ off by > 250 Hz
+TP7,V-DEF,vdef,scope,59.94 Hz sawtooth,±0.05 Hz,rolls with V-HOLD
+TP8,VIDEO,video,scope,0.3 V black / 1.0 V white,-,8 luminance steps (pastel bars)
+TP9,CLK,clk,scope / logic,3.579545 MHz square,±30 ppm,from XTAL ÷4
+TP10,ROW0,row0,scope / logic,active low 250 us every 2 ms,-,8-row scan
+TP11,COL*,col,scope / logic,low while a key on the scanned row is closed,-,shows ghosts without diodes
+TP12,SW,sw,scope (single),bounce ≈ 3.2 ms after press,-,falling-edge trigger
+TP13,XA/XB,xa / xb,scope / logic,quadrature 90°,-,A leads on +X
+TP14,PSG OUT,psg,scope / FFT,sum of enabled square channels,-,odd harmonics in spectrum

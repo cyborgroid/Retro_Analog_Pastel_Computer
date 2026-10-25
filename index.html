@@ -1,0 +1,381 @@
+<title>PASTELLA 84 Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Righteous&family=VT323&display=swap">
+<link rel="stylesheet" href="src/css/tokens.css">
+<link rel="stylesheet" href="src/css/base.css">
+<link rel="stylesheet" href="src/css/topology.css">
+<link rel="stylesheet" href="src/css/circuit.css">
+<link rel="stylesheet" href="src/css/chassis.css">
+<link rel="stylesheet" href="src/css/assembly.css">
+<link rel="stylesheet" href="src/css/instrument.css">
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <span class="logo">PASTELLA 84</span>
+      <span class="sub">레트로 아날로그 파스텔 컴퓨터 · 가상 프로토타이핑 벤치</span>
+    </div>
+    <div class="status" aria-live="polite">
+      <button class="rocker" id="pwr" aria-pressed="true"><span class="sw"></span>POWER</button>
+      <span class="stat"><i class="led ok" id="led-5v"></i><span id="st-5v">+5V 5.00</span></span>
+      <span class="stat"><i class="led ok" id="led-h"></i><span id="st-h">H-LOCK</span></span>
+      <span class="stat"><i class="led ok" id="led-t"></i><span id="st-t">7805 40°C</span></span>
+      <span class="stat"><i class="led" id="led-kb"></i><span id="st-kb">KEY —</span></span>
+      <span class="stat" id="st-ms">X 0 · Y 0</span>
+      <span class="pill bad" id="st-fault" hidden>FAULT</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" role="tablist" aria-label="프로토타이핑 환경">
+    <button class="tab" role="tab" id="tab-topology" data-tab="topology" aria-controls="topology"><span class="chip bg-lav"></span><b>Topology</b><small>블록 · 버스 · 전원망 · 고장 주입</small></button>
+    <button class="tab" role="tab" id="tab-circuit" data-tab="circuit" aria-controls="circuit"><span class="chip bg-mint"></span><b>Circuit</b><small>전원 · CRT · 키 매트릭스 · 엔코더 · PSG</small></button>
+    <button class="tab" role="tab" id="tab-chassis" data-tab="chassis" aria-controls="chassis"><span class="chip bg-peach"></span><b>Chassis</b><small>3D 외형 · 와이드 모니터 · 분해도</small></button>
+    <button class="tab" role="tab" id="tab-assembly" data-tab="assembly" aria-controls="assembly"><span class="chip bg-rose"></span><b>Assembly</b><small>20단계 조립 · 체결 · 검수</small></button>
+    <button class="tab" role="tab" id="tab-instrument" data-tab="instrument" aria-controls="instrument"><span class="chip bg-sky"></span><b>Instrument</b><small>스코프 · 스펙트럼 · 미터 · 로직</small></button>
+  </nav>
+
+  <main>
+  <!-- ================= TOPOLOGY ================= -->
+  <section class="view" id="topology" role="tabpanel" aria-labelledby="tab-topology" hidden>
+    <div class="topo-grid">
+      <div class="card">
+        <h3>시스템 토폴로지 <span class="tag bg-lav">PX-80 · 8-bit bus</span> <span class="pill ok" id="fault-count">고장 없음</span></h3>
+        <p class="desc">블록을 누르면 사양이 보입니다. 고장을 주입하면 CRT 화면, POST, 신호, 소리가 실제처럼 반응합니다. 점선 패킷은 버스 트랜잭션입니다. 키를 누르거나 마우스를 움직이면 PIO 경로에 이벤트가 흐릅니다.</p>
+        <div class="row" style="margin-bottom:10px">
+          <button class="btn on" id="layer-sig" aria-pressed="true">신호 레이어</button>
+          <button class="btn" id="layer-pwr" aria-pressed="false">전원 레이어</button>
+          <button class="btn" id="fault-clear">모든 고장 복구</button>
+        </div>
+        <div class="svg-wrap"><svg id="topo" viewBox="0 0 1000 600" role="img" aria-label="시스템 블록 다이어그램"></svg></div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <h3 id="node-title">PX-80 CPU</h3>
+          <p class="desc" id="node-sub"></p>
+          <dl class="kv" id="node-kv"></dl>
+          <p class="fault-text" id="node-fault-text"></p>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="node-probe">Instrument로 측정 →</button>
+            <button class="btn danger" id="node-fault" aria-pressed="false">고장 주입</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>버스 트랜잭션 로그</h3>
+          <ul class="log" id="log"></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="tri-grid">
+      <div class="card">
+        <h3>메모리 맵 <span class="tag bg-mint">64 KB</span></h3>
+        <div class="memmap" id="memmap"></div>
+        <div class="memaxis"><span>0000H</span><span>8000H</span><span>FFFFH</span></div>
+      </div>
+      <div class="card">
+        <h3>I/O 포트</h3>
+        <dl class="kv" id="ioports"></dl>
+      </div>
+      <div class="card">
+        <h3>클럭 트리</h3>
+        <ul class="tree" id="clocks"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CIRCUIT ================= -->
+  <section class="view" id="circuit" role="tabpanel" aria-labelledby="tab-circuit" hidden>
+    <div class="circ-grid">
+      <div class="card">
+        <h3>선형 전원부 <span class="tag bg-butter">9 Vrms → 7805 → +5 V</span></h3>
+        <p class="desc">부하 전류, 평활 콘덴서 C1, 방열판을 바꿔 보세요. C1 최저 전압이 7 V 아래면 드롭아웃이 일어나고 CRT가 120 Hz로 깜빡입니다. 7805 접합 온도가 125 °C를 넘으면 열 차단으로 +5V가 꺼지고, 95 °C로 식으면 재부팅합니다.</p>
+        <svg class="schem" viewBox="0 0 520 150" aria-label="전원부 회로도">
+          <text x="8" y="20">AC 220V 60Hz</text>
+          <circle class="w" cx="30" cy="75" r="16"/><path class="w" d="M20 75 q5 -10 10 0 t10 0"/>
+          <path class="w" d="M30 59 V40 H70 M30 91 V110 H70"/>
+          <path class="w" d="M70 40 v10 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 v12"/>
+          <path class="w" d="M84 40 v10 a6 6 0 0 0 0 12 a6 6 0 0 0 0 12 a6 6 0 0 0 0 12 a6 6 0 0 0 0 12 v12"/>
+          <path class="w" d="M76 44 V106 M79 44 V106"/>
+          <text x="58" y="132">T1 9V</text>
+          <path class="w" d="M84 40 H130 M84 110 H130"/>
+          <path class="w" d="M150 45 L180 75 L150 105 L120 75 Z"/>
+          <path class="w" d="M130 40 L135 55 M130 110 L135 95"/>
+          <path class="w" d="M143 52 l8 8 M157 52 l-8 8 M143 98 l8 -8 M157 98 l-8 -8"/>
+          <text x="120" y="132">BR1</text>
+          <path class="w hot" d="M180 75 H250 V40 H300"/>
+          <path class="w" d="M120 75 H105 V130 H470"/>
+          <path class="w" d="M240 75 V92 M228 92 H252 M228 99 H252 M240 99 V130"/>
+          <text x="256" y="100" id="sch-c1">C1 4700µF</text>
+          <rect class="w" x="300" y="25" width="70" height="36" rx="4"/><text x="312" y="48">7805</text>
+          <path class="w" d="M335 61 V130"/>
+          <path class="w hot" d="M370 40 H470"/>
+          <path class="w" d="M405 40 V92 M395 92 H415 M395 99 H415 M405 99 V130"/><text x="420" y="100">C2</text>
+          <rect class="w" x="458" y="62" width="24" height="44" rx="3"/><path class="w" d="M470 40 V62 M470 106 V130"/>
+          <text x="486" y="88" id="sch-load">1.0A</text>
+          <text x="440" y="30">+5V</text>
+        </svg>
+        <div class="ctl"><label for="s-load">부하 전류</label><input type="range" id="s-load" min="0.1" max="3" step="0.05" value="1"><output id="o-load">1.00 A</output></div>
+        <div class="ctl"><label for="s-cap">C1 용량</label><input type="range" id="s-cap" min="0" max="5" step="1" value="3"><output id="o-cap">4700 µF</output></div>
+        <div class="ctl"><label for="s-hs-sink">방열판</label><select class="sel" id="s-hs-sink"></select><span></span></div>
+        <div class="readouts">
+          <div class="ro"><small>C1 피크</small><b id="r-vpk">—</b></div>
+          <div class="ro"><small>리플 Vpp</small><b id="r-rip">—</b></div>
+          <div class="ro"><small>C1 최저</small><b id="r-vmin">—</b></div>
+          <div class="ro"><small>7805 손실</small><b id="r-pd">—</b></div>
+        </div>
+        <div class="row between" style="margin-bottom:6px"><span class="note">7805 접합 온도 <b id="r-temp">—</b></span><span class="note" id="r-tss"></span></div>
+        <div class="thermo" aria-label="레귤레이터 온도"><i id="thermo-fill"></i><b title="125 °C 차단"></b></div>
+        <div class="row between" style="margin-block:10px 8px"><span class="pill ok" id="psu-pill">정상 레귤레이션</span><span class="note">민트 = C1 · 핑크 = +5V</span></div>
+        <canvas class="mini" id="mini-psu"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>CRT 편향 회로 <span class="tag bg-sky" id="crt-size">19" 16:10</span></h3>
+        <p class="desc">모니터의 아날로그 다이얼입니다. 수평 발진이 동기 범위(±250 Hz)를 벗어나면 화면이 찢어지고, V-HOLD를 돌리면 화면이 위아래로 흐릅니다. 변경 사항은 3D 모니터에도 그대로 반영됩니다.</p>
+        <div class="crt-box"><canvas class="crt-prev" id="crt-prev" width="640" height="400"></canvas></div>
+        <div class="ctl"><label for="s-hf">H-FREQ</label><input type="range" id="s-hf" min="15000" max="16500" step="2" value="15734"><output id="o-hf">15.734 kHz</output></div>
+        <div class="ctl"><label for="s-hsz">H-SIZE</label><input type="range" id="s-hsz" min="0.7" max="1.15" step="0.01" value="1"><output id="o-hsz">100 %</output></div>
+        <div class="ctl"><label for="s-vh">V-HOLD</label><input type="range" id="s-vh" min="-3" max="3" step="0.05" value="0"><output id="o-vh">+0.00 Hz</output></div>
+        <div class="ctl"><label for="s-br">BRIGHT</label><input type="range" id="s-br" min="0.2" max="1" step="0.01" value="0.85"><output id="o-br">85 %</output></div>
+        <div class="row between" style="margin-bottom:8px"><span class="pill ok" id="crt-pill">수평 동기 고정</span><span class="row"><button class="btn" id="crt-degauss">DEGAUSS</button><button class="btn" id="crt-reset">다이얼 초기화</button></span></div>
+        <canvas class="mini" id="mini-crt"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>키보드 매트릭스 <span class="tag bg-peach">8 × 8 · 49 keys</span></h3>
+        <p class="desc">스위치를 눌러 고정(래치)하거나 실제 키보드로 타이핑하세요. 다이오드를 빼고 직사각형 꼭짓점 세 개를 누르면 네 번째 키가 유령(ghost)으로 감지됩니다. 감지된 키는 CRT의 NOTE.TXT에 입력됩니다.</p>
+        <div class="row" style="margin-bottom:8px">
+          <button class="btn on" id="diodes" aria-pressed="true">다이오드 장착</button>
+          <button class="btn" id="kb-clear">래치 해제</button>
+          <button class="btn" id="kb-demo">유령 키 데모</button>
+          <span class="pill ok" id="kb-pill">유령 키 없음</span>
+        </div>
+        <svg id="matrix" viewBox="0 0 470 430" aria-label="키 매트릭스"></svg>
+        <dl class="kv" style="margin-block:8px"><dt>감지</dt><dd id="kb-det">—</dd><dt>유령</dt><dd id="kb-ghost">—</dd></dl>
+        <p class="note" style="margin:0 0 6px">마지막 키 입력의 접점 바운스 (4 ms)</p>
+        <canvas class="mini" id="mini-kb"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>볼 마우스 엔코더 <span class="tag bg-rose">광학 초퍼 · 직교 A/B</span></h3>
+        <p class="desc">패드 위를 드래그하면 볼이 굴러 X/Y 초퍼 휠을 돌리고, A/B 위상차로 방향을 판정합니다. CRT의 커서도 같이 움직입니다.</p>
+        <div class="pad" id="pad">여기를 드래그하세요<br>(볼 마우스 패드)</div>
+        <div class="enc-row">
+          <svg viewBox="0 0 100 100" aria-label="X 엔코더 휠"><g id="encx"></g><text x="50" y="98" text-anchor="middle" font-size="10" fill="currentColor" font-family="IBM Plex Mono">X WHEEL</text></svg>
+          <svg viewBox="0 0 100 100" aria-label="볼"><circle cx="50" cy="46" r="34" fill="var(--lav)" stroke="var(--on-pastel)" stroke-width="1.4"/><g id="ballspots"></g><text x="50" y="98" text-anchor="middle" font-size="10" fill="currentColor" font-family="IBM Plex Mono">BALL</text></svg>
+          <svg viewBox="0 0 100 100" aria-label="Y 엔코더 휠"><g id="ency"></g><text x="50" y="98" text-anchor="middle" font-size="10" fill="currentColor" font-family="IBM Plex Mono">Y WHEEL</text></svg>
+        </div>
+        <div class="row between" style="margin-top:10px">
+          <span class="qled">XA <i id="q-xa"></i> XB <i id="q-xb"></i></span>
+          <span class="qled">YA <i id="q-ya"></i> YB <i id="q-yb"></i></span>
+          <button class="btn" id="m-auto" aria-pressed="false">자동 이동</button>
+        </div>
+        <dl class="kv" style="margin-top:8px"><dt>카운터</dt><dd id="m-cnt">X 0 · Y 0</dd><dt>방향</dt><dd id="m-dir">정지</dd></dl>
+        <canvas class="mini" id="mini-ms" style="margin-top:10px"></canvas>
+      </div>
+
+      <div class="card span2">
+        <h3>PSG 사운드 <span class="tag bg-lav">3ch 구형파 + 노이즈 · 3.58 MHz</span></h3>
+        <div class="psg-grid">
+          <div>
+            <p class="desc">PSG 칩의 톤 채널 3개와 노이즈 발생기입니다. 스피커를 켜면 실제 소리가 나고, 같은 파형이 Instrument의 PSG 오디오 신호로 나옵니다.</p>
+            <div id="psg-chans"></div>
+            <div class="row" style="margin-top:10px">
+              <button class="btn" id="psg-audio" aria-pressed="false">스피커 켜기</button>
+              <button class="btn" id="psg-melody">부팅 징글 재생</button>
+            </div>
+            <p class="note" id="psg-msg" style="margin-top:8px"></p>
+          </div>
+          <div><canvas class="mini" id="mini-psg" style="height:180px"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHASSIS ================= -->
+  <section class="view" id="chassis" role="tabpanel" aria-labelledby="tab-chassis" hidden>
+    <div class="chassis-grid">
+      <div class="card vp-wrap">
+        <div class="vp-host" id="viewport"></div>
+        <div class="vp-hud">
+          <span class="hud-chip vp-pick">드래그로 회전 · 휠로 확대 · 부품을 클릭</span>
+          <span class="hud-chip">1 칸 = 100 mm</span>
+        </div>
+        <div class="vp-tools">
+          <button class="btn" data-cam="iso">아이소</button>
+          <button class="btn" data-cam="front">정면</button>
+          <button class="btn" data-cam="side">측면</button>
+          <button class="btn" data-cam="top">평면</button>
+          <button class="btn" data-cam="screen">화면 클로즈업</button>
+          <button class="btn" id="spin" aria-pressed="false">턴테이블</button>
+          <button class="btn" id="wire" aria-pressed="false">와이어프레임</button>
+          <button class="btn" id="degauss-3d">DEGAUSS</button>
+        </div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <h3>와이드 모니터 <span class="tag bg-sky">파라메트릭</span></h3>
+          <p class="desc" style="margin-bottom:8px">화면은 키우고 테두리는 얇게. 값을 바꾸면 3D 모델, CRT 화면 비율, BOM이 함께 바뀝니다.</p>
+          <div class="row" id="mon-presets" style="margin-bottom:8px"></div>
+          <div class="ctl"><label for="mon-diag">화면 크기</label><input type="range" id="mon-diag" min="14" max="22" step="1" value="19"><output id="o-diag">19"</output></div>
+          <div class="ctl"><label for="mon-bezel">베젤 두께</label><input type="range" id="mon-bezel" min="6" max="40" step="1" value="12"><output id="o-bezel">12 mm</output></div>
+          <div class="row" style="margin-block:6px 10px"><span class="note">화면 비율</span><div class="seg" id="mon-aspect"></div></div>
+          <dl class="kv" id="mon-kv"></dl>
+          <svg class="mon-sketch" id="mon-sketch" viewBox="0 0 220 150" aria-label="모니터 정면 비율"></svg>
+        </div>
+        <div class="card">
+          <h3>컬러웨이</h3>
+          <div class="swatches" id="presets"></div>
+          <div class="sw-name" id="preset-name">Mint Soda</div>
+          <div class="colors" id="part-colors"></div>
+        </div>
+        <div class="card">
+          <h3>보기</h3>
+          <div class="ctl"><label for="explode">분해도</label><input type="range" id="explode" min="0" max="1" step="0.01" value="0"><output id="o-explode">0 %</output></div>
+          <div class="ctl"><label for="clip-x">단면 위치</label><input type="range" id="clip-x" min="-2.4" max="3.6" step="0.02" value="0"><output id="o-clip">0 mm</output></div>
+          <div class="ctl"><label for="finish">표면 마감</label><input type="range" id="finish" min="0.15" max="0.85" step="0.01" value="0.55"><output id="o-finish">반광</output></div>
+          <div class="row"><button class="btn" id="clip" aria-pressed="false">단면 보기</button><button class="btn" id="night" aria-pressed="false">야간 조명</button></div>
+        </div>
+        <div class="card">
+          <h3 id="pick-title">선택한 부품</h3>
+          <p class="desc" id="pick-desc" style="margin-bottom:8px">3D 뷰에서 부품을 클릭하면 사양이 표시됩니다.</p>
+          <dl class="kv" id="pick-kv"></dl>
+        </div>
+      </aside>
+    </div>
+    <div class="card">
+      <h3>BOM · 외형 치수 <span class="tag bg-mint">ABS 사출 · 무광 텍스처 MT-11020</span></h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>모듈</th><th>W × H × D (mm)</th><th>질량</th><th>외장 재질</th><th>아날로그 조작부</th><th>핵심 부품</th></tr></thead>
+        <tbody id="bom"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ================= ASSEMBLY ================= -->
+  <section class="view" id="assembly" role="tabpanel" aria-labelledby="tab-assembly" hidden>
+    <div class="asm-grid">
+      <div class="card asm-card">
+        <div class="asm-vp">
+          <div class="vp-host" id="asm-viewport"></div>
+          <div class="vp-hud">
+            <span class="hud-chip" id="asm-hud">STEP 01</span>
+            <span class="hud-chip vp-pick">부품을 클릭하면 Chassis 탭에 사양 표시</span>
+          </div>
+        </div>
+        <div class="asm-bar">
+          <div class="row">
+            <button class="btn" id="asm-first" aria-label="처음으로">⏮</button>
+            <button class="btn" id="asm-prev">◀ 이전</button>
+            <button class="btn on" id="asm-play" aria-pressed="false">▶ 재생</button>
+            <button class="btn" id="asm-next">다음 ▶</button>
+            <button class="btn" id="asm-last" aria-label="완성으로">⏭</button>
+            <select class="sel" id="asm-speed" aria-label="재생 속도"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+            <span class="note" id="asm-pct" style="margin-left:auto;font-family:var(--f-mono)">5 %</span>
+          </div>
+          <input type="range" id="asm-scrub" min="0" max="20" step="0.01" value="1" aria-label="조립 타임라인">
+        </div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <div class="asm-step-head"><span class="asm-step-no" id="asm-no">01</span><div><h4 id="asm-title"></h4><div class="row" style="margin-top:4px"><span class="tag" id="asm-mod"></span><span class="note" id="asm-min"></span></div></div></div>
+          <div class="asm-sec"><h5>공구</h5><ul id="asm-tools"></ul></div>
+          <div class="asm-sec"><h5>체결 부품</h5><ul id="asm-fast"></ul></div>
+          <div class="asm-sec"><h5>토크</h5><p class="note" id="asm-torque" style="margin:0;font-family:var(--f-mono);color:var(--ink)"></p></div>
+          <div class="asm-sec"><h5>작업 요령</h5><ul id="asm-notes"></ul></div>
+          <div class="asm-sec"><h5>검수 체크</h5><div class="chk" id="asm-checks"></div></div>
+        </div>
+      </aside>
+    </div>
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <h3 style="margin:0">조립 공정표 <span class="tag bg-rose">20 단계</span></h3>
+        <div class="row"><span class="note" id="asm-sum"></span><button class="btn" id="asm-explode">분해도로 보기</button><button class="btn" id="asm-reset">체크 초기화</button></div>
+      </div>
+      <div class="prog" style="margin-bottom:12px"><i id="asm-prog"></i></div>
+      <ol class="steps" id="asm-steps"></ol>
+    </div>
+  </section>
+
+  <!-- ================= INSTRUMENT ================= -->
+  <section class="view" id="instrument" role="tabpanel" aria-labelledby="tab-instrument" hidden>
+    <div class="inst-grid">
+      <div class="card scope-card">
+        <h3>오실로스코프 <span class="tag bg-sky">PX-OSC 2ch · 아날로그 형광</span></h3>
+        <p class="desc">프로브 프리셋으로 시작하거나, 노브를 위아래로 드래그(또는 휠, 방향키)해 조정하세요. 신호는 Circuit 탭의 값과 주입된 고장으로 실시간 계산됩니다.</p>
+        <div class="presets" id="scope-presets" style="margin-bottom:6px"></div>
+        <p class="note" id="scope-hint" style="margin:0 0 8px;min-height:1.4em"></p>
+        <div class="bezel">
+          <div class="scope-screen">
+            <canvas id="scope"></canvas>
+            <div class="scope-read" id="scope-read"></div>
+          </div>
+          <div class="panel-row">
+            <div class="grp"><h4><i style="background:var(--ph1)"></i>CH1</h4><select id="ch1-src" aria-label="CH1 신호"></select><div class="knobs"><div id="k-v1"></div><div id="k-p1"></div></div></div>
+            <div class="grp"><h4><i style="background:var(--ph2)"></i>CH2</h4><select id="ch2-src" aria-label="CH2 신호"></select><div class="knobs"><div id="k-v2"></div><div id="k-p2"></div></div></div>
+            <div class="grp"><h4>HORIZONTAL</h4><div class="knobs"><div id="k-t"></div></div><div class="bz-row"><button class="bz-btn" id="run">RUN</button><button class="bz-btn" id="single">SINGLE</button><button class="bz-btn" id="xy">XY</button></div></div>
+            <div class="grp"><h4><i style="background:var(--ph3)"></i>TRIGGER</h4><div class="knobs"><div id="k-tl"></div></div><div class="bz-row"><button class="bz-btn on" id="trg1">CH1</button><button class="bz-btn" id="trg2">CH2</button><button class="bz-btn" id="slope">↑ 상승</button></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>아날로그 멀티미터 <span class="tag bg-butter">DCV 20 V · ACV 2 V</span></h3>
+        <p class="desc">측정점과 모드를 고르세요. 바늘은 실제 계기처럼 관성을 가집니다.</p>
+        <canvas id="meter"></canvas>
+        <div class="row" style="margin-top:10px"><div class="seg" id="meter-mode"><button data-mm="dc" aria-pressed="true">DC V</button><button data-mm="ac" aria-pressed="false">AC V</button></div></div>
+        <div class="row" id="meter-probes" style="margin-top:8px"></div>
+      </div>
+      <div class="card">
+        <h3>측정 메모</h3>
+        <dl class="kv" id="inst-notes"></dl>
+      </div>
+    </div>
+    <div class="card">
+      <h3>스펙트럼 분석기 <span class="tag bg-rose">FFT · CH1</span></h3>
+      <p class="desc" id="fft-info">CH1 기록을 FFT로 변환합니다.</p>
+      <canvas id="fft"></canvas>
+    </div>
+    <div class="card">
+      <h3>로직 분석기 <span class="tag bg-lav">8 ch · 상태 디코딩</span></h3>
+      <p class="desc">CPU 버스 사이클(M1 페치, 메모리 읽기/쓰기, I/O), 키보드 스캔, 마우스 직교 신호를 디지털 파형으로 봅니다.</p>
+      <div class="row" id="la-modes" style="margin-bottom:10px"></div>
+      <canvas id="la"></canvas>
+    </div>
+  </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="src/js/core/util.js"></script>
+<script src="src/js/data/palettes.js"></script>
+<script src="src/js/data/keyboard.js"></script>
+<script src="src/js/data/topology.js"></script>
+<script src="src/js/data/parts.js"></script>
+<script src="src/js/data/assembly.js"></script>
+<script src="src/js/data/instrument.js"></script>
+<script src="src/js/core/state.js"></script>
+<script src="src/js/core/signals.js"></script>
+<script src="src/js/core/knob.js"></script>
+<script src="src/js/core/audio.js"></script>
+<script src="src/js/core/trace.js"></script>
+<script src="src/js/core/screen.js"></script>
+<script src="src/js/topology/topology.js"></script>
+<script src="src/js/circuit/psu.js"></script>
+<script src="src/js/circuit/crt.js"></script>
+<script src="src/js/circuit/keyboard.js"></script>
+<script src="src/js/circuit/mouse.js"></script>
+<script src="src/js/circuit/psg.js"></script>
+<script src="src/js/chassis/geometry.js"></script>
+<script src="src/js/chassis/model.js"></script>
+<script src="src/js/chassis/viewer.js"></script>
+<script src="src/js/chassis/chassis.js"></script>
+<script src="src/js/assembly/assembly.js"></script>
+<script src="src/js/instrument/scope.js"></script>
+<script src="src/js/instrument/spectrum.js"></script>
+<script src="src/js/instrument/meter.js"></script>
+<script src="src/js/instrument/logic.js"></script>
+<script src="src/js/main.js"></script>

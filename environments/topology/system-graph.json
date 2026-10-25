@@ -1,0 +1,352 @@
+{
+  "nodes": [
+    {
+      "id": "xtal",
+      "label": "XTAL",
+      "title": "수정 발진기",
+      "summary": "시스템 마스터 클럭. NTSC 컬러버스트의 4배 주파수를 분주해 CPU와 VDP에 공급합니다.",
+      "spec": {
+        "주파수": "14.31818 MHz",
+        "CPU 분주": "÷4 → 3.58 MHz",
+        "VDP": "도트 클럭 5.37 MHz",
+        "정밀도": "±30 ppm"
+      },
+      "probe": "clk",
+      "faultSymptom": "클럭이 멈추면 CPU와 VDP가 모두 정지합니다. 모니터는 동기 신호를 잃고 NO SIGNAL을 띄웁니다."
+    },
+    {
+      "id": "cpu",
+      "label": "PX-80 CPU",
+      "title": "PX-80 CPU",
+      "summary": "8비트 CPU. 16비트 주소 버스와 8비트 데이터 버스로 모든 주변장치와 통신합니다.",
+      "spec": {
+        "아키텍처": "Z80 호환 8-bit",
+        "클럭": "3.579545 MHz",
+        "버스": "A0–A15 · D0–D7",
+        "M1 사이클": "4 T-state",
+        "인터럽트": "/INT 모드 1 · 0x0038"
+      },
+      "probe": "bus",
+      "faultSymptom": "CPU가 죽으면 POST가 실행되지 않고, VDP는 초기화되지 않은 VRAM 쓰레기 타일을 그대로 출력합니다."
+    },
+    {
+      "id": "pio",
+      "label": "PIO / KBC",
+      "title": "PIO / 키보드 컨트롤러",
+      "summary": "키 매트릭스를 행 단위로 스캔하고 마우스 직교 신호를 카운트해 /INT로 CPU에 알립니다.",
+      "spec": {
+        "키 스캔": "8행 × 250 µs = 2 ms",
+        "마우스": "X/Y 직교 4체배",
+        "I/O 포트": "0xA8–0xAB",
+        "IRQ": "/INT (오픈 드레인)"
+      },
+      "probe": "kb",
+      "faultSymptom": "행 스캔이 멈춰 키 입력과 마우스 이동이 전달되지 않습니다. POST에 KBC FAIL이 표시됩니다."
+    },
+    {
+      "id": "kbd",
+      "label": "Keyboard",
+      "title": "키보드",
+      "summary": "49키 매트릭스. 키마다 1N4148 다이오드가 있어 다중 입력 시 유령 키를 막습니다.",
+      "spec": {
+        "키 수": "49",
+        "매트릭스": "8 × 8",
+        "스위치": "리프 스프링 · 3.5 mm",
+        "케이블": "5핀 DIN 코일"
+      },
+      "probe": "kb",
+      "faultSymptom": "키보드 케이블 단선: 매트릭스 신호가 PIO에 도달하지 않습니다."
+    },
+    {
+      "id": "mouse",
+      "label": "Ball Mouse",
+      "title": "볼 마우스",
+      "summary": "고무 볼이 X/Y 초퍼 휠을 돌리고 포토인터럽터 2개가 90° 위상차 신호를 만듭니다.",
+      "spec": {
+        "해상도": "200 CPI",
+        "신호": "XA XB YA YB",
+        "버튼": "2 (택트)",
+        "커넥터": "DE-9"
+      },
+      "probe": "mouse",
+      "faultSymptom": "포토인터럽터 불량: 커서가 움직이지 않습니다."
+    },
+    {
+      "id": "rom",
+      "label": "ROM 32K",
+      "title": "32 KB 마스크 ROM",
+      "summary": "BIOS와 PASTELLA OS를 담은 ROM. M1 페치의 대부분이 여기서 일어납니다.",
+      "spec": {
+        "용량": "32 KB",
+        "주소": "0x0000–0x7FFF",
+        "접근 시간": "250 ns",
+        "내용": "BIOS · OS · 폰트"
+      },
+      "probe": "bus",
+      "faultSymptom": "ROM 체크섬 오류: 부팅 코드를 읽지 못해 화면에 쓰레기 문자가 나옵니다."
+    },
+    {
+      "id": "ram",
+      "label": "RAM 64K",
+      "title": "64 KB DRAM",
+      "summary": "다이내믹 RAM. M1 사이클 후반의 /RFSH 펄스로 128행이 주기적으로 리프레시됩니다.",
+      "spec": {
+        "용량": "64 KB (뱅크 전환)",
+        "칩": "4164 × 8",
+        "리프레시": "128행 / 2 ms",
+        "주소": "0x8000–0xFFFF"
+      },
+      "probe": "bus",
+      "faultSymptom": "DRAM 비트 불량: POST의 RAM 테스트가 C000H에서 멈추고 시스템이 정지합니다."
+    },
+    {
+      "id": "vdp",
+      "label": "VDP",
+      "title": "VDP 비디오 프로세서",
+      "summary": "VRAM을 읽어 NTSC 타이밍의 컴포지트 비디오와 동기 신호를 만들어 CRT로 보냅니다.",
+      "spec": {
+        "해상도": "256 × 192",
+        "팔레트": "파스텔 16색",
+        "VRAM": "16 KB",
+        "수평": "15.734 kHz",
+        "수직": "59.94 Hz"
+      },
+      "probe": "video",
+      "faultSymptom": "비디오와 동기 신호가 사라집니다. 모니터는 자유 발진 래스터와 NO SIGNAL만 표시합니다."
+    },
+    {
+      "id": "fdc",
+      "label": "FDC",
+      "title": "플로피 디스크 컨트롤러",
+      "summary": "MFM 인코딩으로 3.5인치 드라이브를 제어합니다. CPU가 PIO 방식으로 바이트를 전송합니다.",
+      "spec": {
+        "인코딩": "MFM",
+        "전송률": "250 kbps",
+        "포트": "0x7FF8–0x7FFF"
+      },
+      "probe": "bus",
+      "faultSymptom": "DISK ERROR 대화상자가 뜨고 DISK 1 아이콘이 물음표로 바뀝니다."
+    },
+    {
+      "id": "psg",
+      "label": "PSG",
+      "title": "PSG 사운드 칩",
+      "summary": "3채널 구형파와 노이즈 발생기. 본체 전면의 아날로그 볼륨 다이얼로 출력이 조정됩니다.",
+      "spec": {
+        "채널": "3 톤 + 1 노이즈",
+        "출력": "모노 · 아날로그 볼륨",
+        "전원": "+5V / −12V 앰프"
+      },
+      "probe": "psg",
+      "faultSymptom": "사운드 출력이 사라집니다. 키 클릭과 멜로디가 재생되지 않습니다."
+    },
+    {
+      "id": "crt",
+      "label": "19\" Wide CRT",
+      "title": "19인치 와이드 CRT",
+      "summary": "아날로그 편향 회로. H-FREQ · H-SIZE · V-HOLD · 밝기를 다이얼로 조정합니다.",
+      "spec": {
+        "튜브": "19\" 16:10 · 100° 편향",
+        "수평": "15.734 kHz 플라이백",
+        "고압": "11 kV",
+        "조작부": "BRIGHT · V-HOLD · H-SIZE"
+      },
+      "probe": "hdef",
+      "faultSymptom": "편향 회로가 멈춰 화면 중앙에 가로선 하나만 남습니다."
+    },
+    {
+      "id": "fdd",
+      "label": "3.5\" FDD",
+      "title": "3.5인치 플로피 드라이브",
+      "summary": "720 KB 더블 덴시티 드라이브.",
+      "spec": {
+        "용량": "720 KB DD",
+        "회전": "300 rpm",
+        "전원": "+5V / +12V 모터"
+      },
+      "probe": "bus",
+      "faultSymptom": "드라이브 모터 정지: POST에서 FDD NOT READY."
+    },
+    {
+      "id": "spk",
+      "label": "Speaker",
+      "title": "스피커",
+      "summary": "본체 내장 57 mm 풀레인지 스피커.",
+      "spec": {
+        "구경": "57 mm",
+        "임피던스": "8 Ω",
+        "정격": "0.5 W"
+      },
+      "probe": "psg",
+      "faultSymptom": "보이스 코일 단선: 소리가 나지 않습니다."
+    },
+    {
+      "id": "psu",
+      "label": "Linear PSU",
+      "title": "선형 전원부",
+      "summary": "트랜스 → 브리지 정류 → C1 평활 → 7805 레귤레이터. 부하와 C1에 따라 리플이 달라집니다.",
+      "spec": {
+        "입력": "AC 220 V 60 Hz",
+        "트랜스": "9 Vrms · 3 A",
+        "+5V": "7805 · 최대 3 A",
+        "+12V": "7812 · CRT/FDD",
+        "−12V": "7912 · 오디오"
+      },
+      "probe": "psu",
+      "faultSymptom": "퓨즈 단선: 모든 레일이 0 V가 됩니다."
+    }
+  ],
+  "edges": [
+    {
+      "from": "xtal",
+      "to": "cpu",
+      "net": "CLK"
+    },
+    {
+      "from": "cpu",
+      "to": "bus",
+      "net": "A0-A15/D0-D7"
+    },
+    {
+      "from": "rom",
+      "to": "bus",
+      "net": ""
+    },
+    {
+      "from": "ram",
+      "to": "bus",
+      "net": ""
+    },
+    {
+      "from": "vdp",
+      "to": "bus",
+      "net": ""
+    },
+    {
+      "from": "fdc",
+      "to": "bus",
+      "net": ""
+    },
+    {
+      "from": "psg",
+      "to": "bus",
+      "net": ""
+    },
+    {
+      "from": "pio",
+      "to": "bus",
+      "net": ""
+    },
+    {
+      "from": "vdp",
+      "to": "crt",
+      "net": "VIDEO/SYNC"
+    },
+    {
+      "from": "fdc",
+      "to": "fdd",
+      "net": "34P"
+    },
+    {
+      "from": "psg",
+      "to": "spk",
+      "net": "AUDIO"
+    },
+    {
+      "from": "kbd",
+      "to": "pio",
+      "net": "DIN-5"
+    },
+    {
+      "from": "mouse",
+      "to": "pio",
+      "net": "DE-9"
+    }
+  ],
+  "memoryMap": [
+    {
+      "from": "0x0000",
+      "to": "0x3FFF",
+      "region": "BIOS"
+    },
+    {
+      "from": "0x4000",
+      "to": "0x7FFF",
+      "region": "OS · 폰트"
+    },
+    {
+      "from": "0x8000",
+      "to": "0xBFFF",
+      "region": "RAM 뱅크 0–3"
+    },
+    {
+      "from": "0xC000",
+      "to": "0xFFFF",
+      "region": "RAM 상주 · 스택"
+    }
+  ],
+  "ioPorts": [
+    {
+      "port": "0x98–0x99",
+      "function": "VDP 데이터 / 제어"
+    },
+    {
+      "port": "0xA0–0xA2",
+      "function": "PSG 레지스터"
+    },
+    {
+      "port": "0xA8–0xAB",
+      "function": "PIO · 키 스캔 · 마우스"
+    },
+    {
+      "port": "0x7FF8–0x7FFF",
+      "function": "FDC 레지스터"
+    },
+    {
+      "port": "0xF4",
+      "function": "리셋 상태 / 소프트 리셋"
+    }
+  ],
+  "clockTree": [
+    {
+      "depth": 0,
+      "label": "14.31818 MHz XTAL"
+    },
+    {
+      "depth": 1,
+      "label": "÷4 → 3.579545 MHz CPU"
+    },
+    {
+      "depth": 2,
+      "label": "M1 4T / MEM 3T 사이클"
+    },
+    {
+      "depth": 1,
+      "label": "÷1 → VDP 도트 5.37 MHz"
+    },
+    {
+      "depth": 2,
+      "label": "÷341 → H 15.734 kHz"
+    },
+    {
+      "depth": 3,
+      "label": "÷262.5 → V 59.94 Hz"
+    },
+    {
+      "depth": 1,
+      "label": "÷4 → PSG 3.58 MHz"
+    },
+    {
+      "depth": 1,
+      "label": "PIO 스캔 4 kHz (250 µs/행)"
+    },
+    {
+      "depth": 0,
+      "label": "60 Hz 상용 전원"
+    },
+    {
+      "depth": 1,
+      "label": "브리지 → 120 Hz 리플"
+    }
+  ]
+}

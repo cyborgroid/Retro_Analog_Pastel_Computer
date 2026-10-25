@@ -1,0 +1,68 @@
+{
+  "roles": {
+    "base": "본체",
+    "monitor": "모니터",
+    "keyboard": "키보드",
+    "mouse": "마우스",
+    "keyA": "키캡",
+    "keyB": "포인트 키",
+    "trim": "다이얼"
+  },
+  "palettes": [
+    {
+      "n": "Mint Soda",
+      "base": "#c6ecdb",
+      "monitor": "#e4f6ee",
+      "keyboard": "#d2efe2",
+      "keyA": "#fbfaf5",
+      "keyB": "#ffb5a6",
+      "mouse": "#e4f6ee",
+      "trim": "#ffb5a6",
+      "desk": "#efe9f7"
+    },
+    {
+      "n": "Lavender Haze",
+      "base": "#d9cffb",
+      "monitor": "#ebe5ff",
+      "keyboard": "#ddd5fb",
+      "keyA": "#fbf9ff",
+      "keyB": "#ffd4a3",
+      "mouse": "#ebe5ff",
+      "trim": "#9fd3ef",
+      "desk": "#f3eefb"
+    },
+    {
+      "n": "Peach Fuzz",
+      "base": "#ffd6c0",
+      "monitor": "#ffe8da",
+      "keyboard": "#ffdac6",
+      "keyA": "#fffaf5",
+      "keyB": "#a4dbc6",
+      "mouse": "#ffe8da",
+      "trim": "#c2b2f4",
+      "desk": "#f6eef0"
+    },
+    {
+      "n": "Lemon Sherbet",
+      "base": "#f9ecaa",
+      "monitor": "#fff5cc",
+      "keyboard": "#f7e7a8",
+      "keyA": "#fffdf2",
+      "keyB": "#b4c6f6",
+      "mouse": "#fff5cc",
+      "trim": "#f4a6bf",
+      "desk": "#f4f1e8"
+    },
+    {
+      "n": "Baby Blue",
+      "base": "#c9def5",
+      "monitor": "#e0ecfa",
+      "keyboard": "#cfe2f6",
+      "keyA": "#f8fbff",
+      "keyB": "#ffc0d2",
+      "mouse": "#e0ecfa",
+      "trim": "#ffdf86",
+      "desk": "#edf0f8"
+    }
+  ]
+}

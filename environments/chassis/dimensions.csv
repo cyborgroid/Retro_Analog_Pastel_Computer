@@ -1,0 +1,5 @@
+module,width_mm,height_mm,depth_mm,mass_kg,shell_material,wall_mm,controls,key_parts
+base_unit,440,110,340,4.7,ABS + SPCC chassis,2.5,"rotary VOL, rotary TONE, toggle power","PX-80 mainboard, linear PSU, 3.5in FDD"
+monitor_19w,437,334,154,10.8,ABS,2.5,"BRIGHT, V-HOLD, H-SIZE knobs","19in 16:10 slim CRT, yoke, flyback, degauss coil"
+keyboard,450,38,170,1.1,ABS,2.0,-,"49 keys, 8x8 matrix, 1N4148 x49"
+mouse,62,32,100,0.14,ABS,1.8,-,"rubber ball 22mm, chopper wheels x2, photo-interrupters x4"
