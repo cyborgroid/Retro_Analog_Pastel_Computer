@@ -27,22 +27,22 @@
     h += sch.bridge(250, 110, 28, { ref: 'BR1', v: 'KBP206' });
     h += sch.wire([[222, 110], [205, 110], [205, G]]);
     h += sch.wire([[278, 110], [410, 110]]) + sch.dot(320, 110) + sch.dot(368, 110);
-    h += sch.two('ecap', 320, 110, 320, G, { ref: 'C1', v: '4700µF 25V', vid: 'sch-c1v' });
-    h += sch.two('cap', 368, 110, 368, G, { ref: 'C3', v: '0.33µF' });
+    h += sch.two('ecap', 320, 110, 320, G, { ref: 'C1', v: '4700µF', vid: 'sch-c1v' });
+    h += sch.two('cap', 368, 110, 368, G, { ref: 'C3', v: '0.33µ' });
     h += `<rect class="w nofill dash" x="402" y="74" width="96" height="70" rx="6"/><text class="tiny" x="494" y="70" text-anchor="end">HS1 방열판</text>`;
     h += `<g id="sch-u1">` + sch.box(410, 88, 80, 44, '7805', 'U1 L7805CV') + `</g>`;
     h += sch.text(414, 106, 'IN', 'pinl') + sch.text(486, 106, 'OUT', 'pinl', 'end') + sch.text(450, 129, 'GND', 'pinl', 'middle');
-    h += sch.text(450, 158, '—', 'val', 'middle', 'sch-u1t');
+    h += sch.text(410, 174, '—', 'val', 'start', 'sch-u1t');
     h += sch.wire([[450, 132], [450, G]]);
     h += sch.wire([[490, 110], [640, 110]]) + sch.dot(520, 110) + sch.dot(560, 110) + sch.dot(600, 110);
     h += sch.two('cap', 520, 110, 520, G, { ref: 'C2', v: '0.1µF' });
     h += sch.two('ecap', 560, 110, 560, G, { ref: 'C4', v: '100µF' });
     h += sch.two('res', 600, 110, 600, 150, { ref: 'R1', v: '330Ω' }) + `<g id="sch-led">` + sch.two('led', 600, 150, 600, G, { ref: 'D5', v: 'PWR' }) + `</g>`;
-    h += sch.two('res', 640, 110, 640, G, { ref: 'RL', v: '부하', side: 'l' });
+    h += sch.two('res', 640, 110, 640, G, {});
     h += sch.wire([[205, G], [640, G]]) + sch.gnd(420, G) + sch.text(530, 104, '+5V', 'lab');
     h += sch.text(286, 104, 'VRAW', 'lab');
     h += sch.flow([[278, 110], [410, 110]], 'fl-psu1') + sch.flow([[490, 110], [640, 110], [640, G]], 'fl-psu2') + sch.flow([[640, G], [205, G], [205, 110], [222, 110]], 'fl-psu3') + sch.flow([[600, 110], [600, G]], 'fl-psu4');
-    h += sch.flag(320, 110, -48, -46, 'TP1', 'sch-tp1', 118) + sch.flag(520, 110, 8, -42, 'TP2', 'sch-tp2', 92) + sch.flag(640, 150, -26, 36, 'I', 'sch-il', 70);
+    h += sch.flag(320, 110, -48, -46, 'TP1', 'sch-tp1', 118) + sch.flag(520, 110, 8, -42, 'TP2', 'sch-tp2', 92) + sch.flag(640, 150, -26, 36, 'RL 부하', 'sch-il', 104);
     return `<svg class="schem" viewBox="0 0 660 230" role="img" aria-label="선형 전원부 회로도">${h}</svg>`;
   }
 
@@ -127,7 +127,7 @@
       sch.set('sch-tp1', on ? `${P.vavg.toFixed(1)}V ~${Math.min(P.rip, P.vpk).toFixed(2)}Vpp` : '0 V');
       sch.set('sch-tp2', `${v5.toFixed(2)} V`);
       sch.set('sch-il', `${I.toFixed(2)} A`);
-      sch.set('sch-c1v', C.CAPS[S.capIdx] + 'µF 25V');
+      sch.set('sch-c1v', C.CAPS[S.capIdx] + 'µF');
       sch.set('sch-u1t', `Tj ${S.tReg.toFixed(0)}°C · ${P.pd.toFixed(1)}W`);
       const u = $('#sch-u1'); if (u) u.classList.toggle('hot', S.tReg > 100);
       const led = $('#sch-led'); if (led) led.classList.toggle('lit', v5 > 3);
