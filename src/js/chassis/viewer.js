@@ -38,7 +38,7 @@
     V.ro = new ResizeObserver(() => V.resize());
     PX.on('monitor-built', () => { V.refreshMaterials(); V.helper.visible = false; V.sel = null; });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => PX.model.relabel());
-    V.ok = true; return true;
+    V.ok = true; PX.emit('viewer-ready'); return true;
   };
 
   V.attach = function (host, mode) {
@@ -80,6 +80,7 @@
     V.hemi.intensity = U.lerp(V.hemi.intensity, 0.5 - 0.38 * n, 0.1); V.key.intensity = U.lerp(V.key.intensity, 1.05 - 0.85 * n, 0.1);
     V.fill.intensity = U.lerp(V.fill.intensity, 0.35 - 0.25 * n, 0.1); V.rim.intensity = U.lerp(V.rim.intensity, 0.25 + 0.25 * n, 0.1);
     V.glow.intensity = U.lerp(V.glow.intensity, lit ? (0.25 + 1.4 * n) * S.bright : 0, 0.15);
+    if (PX.cad) PX.cad.sync(V.mode);
     if (V.sel && V.helper.visible) V.helper.setFromObject(V.sel);
     V.controls.update(); V.renderer.render(V.scene, V.camera);
   };

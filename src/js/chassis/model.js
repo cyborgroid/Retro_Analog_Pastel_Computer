@@ -245,7 +245,8 @@
   }
 
   model.build = function (sc) {
-    scene = sc; model.scene = sc;
+    model.root = new THREE.Group(); sc.add(model.root);
+    scene = model.root; model.scene = sc;
     materials(PX.palette);
     const desk = new THREE.Mesh(new THREE.CircleGeometry(12, 72), model.M.desk); desk.rotation.x = -Math.PI / 2; desk.receiveShadow = true; desk.userData.noClip = true; sc.add(desk);
     buildBase(); buildKeyboard(); buildMouse(); buildCables(); buildMonitor();

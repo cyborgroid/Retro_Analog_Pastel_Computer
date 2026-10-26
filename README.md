@@ -4,7 +4,22 @@
 
 ## 실행
 
-`index.html`을 브라우저로 여세요(빌드 불필요). 3D 라이브러리(three.js r128)와 웹폰트는 CDN에서 불러오므로 인터넷 연결이 필요합니다. ES 모듈 대신 일반 `<script>`를 써서 `file://`로도 동작합니다.
+```
+./run.sh
+```
+
+터미널에 나오는 **Open Integrated Browser** 주소(`http://localhost:8084/index.html`)를 VS Code에서 열면 됩니다. `run.sh`는 로컬 HTTP 서버만 띄우고 별도 앱이나 외부 브라우저를 실행하지 않습니다. 3D 라이브러리(three.js r128)와 웹폰트는 CDN에서 불러오므로 인터넷 연결이 필요합니다. `index.html`을 `file://`로 직접 열어도 동작하지만, 그때는 CAD v3 모델(GLB)을 불러올 수 없어 웹 v2 모델이 표시됩니다.
+
+## CAD v3 — STEP · URDF · USDA
+
+`cad/spec.json`을 원본으로 Rust가 B-rep 솔리드를 만들어 STEP(AP214), URDF(+STL, 질량 · 관성), USDA(UsdPhysics), 웹용 GLB를 내보냅니다. 간섭 · 관절 스윕 검사를 거치고, C#이 산출물을 교차 검증합니다. Chassis 탭의 3D 뷰와 BOM은 이 결과를 표시합니다.
+
+```
+./cad/build.sh rust          # Only Rust
+./cad/build.sh csharp-rust   # Rust + C# 검증 (기본값)
+```
+
+실물 참고 사진에서 배운 내용, 검사 항목, 한계는 [cad/README.md](cad/README.md)에 있습니다.
 
 ## 다섯 환경
 
@@ -12,7 +27,7 @@
 |---|---|---|
 | **Topology** | 블록 다이어그램, 버스 트랜잭션, 전원망, **고장 주입**, 메모리 맵, 클럭 트리, **양자 서브시스템**(Q-Bus 브리지 → QCU → 희석 냉동기 → 5큐비트 QPU → 판독 체인)과 결합 맵 | [environments/topology](environments/topology/) |
 | **Circuit** | **실물 회로도**(실제 기호 · 참조번호 · 품번 · 실시간 TP · 전류 흐름)와 전원부 실물 PCB 보기: 전원부, CRT 수평 출력단, 키 매트릭스, 포토인터럽터, Pico PSG. **양자 회로**: 트랜스몬(칩 실물 배치도), 마이크로파 제어 체인, 희석 냉동기, 분산 판독. **부품 조달 표** | [environments/circuit](environments/circuit/) |
-| **Chassis** | 3D 모델, **파라메트릭 와이드 모니터**(크기 · 비율 · 베젤), 분해도, 단면, 야간 조명, 컬러웨이, BOM | [environments/chassis](environments/chassis/) |
+| **Chassis** | **CAD v3 (Rust) 모델과 산출물 다운로드**, 웹 v2 3D 모델, **파라메트릭 와이드 모니터**(크기 · 비율 · 베젤), 분해도, 단면, 야간 조명, 컬러웨이, BOM | [environments/chassis](environments/chassis/) |
 | **Assembly** | **20단계 조립 애니메이션**, 단계별 공구 · 체결 부품 · 토크 · 검수 체크, 완성 시 POST | [environments/assembly](environments/assembly/) |
 | **Instrument** | **양자 블록 작곡기 · 펄스 시퀀서**(블록 배치 → 펄스 시퀀스 → 노이즈 시뮬레이션 → 히스토그램 · 블로흐 구 · 상태벡터 · 오류 예산 · OpenQASM), 실물형 벤치 계측기(오실로스코프 · 로터리 스위치 멀티테스터 · FFT · 로직 분석기) | [environments/instrument](environments/instrument/) |
 
@@ -36,6 +51,8 @@ src/
   js/main.js               탭 · 상태 표시줄 · 메인 루프
 environments/              환경별 설계 문서 (사양, SPICE 넷리스트, CSV, JSON)
 tools/export-data.js       src/js/data → environments/*.json·csv·md 재생성
+cad/                       CAD v3: spec.json · rust(형상 · 검사 · 내보내기) · csharp(검증) · out(STEP · URDF · USDA · GLB)
+run.sh                     워크벤치 로컬 서버 (Open Integrated Browser 주소 출력)
 ```
 
 ## 데이터 동기화
@@ -46,7 +63,7 @@ tools/export-data.js       src/js/data → environments/*.json·csv·md 재생�
 node tools/export-data.js
 ```
 
-나머지 `.md`, `.cir`, `.csv` 문서는 사람이 직접 관리하는 설계 문서입니다.
+`src/js/data/cad.js`와 `environments/chassis/dimensions.csv`는 `./cad/build.sh`가 생성합니다. 나머지 `.md`, `.cir`, `.csv` 문서는 사람이 직접 관리하는 설계 문서입니다.
 
 ## 모델 단위와 기준값
 

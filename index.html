@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PASTELLA 84 Workbench</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -303,6 +306,13 @@
       </div>
       <aside class="side">
         <div class="card">
+          <h3>CAD v3 <span class="tag bg-mint">Rust 산출물</span></h3>
+          <p class="desc" style="margin-bottom:8px">cad/spec.json → Rust(truck B-rep) → STEP · URDF · USDA · GLB. 3D 뷰와 아래 BOM이 이 빌드 결과를 씁니다. 분해도와 모니터 파라미터는 웹 v2 모델에만 적용됩니다.</p>
+          <div class="row" style="margin-bottom:8px"><span class="note">모델</span><div class="seg" id="cad-mode"><button data-m="cad">CAD v3 (Rust)</button><button data-m="web">웹 v2</button></div></div>
+          <dl class="kv" id="cad-kv"></dl>
+          <div class="row" id="cad-files" style="margin-top:8px"></div>
+        </div>
+        <div class="card">
           <h3>와이드 모니터 <span class="tag bg-sky">파라메트릭</span></h3>
           <p class="desc" style="margin-bottom:8px">화면은 키우고 테두리는 얇게. 값을 바꾸면 3D 모델, CRT 화면 비율, BOM이 함께 바뀝니다.</p>
           <div class="row" id="mon-presets" style="margin-bottom:8px"></div>
@@ -505,6 +515,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="src/js/core/util.js"></script>
 <script src="src/js/data/palettes.js"></script>
 <script src="src/js/data/keyboard.js"></script>
@@ -514,6 +525,7 @@
 <script src="src/js/data/instrument.js"></script>
 <script src="src/js/data/quantum.js"></script>
 <script src="src/js/data/sourcing.js"></script>
+<script src="src/js/data/cad.js"></script>
 <script src="src/js/core/state.js"></script>
 <script src="src/js/core/signals.js"></script>
 <script src="src/js/core/knob.js"></script>
@@ -539,6 +551,7 @@
 <script src="src/js/chassis/geometry.js"></script>
 <script src="src/js/chassis/model.js"></script>
 <script src="src/js/chassis/viewer.js"></script>
+<script src="src/js/chassis/cad.js"></script>
 <script src="src/js/chassis/chassis.js"></script>
 <script src="src/js/assembly/assembly.js"></script>
 <script src="src/js/instrument/scope.js"></script>

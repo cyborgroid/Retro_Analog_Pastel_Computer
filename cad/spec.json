@@ -1,0 +1,61 @@
+{
+  "name": "PASTELLA 84",
+  "revision": "v3",
+  "frame": "X = user's right, Y = away from the user (front faces -Y), Z = up, desk top at Z = 0, mm",
+  "palette": { "source": "environments/chassis/colorways.json", "default": "Mint Soda" },
+  "tessellation_mm": 0.12,
+  "clash_threshold_mm3": 1.0,
+  "base": {
+    "W": 440, "D": 340, "H_tray": 30, "H_lid": 80, "feet_h": 3, "wall": 2.5, "corner_r": 14, "y": 70
+  },
+  "monitor": {
+    "diag_in": 19, "aspect": 1.6, "bezel": 12, "gap": 2, "chin": 20, "stand_h": 50, "bezel_depth": 15,
+    "recess_step": 8, "recess_depth": 6, "depth_per_diag_mm": 0.52, "front_y": -50, "wall": 2.5,
+    "tilt_deg": [-5, 12], "swivel_deg": [-90, 90],
+    "tube_mass_kg": 9.4, "yoke_mass_kg": 0.85, "flyback_mass_kg": 0.45, "degauss_mass_kg": 0.35
+  },
+  "keyboard": {
+    "pitch": 19.05, "W": 300, "D": 150, "h_front": 22, "h_rear": 38, "y": -245, "wall": 2.0,
+    "margin_front": 14, "plate_t": 1.5, "plate_below_top": 6.0, "travel": 4.0,
+    "rows": [
+      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "BKSP"],
+      ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]"],
+      ["A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "ENTER"],
+      ["SHIFT", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"],
+      ["SPACE"]
+    ],
+    "wide_u": { "BKSP": 1.5, "ENTER": 1.75, "SHIFT": 1.75, "SPACE": 6.25 },
+    "switch_mass_kg": 0.0035
+  },
+  "mouse": { "W": 62, "D": 100, "H": 30, "x": 255, "y": -235, "ball_d": 22, "ball_mass_kg": 0.035 },
+  "materials": {
+    "base":     { "color": "palette:base",          "roughness": 0.55, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "tray":     { "color": "palette:base*0.88",     "roughness": 0.60, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "monitor":  { "color": "palette:monitor",       "roughness": 0.55, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "keyboard": { "color": "palette:keyboard",      "roughness": 0.55, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "keyA":     { "color": "palette:keyA",          "roughness": 0.45, "metallic": 0.0, "opacity": 1.0,  "density": "pbt" },
+    "keyB":     { "color": "palette:keyB",          "roughness": 0.45, "metallic": 0.0, "opacity": 1.0,  "density": "pbt" },
+    "mouse":    { "color": "palette:mouse",         "roughness": 0.50, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "trim":     { "color": "palette:trim",          "roughness": 0.40, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "stripe1":  { "color": "#ffb5a6", "roughness": 0.4,  "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "stripe2":  { "color": "#f9ecaa", "roughness": 0.4,  "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "stripe3":  { "color": "#a4dbc6", "roughness": 0.4,  "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "stripe4":  { "color": "#c2b2f4", "roughness": 0.4,  "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "dark":     { "color": "#4a4458", "roughness": 0.7,  "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "slot":     { "color": "#2a2633", "roughness": 0.8,  "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
+    "steel":    { "color": "#d7d3df", "roughness": 0.45, "metallic": 0.5, "opacity": 1.0,  "density": "steel" },
+    "alu":      { "color": "#c9c3d6", "roughness": 0.35, "metallic": 0.6, "opacity": 1.0,  "density": "alu" },
+    "pcb":      { "color": "#9fdcc4", "roughness": 0.6,  "metallic": 0.0, "opacity": 1.0,  "density": "fr4" },
+    "chip":     { "color": "#34303f", "roughness": 0.45, "metallic": 0.0, "opacity": 1.0,  "density": "epoxy" },
+    "glass":    { "color": "#5b5577", "roughness": 0.15, "metallic": 0.1, "opacity": 0.45, "density": "glass" },
+    "copper":   { "color": "#e9b38c", "roughness": 0.35, "metallic": 0.5, "opacity": 1.0,  "density": "copper" },
+    "rubber":   { "color": "#8c84a2", "roughness": 0.9,  "metallic": 0.0, "opacity": 1.0,  "density": "rubber" },
+    "switch":   { "color": "#f2a3bb", "roughness": 0.5,  "metallic": 0.0, "opacity": 1.0,  "density": "pom" },
+    "led":      { "color": "#7ff0b8", "roughness": 0.3,  "metallic": 0.0, "opacity": 1.0,  "density": "epoxy" },
+    "screen":   { "color": "#1f2b28", "roughness": 0.1,  "metallic": 0.0, "opacity": 1.0,  "density": "glass" }
+  },
+  "density_kg_per_mm3": {
+    "abs": 1.05e-6, "pbt": 1.40e-6, "steel": 7.85e-6, "alu": 2.70e-6, "fr4": 1.85e-6,
+    "rubber": 1.15e-6, "glass": 2.50e-6, "copper": 8.90e-6, "epoxy": 1.90e-6, "pom": 1.41e-6
+  }
+}

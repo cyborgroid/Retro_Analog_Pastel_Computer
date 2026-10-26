@@ -14,11 +14,11 @@
     const b = e.target.closest('.sw-btn'); if (!b) return;
     palIdx = +b.dataset.i; PX.palette = { ...DATA.palettes[palIdx] };
     $$('#presets .sw-btn').forEach(x => x.setAttribute('aria-pressed', x === b)); $('#preset-name').textContent = PX.palette.n;
-    DATA.roles.forEach(([k]) => $('#col-' + k).value = PX.palette[k]); PX.model.setPalette(PX.palette); U.store.set('pal', palIdx);
+    DATA.roles.forEach(([k]) => $('#col-' + k).value = PX.palette[k]); PX.model.setPalette(PX.palette); PX.emit('palette', PX.palette); U.store.set('pal', palIdx);
   });
   $('#preset-name').textContent = PX.palette.n;
   $('#part-colors').innerHTML = DATA.roles.map(([k, n]) => `<label>${n}<input type="color" id="col-${k}" value="${PX.palette[k]}"></label>`).join('');
-  DATA.roles.forEach(([k]) => $('#col-' + k).addEventListener('input', e => { PX.palette[k] = e.target.value; $('#preset-name').textContent = DATA.palettes[palIdx].n + ' · 커스텀'; PX.model.setPalette(PX.palette); }));
+  DATA.roles.forEach(([k]) => $('#col-' + k).addEventListener('input', e => { PX.palette[k] = e.target.value; $('#preset-name').textContent = DATA.palettes[palIdx].n + ' · 커스텀'; PX.model.setPalette(PX.palette); PX.emit('palette', PX.palette); }));
 
   /* monitor parameters */
   const MPRE = [['클래식 14"', { diag: 14, aspect: '4:3', bezel: 30 }], ['와이드 19"', { diag: 19, aspect: '16:10', bezel: 12 }], ['시네마 22"', { diag: 22, aspect: '16:9', bezel: 8 }]];
@@ -63,8 +63,19 @@
       <text x="110" y="${Math.max(oh, 120) + 24}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor">${S.monitor.diag}" ${S.monitor.aspect} · 폭 ${Math.round(d.W)} mm · 화면 ${Math.round(d.ratio * 100)}%</text>`;
   }
   function renderMonitor() { renderBOM(); }
+  /* with the CAD v3 view on, dimensions and masses come from the Rust build (W x H x D, mm) */
+  const CADROW = { '본체': 'base_unit', '키보드': 'keyboard', '볼 마우스': 'mouse' };
+  const cadDims = m => { const b = m.bbox_mm; return [`${Math.round(b[0])} × ${Math.round(b[2])} × ${Math.round(b[1])}`, m.mass_kg.toFixed(2) + ' kg']; };
   function renderBOM() {
     const d = dimsFromState(), kg = (6.5 + S.monitor.diag * S.monitor.diag * 0.012).toFixed(1);
+    const C = DATA.CAD && PX.cad && PX.cad.enabled ? DATA.CAD.modules : null;
+    if (C) {
+      const m = cadDims(C.monitor);
+      $('#bom').innerHTML = DATA.BOM.map(r => r[0] === 'MONITOR' ? ['CRT 모니터', m[0], m[1], 'ABS 2.5t, 베젤 12 mm', 'BRIGHT · V-HOLD · H-SIZE 노브', '19" 16:10 슈퍼슬림 CRT, 손잡이, 틸트 로커']
+        : CADROW[r[0]] ? [r[0], ...cadDims(C[CADROW[r[0]]]), r[3], r[4], r[5]] : r)
+        .map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join('');
+      return;
+    }
     $('#bom').innerHTML = DATA.BOM.map(r => r[0] === 'MONITOR'
       ? ['CRT 모니터', `${Math.round(d.W)} × ${Math.round(d.Htot)} × ${Math.round(d.D)}`, kg + ' kg', `ABS 2.5t, 베젤 ${S.monitor.bezel} mm`, 'BRIGHT · V-HOLD · H-SIZE 노브', `${S.monitor.diag}" ${S.monitor.aspect} 슬림 CRT, 편향 요크, 플라이백`]
       : r).map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join('');
@@ -79,7 +90,7 @@
   clipBtn.addEventListener('click', () => { const on = clipBtn.getAttribute('aria-pressed') !== 'true'; clipBtn.setAttribute('aria-pressed', on); clipBtn.classList.toggle('on', on); V.setClip(on, parseFloat(clipX.value)); });
   clipX.addEventListener('input', () => { $('#o-clip').textContent = Math.round(parseFloat(clipX.value) * 100) + ' mm'; if (V.ok) V.setClip(V.clipOn, parseFloat(clipX.value)); });
   $('#night').addEventListener('click', e => { const on = !V.night; V.setNight(on); e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.classList.toggle('on', on); });
-  $('#finish').addEventListener('input', e => { const r = parseFloat(e.target.value); PX.model.setFinish(r); $('#o-finish').textContent = r < 0.3 ? '유광' : r < 0.6 ? '반광' : '무광'; });
+  $('#finish').addEventListener('input', e => { const r = parseFloat(e.target.value); PX.model.setFinish(r); PX.emit('finish', r); $('#o-finish').textContent = r < 0.3 ? '유광' : r < 0.6 ? '반광' : '무광'; });
   $('#wire').addEventListener('click', e => { if (!V.ok) return; const on = !V.wire; V.setWire(on); e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.classList.toggle('on', on); });
   $('#spin').addEventListener('click', e => { if (!V.ok) return; V.controls.autoRotate = !V.controls.autoRotate; e.currentTarget.setAttribute('aria-pressed', V.controls.autoRotate); e.currentTarget.classList.toggle('on', V.controls.autoRotate); });
   $('#degauss-3d').addEventListener('click', () => PX.degauss());
@@ -95,6 +106,7 @@
   });
   PX.on('keys', () => PX.model.updateKeys && PX.model.scene && PX.model.updateKeys());
   PX.on('monitor-built', () => { renderMonitor(); });
+  PX.on('cad', renderBOM);
 
   PX.addFrame('chassis', (dt, t) => V.render(dt, t));
   PX.onShow = PX.onShow || {};

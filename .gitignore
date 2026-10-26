@@ -1,0 +1,13 @@
+# VS Code C/C++ IntelliSense cache (~1 GB, machine-specific)
+.vscode/browse.vc.db*
+.vscode/*.db
+.vscode/*.db-*
+.vscode/ipch/
+
+# Rust / .NET build output
+cad/rust/target/
+cad/csharp/**/bin/
+cad/csharp/**/obj/
+
+# scratch build output (cad/out is the published output)
+cad/out_*/

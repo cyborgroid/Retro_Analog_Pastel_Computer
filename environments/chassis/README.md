@@ -1,6 +1,12 @@
 # Chassis 환경
 
-외형, 재질, 색, 치수를 3D로 검토합니다. 구현은 `src/js/chassis/`(geometry · model · viewer · chassis)에 있습니다.
+외형, 재질, 색, 치수를 3D로 검토합니다. 구현은 `src/js/chassis/`(geometry · model · viewer · cad · chassis)에 있습니다.
+
+## CAD v3 (Rust) 와 웹 v2
+
+3D 뷰는 기본으로 **CAD v3** 모델을 표시합니다. `cad/spec.json`에서 Rust가 만든 실제 제작용 형상(`cad/out/web/pastella84.glb`)이고, STEP · URDF · USDA와 같은 형상입니다. 이 모드에서는 BOM의 치수와 질량도 Rust 빌드 값(`src/js/data/cad.js`)을 씁니다. 자세한 내용은 [cad/README.md](../../cad/README.md)를 보세요.
+
+"웹 v2"를 고르면 three.js로 직접 그린 이전 모델로 돌아갑니다. 분해도와 파라메트릭 모니터는 웹 v2에만 적용되며, Assembly 탭의 조립 애니메이션도 웹 v2 모델을 씁니다. 실물 참고 사진의 출처는 [references.md](references.md)에 있습니다.
 
 ## 기능
 
@@ -14,7 +20,7 @@
 
 ## 치수
 
-외형 치수와 질량은 [dimensions.csv](dimensions.csv)를 보세요(모니터는 기본값 기준).
+외형 치수와 질량은 [dimensions.csv](dimensions.csv)를 보세요. CAD v3 빌드가 생성하는 값입니다(W × H × D, 질량은 B-rep 부피 × 밀도, 주요 부품은 지정 질량).
 
 ## 좌표계
 
