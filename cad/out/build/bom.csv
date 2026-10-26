@@ -1,0 +1,136 @@
+category,item,qty
+구매 부품,"AUO M190PW01 V8 (19in 1440x900, LED backlight, dual LVDS)",1
+구매 부품,"DC 잭 5.5 × 2.1 mm 패널 장착형",1
+구매 부품,"EC11 로터리 엔코더 (6 mm 축) → 컨트롤러 키패드",3
+구매 부품,"Gotek USB 플로피 에뮬레이터 (FlashFloppy, 3.5"" 규격)",1
+구매 부품,"HDMI/VGA/AV LCD controller board for M190PW01 (VS Display type)",1
+구매 부품,"LED 3 mm 녹색",1
+구매 부품,"LED 5 mm 녹색 + 홀더",1
+구매 부품,"LM2596 강압 모듈 (12 V → 5 V 3 A)",1
+구매 부품,"MX 호환 스위치 (Gateron / Cherry)",49
+구매 부품,"Omron D2F-01F micro switch",1
+구매 부품,"PMW3360 module with LM19-LSI lens",1
+구매 부품,"가변저항 16 mm B10K (6 mm 축)",2
+구매 부품,"고무발 Ø17 × 3 mm (점착식)",4
+구매 부품,"레이지수잔 베어링 75 mm (턴테이블)",1
+구매 부품,"메인보드 PCB 390 × 300 mm 2층 (JLCPCB 등 주문 제작)",1
+구매 부품,"메인보드 실장 부품 (Z80 · EEPROM · SRAM · Pico × 2 · CH376S · 74HC)",1
+구매 부품,"스위치 플레이트 FR4 1.5t (PCB 업체 주문, cad/out/build/fab/kb_plate.dxf)",1
+구매 부품,"스피커 57 mm 8 Ω 0.5 W",1
+구매 부품,"키보드 매트릭스 PCB (주문 제작) 또는 핸드와이어링 + 1N4148 × 49",1
+구매 부품,"키캡 PBT 1.5u",1
+구매 부품,"키캡 PBT 1.75u",2
+구매 부품,"키캡 PBT 1u",45
+구매 부품,"키캡 PBT 6.25u",1
+구매 부품,"토글 스위치 MTS-102 (전원)",1
+체결 · 기타,"12 V 5 A DC 어댑터 (KC 인증) — 모니터 · 본체 공용 분배",1
+체결 · 기타,"6.25u 플레이트 마운트 스태빌라이저",1
+체결 · 기타,"M2 × 6 볼트 (센서 모듈)",2
+체결 · 기타,"M2.5 × 6 태핑 나사 (스위치 플레이트)",4
+체결 · 기타,"M3 × 10 볼트 (셸 바닥 → 베젤)",2
+체결 · 기타,"M3 × 25 볼트 (패널 클립)",8
+체결 · 기타,"M3 × 35 볼트 (트레이 → 상판)",4
+체결 · 기타,"M3 × 6 볼트 (LCD 컨트롤러 보드)",4
+체결 · 기타,"M3 × 6 볼트 (마우스 바닥)",4
+체결 · 기타,"M3 × 6 볼트 (메인보드)",6
+체결 · 기타,"M3 × 6 볼트 (키보드 하판)",4
+체결 · 기타,"M3 × 6 볼트 + 너트 (베어링)",8
+체결 · 기타,"M3 × 8 볼트 (뒤 덮개)",4
+체결 · 기타,"M3 × 8 볼트 (분할 이음 연결판)",70
+체결 · 기타,"M3 × 8 볼트 (손잡이)",2
+체결 · 기타,"M3 열압입 인서트 (OD 4.6 × L 5.7)",108
+체결 · 기타,"RP2040 Zero + USB 케이블 (센서 → USB 변환)",1
+출력 부품,"bezel_a1.stl (모니터 베젤 (앞면이 베드))",1
+출력 부품,"bezel_a2.stl (모니터 베젤 (앞면이 베드))",1
+출력 부품,"bezel_b1.stl (모니터 베젤 (앞면이 베드))",1
+출력 부품,"bezel_b2.stl (모니터 베젤 (앞면이 베드))",1
+출력 부품,"clips__panel_clip_bottom_l.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_bottom_r.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_left_down.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_left_up.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_right_down.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_right_up.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_top_l.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"clips__panel_clip_top_r.stl (LCD 패널 클립 (립이 베드))",1
+출력 부품,"cover_a1.stl (모니터 뒤 덮개 (바깥면이 베드))",1
+출력 부품,"cover_b1.stl (모니터 뒤 덮개 (바깥면이 베드))",1
+출력 부품,"handle__carry_handle.stl (모니터 손잡이 (나사 고정))",1
+출력 부품,"kbbottom_a1.stl (키보드 하판)",1
+출력 부품,"kbbottom_b1.stl (키보드 하판)",1
+출력 부품,"kbcase_a1.stl (키보드 케이스 (경사 윗면이 베드))",1
+출력 부품,"kbcase_b1.stl (키보드 케이스 (경사 윗면이 베드))",1
+출력 부품,"kbfeet__kb_foot_l.stl (키보드 접이식 다리)",1
+출력 부품,"kbfeet__kb_foot_r.stl (키보드 접이식 다리)",1
+출력 부품,"knobs__dial_tone_knob.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"knobs__dial_tone_mark.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"knobs__dial_vol_knob.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"knobs__dial_vol_mark.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"knobs__knob_bright_cap.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"knobs__knob_hsize_cap.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"knobs__knob_vhold_cap.stl (다이얼 · 노브 (앞면이 베드))",1
+출력 부품,"lid_a1.stl (본체 상판 (윗면이 베드))",1
+출력 부품,"lid_a2.stl (본체 상판 (윗면이 베드))",1
+출력 부품,"lid_b1.stl (본체 상판 (윗면이 베드))",1
+출력 부품,"lid_b2.stl (본체 상판 (윗면이 베드))",1
+출력 부품,"mbase.stl (마우스 바닥판 + 스위치 기둥)",1
+출력 부품,"mbody.stl (마우스 몸체 (윗면이 베드))",1
+출력 부품,"mbutton.stl (마우스 버튼)",1
+출력 부품,"shell_a1.stl (모니터 후면 셸 (앞 테두리가 베드))",1
+출력 부품,"shell_a2.stl (모니터 후면 셸 (앞 테두리가 베드))",1
+출력 부품,"shell_b1.stl (모니터 후면 셸 (앞 테두리가 베드))",1
+출력 부품,"shell_b2.stl (모니터 후면 셸 (앞 테두리가 베드))",1
+출력 부품,"splices__seam_bezel_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_bezel_1_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_bezel_1_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_cover_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_cover_0_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_kbbottom_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_kbbottom_0_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_kbcase_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_kbcase_0_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_0_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_0_2_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_0_3_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_1_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_1_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_1_2_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_1_3_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_1_4_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_lid_1_5_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_0_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_0_2_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_0_3_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_0_4_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_0_5_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_1_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_1_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_1_2_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_1_3_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_1_4_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_shell_1_5_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_tray_0_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_tray_0_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_tray_1_0_plate.stl (분할 이음 연결판)",1
+출력 부품,"splices__seam_tray_1_1_plate.stl (분할 이음 연결판)",1
+출력 부품,"stand_base.stl (모니터 스탠드 받침)",1
+출력 부품,"stand_neck__stand_neck.stl (스위블 목 (베어링 ↔ 크래들))",1
+출력 부품,"stand_swivel.stl (틸트 크래들 (평평한 바닥이 베드))",1
+출력 부품,"tray_a1.stl (본체 하부 트레이 (바닥면이 베드))",1
+출력 부품,"tray_a2.stl (본체 하부 트레이 (바닥면이 베드))",1
+출력 부품,"tray_b1.stl (본체 하부 트레이 (바닥면이 베드))",1
+출력 부품,"tray_b2.stl (본체 하부 트레이 (바닥면이 베드))",1
+출력 부품,"trim__brand_badge.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__brand_badge_monitor.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__eject_button.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__kb_stripe_0.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__kb_stripe_1.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__kb_stripe_2.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__kb_stripe_3.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__stripe_0.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__stripe_1.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__stripe_2.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__stripe_3.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__toggle_plate.stl (배지 · 스트라이프 · 소형 트림)",1
+출력 부품,"trim__usb_bay_bezel.stl (배지 · 스트라이프 · 소형 트림)",1

@@ -4,7 +4,7 @@
 
 ## CAD v3 (Rust) 와 웹 v2
 
-3D 뷰는 기본으로 **CAD v3** 모델을 표시합니다. `cad/spec.json`에서 Rust가 만든 실제 제작용 형상(`cad/out/web/pastella84.glb`)이고, STEP · URDF · USDA와 같은 형상입니다. 이 모드에서는 BOM의 치수와 질량도 Rust 빌드 값(`src/js/data/cad.js`)을 씁니다. 자세한 내용은 [cad/README.md](../../cad/README.md)를 보세요.
+3D 뷰는 기본으로 **실제 제작판** 모델을 표시합니다. `cad/spec.json`에서 Rust가 만든 형상(`cad/out/build/web/pastella84.glb`)으로, 19" LCD 패널과 3D 출력 하우징으로 지금 만들 수 있는 구성이고 STEP · URDF · USDA와 같은 형상입니다. **컨셉 (CRT)**를 고르면 워크벤치가 시뮬레이션하는 CRT 설계(`cad/out/web/pastella84.glb`)를 봅니다. 이 두 모드에서는 BOM의 치수와 질량도 Rust 빌드 값(`src/js/data/cad.js`)을 쓰고, 출력 계획 · BOM · DXF를 바로 받을 수 있습니다. 자세한 내용은 [cad/README.md](../../cad/README.md)를 보세요.
 
 "웹 v2"를 고르면 three.js로 직접 그린 이전 모델로 돌아갑니다. 분해도와 파라메트릭 모니터는 웹 v2에만 적용되며, Assembly 탭의 조립 애니메이션도 웹 v2 모델을 씁니다. 실물 참고 사진의 출처는 [references.md](references.md)에 있습니다.
 

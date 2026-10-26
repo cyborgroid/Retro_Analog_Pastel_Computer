@@ -1,6 +1,7 @@
 {
   "checks": {
     "clash_threshold_mm3": 1.0,
+    "fab_ok": true,
     "nominal_clashes": [],
     "ok": true,
     "open_meshes": [],
@@ -556,6 +557,7 @@
     "screen_h": 255.8,
     "screen_w": 409.2
   },
+  "fab": null,
   "files": {
     "glb": "cad/out/web/pastella84.glb",
     "glb_bytes": 2238016,
@@ -564,7 +566,7 @@
     "urdf": "cad/out/urdf/pastella84.urdf",
     "usda": "cad/out/pastella84.usda"
   },
-  "generator": "pastella-cad (Rust, truck B-rep)",
+  "generator": "pastella-cad (Rust, truck B-rep + boolmesh)",
   "links": [
     {
       "com_mm": [
@@ -2410,6 +2412,7 @@
       "mat": "tray",
       "name": "tray",
       "pick": "tray",
+      "source": "concept",
       "triangles": 1068,
       "volume_mm3": 478947.4
     },
@@ -2420,6 +2423,7 @@
       "mat": "rubber",
       "name": "foot_0",
       "pick": "tray",
+      "source": "concept",
       "triangles": 268,
       "volume_mm3": 676.6
     },
@@ -2430,6 +2434,7 @@
       "mat": "rubber",
       "name": "foot_1",
       "pick": "tray",
+      "source": "concept",
       "triangles": 268,
       "volume_mm3": 676.6
     },
@@ -2440,6 +2445,7 @@
       "mat": "rubber",
       "name": "foot_2",
       "pick": "tray",
+      "source": "concept",
       "triangles": 268,
       "volume_mm3": 676.6
     },
@@ -2450,6 +2456,7 @@
       "mat": "rubber",
       "name": "foot_3",
       "pick": "tray",
+      "source": "concept",
       "triangles": 268,
       "volume_mm3": 676.6
     },
@@ -2460,6 +2467,7 @@
       "mat": "steel",
       "name": "frame_plate",
       "pick": "frame",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 130725.0
     },
@@ -2470,6 +2478,7 @@
       "mat": "alu",
       "name": "standoff_0",
       "pick": "frame",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 293.9
     },
@@ -2480,6 +2489,7 @@
       "mat": "alu",
       "name": "standoff_1",
       "pick": "frame",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 293.9
     },
@@ -2490,6 +2500,7 @@
       "mat": "alu",
       "name": "standoff_2",
       "pick": "frame",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 293.9
     },
@@ -2500,6 +2511,7 @@
       "mat": "alu",
       "name": "standoff_3",
       "pick": "frame",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 293.9
     },
@@ -2510,6 +2522,7 @@
       "mat": "alu",
       "name": "standoff_4",
       "pick": "frame",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 293.9
     },
@@ -2520,6 +2533,7 @@
       "mat": "alu",
       "name": "standoff_5",
       "pick": "frame",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 293.9
     },
@@ -2530,6 +2544,7 @@
       "mat": "pcb",
       "name": "mainboard",
       "pick": "mainboard",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 187200.0
     },
@@ -2540,6 +2555,7 @@
       "mat": "chip",
       "name": "ic_cpu",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 3900.0
     },
@@ -2550,6 +2566,7 @@
       "mat": "chip",
       "name": "ic_rom",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 2775.0
     },
@@ -2560,6 +2577,7 @@
       "mat": "chip",
       "name": "ic_sram0",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 2775.0
     },
@@ -2570,6 +2588,7 @@
       "mat": "chip",
       "name": "ic_sram1",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 2775.0
     },
@@ -2580,6 +2599,7 @@
       "mat": "chip",
       "name": "ic_pico_video",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 5355.0
     },
@@ -2590,6 +2610,7 @@
       "mat": "chip",
       "name": "ic_pico_sound",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 5355.0
     },
@@ -2600,6 +2621,7 @@
       "mat": "chip",
       "name": "ic_ch376s",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 3750.0
     },
@@ -2610,6 +2632,7 @@
       "mat": "chip",
       "name": "ic_logic_0",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2620,6 +2643,7 @@
       "mat": "chip",
       "name": "ic_logic_1",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.3
     },
@@ -2630,6 +2654,7 @@
       "mat": "chip",
       "name": "ic_logic_2",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2640,6 +2665,7 @@
       "mat": "chip",
       "name": "ic_logic_3",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2650,6 +2676,7 @@
       "mat": "chip",
       "name": "ic_logic_4",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2660,6 +2687,7 @@
       "mat": "chip",
       "name": "ic_logic_5",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2670,6 +2698,7 @@
       "mat": "chip",
       "name": "ic_logic_6",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2680,6 +2709,7 @@
       "mat": "chip",
       "name": "ic_logic_7",
       "pick": "ics",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 614.2
     },
@@ -2690,6 +2720,7 @@
       "mat": "alu",
       "name": "xtal",
       "pick": "ics",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 841.9
     },
@@ -2700,6 +2731,7 @@
       "mat": "alu",
       "name": "heatsink",
       "pick": "psu",
+      "source": "concept",
       "triangles": 124,
       "volume_mm3": 92700.0
     },
@@ -2710,6 +2742,7 @@
       "mat": "chip",
       "name": "regulator_0",
       "pick": "psu",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 675.0
     },
@@ -2720,6 +2753,7 @@
       "mat": "chip",
       "name": "regulator_1",
       "pick": "psu",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 675.0
     },
@@ -2730,6 +2764,7 @@
       "mat": "chip",
       "name": "regulator_2",
       "pick": "psu",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 675.0
     },
@@ -2740,6 +2775,7 @@
       "mat": "steel",
       "name": "transformer",
       "pick": "psu",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 103488.0
     },
@@ -2750,6 +2786,7 @@
       "mat": "trim",
       "name": "c1_4700uF",
       "pick": "psu",
+      "source": "concept",
       "triangles": 268,
       "volume_mm3": 25695.7
     },
@@ -2760,6 +2797,7 @@
       "mat": "steel",
       "name": "usb_bay",
       "pick": "floppy",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 397800.0
     },
@@ -2770,6 +2808,7 @@
       "mat": "dark",
       "name": "speaker",
       "pick": "harness",
+      "source": "concept",
       "triangles": 1036,
       "volume_mm3": 19672.4
     },
@@ -2780,6 +2819,7 @@
       "mat": "base",
       "name": "lid",
       "pick": "lid",
+      "source": "concept",
       "triangles": 8156,
       "volume_mm3": 635746.9
     },
@@ -2790,6 +2830,7 @@
       "mat": "dark",
       "name": "usb_bay_bezel",
       "pick": "floppy",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 552.0
     },
@@ -2800,6 +2841,7 @@
       "mat": "trim",
       "name": "eject_button",
       "pick": "floppy",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 336.0
     },
@@ -2810,6 +2852,7 @@
       "mat": "led",
       "name": "led_power",
       "pick": "lid",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 76.5
     },
@@ -2820,6 +2863,7 @@
       "mat": "dark",
       "name": "brand_badge",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 1232.0
     },
@@ -2830,6 +2874,7 @@
       "mat": "stripe1",
       "name": "stripe_0",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 102.4
     },
@@ -2840,6 +2885,7 @@
       "mat": "stripe2",
       "name": "stripe_1",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 102.4
     },
@@ -2850,6 +2896,7 @@
       "mat": "stripe3",
       "name": "stripe_2",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 102.4
     },
@@ -2860,6 +2907,7 @@
       "mat": "stripe4",
       "name": "stripe_3",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 102.4
     },
@@ -2870,6 +2918,7 @@
       "mat": "trim",
       "name": "dial_vol_knob",
       "pick": "lid",
+      "source": "concept",
       "triangles": 348,
       "volume_mm3": 9406.7
     },
@@ -2880,6 +2929,7 @@
       "mat": "dark",
       "name": "dial_vol_mark",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 15.4
     },
@@ -2890,6 +2940,7 @@
       "mat": "trim",
       "name": "dial_tone_knob",
       "pick": "lid",
+      "source": "concept",
       "triangles": 348,
       "volume_mm3": 9406.7
     },
@@ -2900,6 +2951,7 @@
       "mat": "dark",
       "name": "dial_tone_mark",
       "pick": "lid",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 15.4
     },
@@ -2910,6 +2962,7 @@
       "mat": "dark",
       "name": "toggle_plate",
       "pick": "lid",
+      "source": "concept",
       "triangles": 168,
       "volume_mm3": 519.5
     },
@@ -2920,6 +2973,7 @@
       "mat": "alu",
       "name": "toggle_lever",
       "pick": "lid",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 424.3
     },
@@ -2930,6 +2984,7 @@
       "mat": "monitor",
       "name": "bezel",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 1358,
       "volume_mm3": 313103.2
     },
@@ -2940,6 +2995,7 @@
       "mat": "monitor",
       "name": "rear_shell",
       "pick": "shell",
+      "source": "concept",
       "triangles": 2012,
       "volume_mm3": 952981.3
     },
@@ -2950,6 +3006,7 @@
       "mat": "monitor",
       "name": "carry_handle",
       "pick": "shell",
+      "source": "concept",
       "triangles": 28,
       "volume_mm3": 36480.0
     },
@@ -2960,6 +3017,7 @@
       "mat": "slot",
       "name": "screen_mask",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 928,
       "volume_mm3": 10661.0
     },
@@ -2970,6 +3028,7 @@
       "mat": "glass",
       "name": "crt_tube",
       "pick": "tube",
+      "source": "concept",
       "triangles": 4884,
       "volume_mm3": 6448792.1
     },
@@ -2980,6 +3039,7 @@
       "mat": "screen",
       "name": "crt_screen",
       "pick": "screen",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 52337.7
     },
@@ -2990,6 +3050,7 @@
       "mat": "copper",
       "name": "deflection_yoke",
       "pick": "yoke",
+      "source": "concept",
       "triangles": 1312,
       "volume_mm3": 267057.4
     },
@@ -3000,6 +3061,7 @@
       "mat": "pcb",
       "name": "neck_board",
       "pick": "neckboard",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 5760.0
     },
@@ -3010,6 +3072,7 @@
       "mat": "dark",
       "name": "flyback",
       "pick": "flyback",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 32640.0
     },
@@ -3020,6 +3083,7 @@
       "mat": "pcb",
       "name": "chassis_board",
       "pick": "neckboard",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 52049.5
     },
@@ -3030,6 +3094,7 @@
       "mat": "copper",
       "name": "degauss_coil",
       "pick": "degauss",
+      "source": "concept",
       "triangles": 1072,
       "volume_mm3": 33570.1
     },
@@ -3040,6 +3105,7 @@
       "mat": "led",
       "name": "led_monitor",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 36.7
     },
@@ -3050,6 +3116,7 @@
       "mat": "dark",
       "name": "brand_badge_monitor",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 496.0
     },
@@ -3060,6 +3127,7 @@
       "mat": "trim",
       "name": "knob_bright_cap",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 108,
       "volume_mm3": 619.3
     },
@@ -3070,6 +3138,7 @@
       "mat": "trim",
       "name": "knob_vhold_cap",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 108,
       "volume_mm3": 619.3
     },
@@ -3080,6 +3149,7 @@
       "mat": "trim",
       "name": "knob_hsize_cap",
       "pick": "bezel",
+      "source": "concept",
       "triangles": 108,
       "volume_mm3": 619.3
     },
@@ -3090,6 +3160,7 @@
       "mat": "monitor",
       "name": "tilt_rocker",
       "pick": "stand",
+      "source": "concept",
       "triangles": 514,
       "volume_mm3": 117337.7
     },
@@ -3100,6 +3171,7 @@
       "mat": "monitor",
       "name": "stand_base",
       "pick": "stand",
+      "source": "concept",
       "triangles": 532,
       "volume_mm3": 261188.2
     },
@@ -3110,6 +3182,7 @@
       "mat": "monitor",
       "name": "stand_neck",
       "pick": "stand",
+      "source": "concept",
       "triangles": 1036,
       "volume_mm3": 48779.6
     },
@@ -3120,6 +3193,7 @@
       "mat": "monitor",
       "name": "tilt_cradle",
       "pick": "stand",
+      "source": "concept",
       "triangles": 530,
       "volume_mm3": 213343.5
     },
@@ -3130,6 +3204,7 @@
       "mat": "keyboard",
       "name": "keyboard_case",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 1080,
       "volume_mm3": 88550.5
     },
@@ -3140,6 +3215,7 @@
       "mat": "stripe1",
       "name": "kb_stripe_0",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 86.4
     },
@@ -3150,6 +3226,7 @@
       "mat": "stripe2",
       "name": "kb_stripe_1",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 86.4
     },
@@ -3160,6 +3237,7 @@
       "mat": "stripe3",
       "name": "kb_stripe_2",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 86.4
     },
@@ -3170,6 +3248,7 @@
       "mat": "stripe4",
       "name": "kb_stripe_3",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 86.4
     },
@@ -3180,6 +3259,7 @@
       "mat": "steel",
       "name": "kb_plate",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 1032,
       "volume_mm3": 28645.5
     },
@@ -3190,6 +3270,7 @@
       "mat": "pcb",
       "name": "kb_pcb",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 39193.5
     },
@@ -3200,6 +3281,7 @@
       "mat": "tray",
       "name": "kb_foot_l",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 5200.0
     },
@@ -3210,6 +3292,7 @@
       "mat": "tray",
       "name": "kb_foot_r",
       "pick": "kbcase",
+      "source": "concept",
       "triangles": 12,
       "volume_mm3": 5200.0
     },
@@ -3220,6 +3303,7 @@
       "mat": "switch",
       "name": "key_1_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3230,6 +3314,7 @@
       "mat": "keyA",
       "name": "key_1_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3240,6 +3325,7 @@
       "mat": "switch",
       "name": "key_1_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3250,6 +3336,7 @@
       "mat": "switch",
       "name": "key_2_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3260,6 +3347,7 @@
       "mat": "keyA",
       "name": "key_2_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3270,6 +3358,7 @@
       "mat": "switch",
       "name": "key_2_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3280,6 +3369,7 @@
       "mat": "switch",
       "name": "key_3_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3290,6 +3380,7 @@
       "mat": "keyA",
       "name": "key_3_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3300,6 +3391,7 @@
       "mat": "switch",
       "name": "key_3_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3310,6 +3402,7 @@
       "mat": "switch",
       "name": "key_4_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3320,6 +3413,7 @@
       "mat": "keyA",
       "name": "key_4_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3330,6 +3424,7 @@
       "mat": "switch",
       "name": "key_4_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3340,6 +3435,7 @@
       "mat": "switch",
       "name": "key_5_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3350,6 +3446,7 @@
       "mat": "keyA",
       "name": "key_5_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3360,6 +3457,7 @@
       "mat": "switch",
       "name": "key_5_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3370,6 +3468,7 @@
       "mat": "switch",
       "name": "key_6_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3380,6 +3479,7 @@
       "mat": "keyA",
       "name": "key_6_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3390,6 +3490,7 @@
       "mat": "switch",
       "name": "key_6_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3400,6 +3501,7 @@
       "mat": "switch",
       "name": "key_7_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3410,6 +3512,7 @@
       "mat": "keyA",
       "name": "key_7_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3420,6 +3523,7 @@
       "mat": "switch",
       "name": "key_7_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3430,6 +3534,7 @@
       "mat": "switch",
       "name": "key_8_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3440,6 +3545,7 @@
       "mat": "keyA",
       "name": "key_8_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3450,6 +3556,7 @@
       "mat": "switch",
       "name": "key_8_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3460,6 +3567,7 @@
       "mat": "switch",
       "name": "key_9_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3470,6 +3578,7 @@
       "mat": "keyA",
       "name": "key_9_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3480,6 +3589,7 @@
       "mat": "switch",
       "name": "key_9_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3490,6 +3600,7 @@
       "mat": "switch",
       "name": "key_0_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3500,6 +3611,7 @@
       "mat": "keyA",
       "name": "key_0_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3510,6 +3622,7 @@
       "mat": "switch",
       "name": "key_0_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3520,6 +3633,7 @@
       "mat": "switch",
       "name": "key_minus_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3530,6 +3644,7 @@
       "mat": "keyA",
       "name": "key_minus_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3540,6 +3655,7 @@
       "mat": "switch",
       "name": "key_minus_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3550,6 +3666,7 @@
       "mat": "switch",
       "name": "key_equal_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3560,6 +3677,7 @@
       "mat": "keyA",
       "name": "key_equal_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3570,6 +3688,7 @@
       "mat": "switch",
       "name": "key_equal_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3580,6 +3699,7 @@
       "mat": "switch",
       "name": "key_bksp_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3590,6 +3710,7 @@
       "mat": "keyB",
       "name": "key_bksp_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 1208.7
     },
@@ -3600,6 +3721,7 @@
       "mat": "switch",
       "name": "key_bksp_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3610,6 +3732,7 @@
       "mat": "switch",
       "name": "key_q_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3620,6 +3743,7 @@
       "mat": "keyA",
       "name": "key_q_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3630,6 +3754,7 @@
       "mat": "switch",
       "name": "key_q_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3640,6 +3765,7 @@
       "mat": "switch",
       "name": "key_w_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3650,6 +3776,7 @@
       "mat": "keyA",
       "name": "key_w_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3660,6 +3787,7 @@
       "mat": "switch",
       "name": "key_w_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3670,6 +3798,7 @@
       "mat": "switch",
       "name": "key_e_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3680,6 +3809,7 @@
       "mat": "keyA",
       "name": "key_e_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3690,6 +3820,7 @@
       "mat": "switch",
       "name": "key_e_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3700,6 +3831,7 @@
       "mat": "switch",
       "name": "key_r_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3710,6 +3842,7 @@
       "mat": "keyA",
       "name": "key_r_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3720,6 +3853,7 @@
       "mat": "switch",
       "name": "key_r_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3730,6 +3864,7 @@
       "mat": "switch",
       "name": "key_t_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3740,6 +3875,7 @@
       "mat": "keyA",
       "name": "key_t_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3750,6 +3886,7 @@
       "mat": "switch",
       "name": "key_t_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3760,6 +3897,7 @@
       "mat": "switch",
       "name": "key_y_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3770,6 +3908,7 @@
       "mat": "keyA",
       "name": "key_y_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3780,6 +3919,7 @@
       "mat": "switch",
       "name": "key_y_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3790,6 +3930,7 @@
       "mat": "switch",
       "name": "key_u_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3800,6 +3941,7 @@
       "mat": "keyA",
       "name": "key_u_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3810,6 +3952,7 @@
       "mat": "switch",
       "name": "key_u_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3820,6 +3963,7 @@
       "mat": "switch",
       "name": "key_i_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3830,6 +3974,7 @@
       "mat": "keyA",
       "name": "key_i_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3840,6 +3985,7 @@
       "mat": "switch",
       "name": "key_i_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3850,6 +3996,7 @@
       "mat": "switch",
       "name": "key_o_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3860,6 +4007,7 @@
       "mat": "keyA",
       "name": "key_o_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3870,6 +4018,7 @@
       "mat": "switch",
       "name": "key_o_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3880,6 +4029,7 @@
       "mat": "switch",
       "name": "key_p_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3890,6 +4040,7 @@
       "mat": "keyA",
       "name": "key_p_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3900,6 +4051,7 @@
       "mat": "switch",
       "name": "key_p_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3910,6 +4062,7 @@
       "mat": "switch",
       "name": "key_lbracket_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3920,6 +4073,7 @@
       "mat": "keyA",
       "name": "key_lbracket_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3930,6 +4084,7 @@
       "mat": "switch",
       "name": "key_lbracket_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3940,6 +4095,7 @@
       "mat": "switch",
       "name": "key_rbracket_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3950,6 +4106,7 @@
       "mat": "keyA",
       "name": "key_rbracket_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3960,6 +4117,7 @@
       "mat": "switch",
       "name": "key_rbracket_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -3970,6 +4128,7 @@
       "mat": "switch",
       "name": "key_a_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -3980,6 +4139,7 @@
       "mat": "keyA",
       "name": "key_a_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -3990,6 +4150,7 @@
       "mat": "switch",
       "name": "key_a_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4000,6 +4161,7 @@
       "mat": "switch",
       "name": "key_s_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4010,6 +4172,7 @@
       "mat": "keyA",
       "name": "key_s_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4020,6 +4183,7 @@
       "mat": "switch",
       "name": "key_s_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4030,6 +4194,7 @@
       "mat": "switch",
       "name": "key_d_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4040,6 +4205,7 @@
       "mat": "keyA",
       "name": "key_d_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4050,6 +4216,7 @@
       "mat": "switch",
       "name": "key_d_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4060,6 +4227,7 @@
       "mat": "switch",
       "name": "key_f_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4070,6 +4238,7 @@
       "mat": "keyA",
       "name": "key_f_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4080,6 +4249,7 @@
       "mat": "switch",
       "name": "key_f_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4090,6 +4260,7 @@
       "mat": "switch",
       "name": "key_g_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4100,6 +4271,7 @@
       "mat": "keyA",
       "name": "key_g_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4110,6 +4282,7 @@
       "mat": "switch",
       "name": "key_g_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4120,6 +4293,7 @@
       "mat": "switch",
       "name": "key_h_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4130,6 +4304,7 @@
       "mat": "keyA",
       "name": "key_h_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4140,6 +4315,7 @@
       "mat": "switch",
       "name": "key_h_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4150,6 +4326,7 @@
       "mat": "switch",
       "name": "key_j_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4160,6 +4337,7 @@
       "mat": "keyA",
       "name": "key_j_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4170,6 +4348,7 @@
       "mat": "switch",
       "name": "key_j_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4180,6 +4359,7 @@
       "mat": "switch",
       "name": "key_k_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4190,6 +4370,7 @@
       "mat": "keyA",
       "name": "key_k_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4200,6 +4381,7 @@
       "mat": "switch",
       "name": "key_k_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4210,6 +4392,7 @@
       "mat": "switch",
       "name": "key_l_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4220,6 +4403,7 @@
       "mat": "keyA",
       "name": "key_l_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4230,6 +4414,7 @@
       "mat": "switch",
       "name": "key_l_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4240,6 +4425,7 @@
       "mat": "switch",
       "name": "key_semicolon_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4250,6 +4436,7 @@
       "mat": "keyA",
       "name": "key_semicolon_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4260,6 +4447,7 @@
       "mat": "switch",
       "name": "key_semicolon_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4270,6 +4458,7 @@
       "mat": "switch",
       "name": "key_quote_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4280,6 +4469,7 @@
       "mat": "keyA",
       "name": "key_quote_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4290,6 +4480,7 @@
       "mat": "switch",
       "name": "key_quote_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4300,6 +4491,7 @@
       "mat": "switch",
       "name": "key_enter_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4310,6 +4502,7 @@
       "mat": "keyB",
       "name": "key_enter_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 1385.3
     },
@@ -4320,6 +4513,7 @@
       "mat": "switch",
       "name": "key_enter_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4330,6 +4524,7 @@
       "mat": "switch",
       "name": "key_shift_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4340,6 +4535,7 @@
       "mat": "keyB",
       "name": "key_shift_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 1385.3
     },
@@ -4350,6 +4546,7 @@
       "mat": "switch",
       "name": "key_shift_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4360,6 +4557,7 @@
       "mat": "switch",
       "name": "key_z_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4370,6 +4568,7 @@
       "mat": "keyA",
       "name": "key_z_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4380,6 +4579,7 @@
       "mat": "switch",
       "name": "key_z_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4390,6 +4590,7 @@
       "mat": "switch",
       "name": "key_x_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4400,6 +4601,7 @@
       "mat": "keyA",
       "name": "key_x_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4410,6 +4612,7 @@
       "mat": "switch",
       "name": "key_x_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4420,6 +4623,7 @@
       "mat": "switch",
       "name": "key_c_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4430,6 +4634,7 @@
       "mat": "keyA",
       "name": "key_c_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4440,6 +4645,7 @@
       "mat": "switch",
       "name": "key_c_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4450,6 +4656,7 @@
       "mat": "switch",
       "name": "key_v_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4460,6 +4667,7 @@
       "mat": "keyA",
       "name": "key_v_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4470,6 +4678,7 @@
       "mat": "switch",
       "name": "key_v_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4480,6 +4689,7 @@
       "mat": "switch",
       "name": "key_b_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4490,6 +4700,7 @@
       "mat": "keyA",
       "name": "key_b_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4500,6 +4711,7 @@
       "mat": "switch",
       "name": "key_b_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4510,6 +4722,7 @@
       "mat": "switch",
       "name": "key_n_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4520,6 +4733,7 @@
       "mat": "keyA",
       "name": "key_n_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4530,6 +4744,7 @@
       "mat": "switch",
       "name": "key_n_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4540,6 +4755,7 @@
       "mat": "switch",
       "name": "key_m_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4550,6 +4766,7 @@
       "mat": "keyA",
       "name": "key_m_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4560,6 +4777,7 @@
       "mat": "switch",
       "name": "key_m_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4570,6 +4788,7 @@
       "mat": "switch",
       "name": "key_comma_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4580,6 +4799,7 @@
       "mat": "keyA",
       "name": "key_comma_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4590,6 +4810,7 @@
       "mat": "switch",
       "name": "key_comma_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4600,6 +4821,7 @@
       "mat": "switch",
       "name": "key_period_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4610,6 +4832,7 @@
       "mat": "keyA",
       "name": "key_period_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4620,6 +4843,7 @@
       "mat": "switch",
       "name": "key_period_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4630,6 +4854,7 @@
       "mat": "switch",
       "name": "key_slash_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4640,6 +4865,7 @@
       "mat": "keyA",
       "name": "key_slash_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 855.5
     },
@@ -4650,6 +4876,7 @@
       "mat": "switch",
       "name": "key_slash_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4660,6 +4887,7 @@
       "mat": "switch",
       "name": "key_space_switch",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 188,
       "volume_mm3": 1938.8
     },
@@ -4670,6 +4898,7 @@
       "mat": "keyB",
       "name": "key_space_cap",
       "pick": "keycap",
+      "source": "concept",
       "triangles": 324,
       "volume_mm3": 4564.0
     },
@@ -4680,6 +4909,7 @@
       "mat": "switch",
       "name": "key_space_stem",
       "pick": "kbpcb",
+      "source": "concept",
       "triangles": 76,
       "volume_mm3": 68.6
     },
@@ -4690,6 +4920,7 @@
       "mat": "tray",
       "name": "mouse_base",
       "pick": "mshell",
+      "source": "concept",
       "triangles": 808,
       "volume_mm3": 16753.8
     },
@@ -4700,6 +4931,7 @@
       "mat": "mouse",
       "name": "mouse_shell",
       "pick": "mshell",
+      "source": "concept",
       "triangles": 1224,
       "volume_mm3": 21292.1
     },
@@ -4710,6 +4942,7 @@
       "mat": "trim",
       "name": "mouse_button",
       "pick": "mshell",
+      "source": "concept",
       "triangles": 148,
       "volume_mm3": 7116.5
     },
@@ -4720,6 +4953,7 @@
       "mat": "rubber",
       "name": "mouse_ball",
       "pick": "ball",
+      "source": "concept",
       "triangles": 528,
       "volume_mm3": 5419.9
     },
@@ -4730,6 +4964,7 @@
       "mat": "alu",
       "name": "mouse_roller_x",
       "pick": "encoder",
+      "source": "concept",
       "triangles": 236,
       "volume_mm3": 528.1
     },
@@ -4740,9 +4975,11 @@
       "mat": "alu",
       "name": "mouse_roller_y",
       "pick": "encoder",
+      "source": "concept",
       "triangles": 236,
       "volume_mm3": 528.1
     }
   ],
-  "revision": "v3"
+  "revision": "v3",
+  "variant": "concept"
 }

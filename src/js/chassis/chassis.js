@@ -68,10 +68,11 @@
   const cadDims = m => { const b = m.bbox_mm; return [`${Math.round(b[0])} × ${Math.round(b[2])} × ${Math.round(b[1])}`, m.mass_kg.toFixed(2) + ' kg']; };
   function renderBOM() {
     const d = dimsFromState(), kg = (6.5 + S.monitor.diag * S.monitor.diag * 0.012).toFixed(1);
-    const C = DATA.CAD && PX.cad && PX.cad.enabled ? DATA.CAD.modules : null;
+    const C = PX.cad && PX.cad.current() ? PX.cad.current().modules : null;
     if (C) {
       const m = cadDims(C.monitor);
-      $('#bom').innerHTML = DATA.BOM.map(r => r[0] === 'MONITOR' ? ['CRT 모니터', m[0], m[1], 'ABS 2.5t, 베젤 12 mm', 'BRIGHT · V-HOLD · H-SIZE 노브', '19" 16:10 슈퍼슬림 CRT, 손잡이, 틸트 로커']
+      const real = PX.cad.mode === 'build';
+      $('#bom').innerHTML = DATA.BOM.map(r => r[0] === 'MONITOR' ? [real ? 'LCD 모니터' : 'CRT 모니터', m[0], m[1], real ? 'PLA 출력 2.5t, 베젤 21 mm' : 'ABS 2.5t, 베젤 12 mm', 'BRIGHT · V-HOLD · H-SIZE 노브', real ? '19" 16:10 LCD (M190PW01 V8), 컨트롤러 보드, 패널 클립 8개' : '19" 16:10 슈퍼슬림 CRT, 손잡이, 틸트 로커']
         : CADROW[r[0]] ? [r[0], ...cadDims(C[CADROW[r[0]]]), r[3], r[4], r[5]] : r)
         .map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join('');
       return;

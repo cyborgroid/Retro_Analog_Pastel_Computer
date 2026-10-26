@@ -14,6 +14,7 @@ pub struct Spec {
     pub monitor: Monitor,
     pub keyboard: Keyboard,
     pub mouse: Mouse,
+    pub build: Build,
     pub materials: BTreeMap<String, MaterialSpec>,
     pub density_kg_per_mm3: BTreeMap<String, f64>,
 }
@@ -44,6 +45,25 @@ pub struct Keyboard {
 #[derive(Deserialize, Clone)]
 #[allow(non_snake_case)]
 pub struct Mouse { pub W: f64, pub D: f64, pub H: f64, pub x: f64, pub y: f64, pub ball_d: f64, pub ball_mass_kg: f64 }
+
+#[derive(Deserialize, Clone)]
+pub struct Printer { pub name: String, pub bed: [f64; 3], pub margin: f64 }
+#[derive(Deserialize, Clone)]
+pub struct Filament { pub name: String, pub density_g_cm3: f64, pub flow_mm3_s: f64, pub price_krw_per_kg: f64 }
+#[derive(Deserialize, Clone)]
+pub struct Insert { pub spec: String, pub hole_d: f64, pub depth: f64, pub boss_d: f64 }
+#[derive(Deserialize, Clone)]
+pub struct Item { pub part: String, #[serde(default)] pub outline: Vec<f64>, #[serde(default)] pub active: Vec<f64>,
+                  #[serde(default)] pub envelope: Vec<f64>, #[serde(default)] pub size: Vec<f64>, #[serde(default)] pub buck: Vec<f64>,
+                  #[serde(default)] pub mass_kg: f64 }
+
+/// Real-build parameters (LCD, DC adapter, FDM printing).
+#[derive(Deserialize, Clone)]
+pub struct Build {
+    pub printer: Printer, pub printer_alt: Printer, pub filament: Filament, pub insert: Insert,
+    pub screw_clear_d: f64, pub joint_spacing: f64, pub monitor_bezel: f64,
+    pub panel: Item, pub lcd_board: Item, pub psu: Item, pub mouse_sensor: Item, pub mouse_switch: Item,
+}
 
 #[derive(Deserialize, Clone)]
 pub struct MaterialSpec { pub color: String, pub roughness: f64, pub metallic: f64, pub opacity: f64, pub density: String }

@@ -76,6 +76,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06"
 
 [[package]]
+name = "boolmesh"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "db6504723206a532f9cace8eb63d339c14a17ad9c2b06d7c35b1c3127f7b945f"
+dependencies = [
+ "glam",
+]
+
+[[package]]
 name = "branches"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -297,6 +306,12 @@ dependencies = [
  "wasi",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "glam"
+version = "0.32.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f70749695b063ecbf6b62949ccccde2e733ec3ecbbd71d467dca4e5c6c97cca0"
 
 [[package]]
 name = "hashbrown"
@@ -562,6 +577,7 @@ dependencies = [
 name = "pastella-cad"
 version = "0.3.0"
 dependencies = [
+ "boolmesh",
  "rayon",
  "ruststep",
  "serde",

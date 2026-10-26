@@ -28,6 +28,21 @@
     "switch_mass_kg": 0.0035
   },
   "mouse": { "W": 62, "D": 100, "H": 30, "x": 255, "y": -235, "ball_d": 22, "ball_mass_kg": 0.035 },
+  "build": {
+    "note": "real build: LCD instead of CRT, external DC adapter, FDM-printed housings split to the printer bed, M3 heat-set inserts",
+    "printer": { "name": "256 mm class (Bambu Lab P1S / A1, Prusa Core One)", "bed": [256, 256, 256], "margin": 4 },
+    "printer_alt": { "name": "220 mm class (Creality Ender-3 V3)", "bed": [220, 220, 250], "margin": 4 },
+    "filament": { "name": "PLA", "density_g_cm3": 1.24, "flow_mm3_s": 12, "price_krw_per_kg": 22000 },
+    "insert": { "spec": "M3 heat-set insert, OD 4.6 x L 5.7", "hole_d": 4.1, "depth": 6.7, "boss_d": 9.0 },
+    "screw_clear_d": 3.4,
+    "joint_spacing": 90,
+    "monitor_bezel": 21,
+    "panel": { "part": "AUO M190PW01 V8 (19in 1440x900, LED backlight, dual LVDS)", "outline": [428, 278, 19], "active": [408.24, 255.15], "mass_kg": 2.1 },
+    "lcd_board": { "part": "HDMI/VGA/AV LCD controller board for M190PW01 (VS Display type)", "envelope": [150, 90, 25], "mass_kg": 0.15 },
+    "psu": { "part": "12 V 5 A DC adapter (KC certified) + LM2596 5 V buck module", "buck": [43, 21, 14] },
+    "mouse_sensor": { "part": "PMW3360 module with LM19-LSI lens", "size": [28, 21, 9.25] },
+    "mouse_switch": { "part": "Omron D2F-01F micro switch", "size": [12.8, 5.8, 6.5] }
+  },
   "materials": {
     "base":     { "color": "palette:base",          "roughness": 0.55, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },
     "tray":     { "color": "palette:base*0.88",     "roughness": 0.60, "metallic": 0.0, "opacity": 1.0,  "density": "abs" },

@@ -10,16 +10,22 @@
 
 터미널에 나오는 **Open Integrated Browser** 주소(`http://localhost:8084/index.html`)를 VS Code에서 열면 됩니다. `run.sh`는 로컬 HTTP 서버만 띄우고 별도 앱이나 외부 브라우저를 실행하지 않습니다. 3D 라이브러리(three.js r128)와 웹폰트는 CDN에서 불러오므로 인터넷 연결이 필요합니다. `index.html`을 `file://`로 직접 열어도 동작하지만, 그때는 CAD v3 모델(GLB)을 불러올 수 없어 웹 v2 모델이 표시됩니다.
 
-## CAD v3 — STEP · URDF · USDA
+## CAD v3 — STEP · URDF · USDA · 3D 프린팅
 
-`cad/spec.json`을 원본으로 Rust가 B-rep 솔리드를 만들어 STEP(AP214), URDF(+STL, 질량 · 관성), USDA(UsdPhysics), 웹용 GLB를 내보냅니다. 간섭 · 관절 스윕 검사를 거치고, C#이 산출물을 교차 검증합니다. Chassis 탭의 3D 뷰와 BOM은 이 결과를 표시합니다.
+`cad/spec.json`을 원본으로 Rust가 B-rep 솔리드를 만들어 STEP(AP214), URDF(+STL, 질량 · 관성), USDA(UsdPhysics), 웹용 GLB를 내보냅니다. 간섭 · 관절 스윕 검사를 거치고, C#이 산출물을 교차 검증합니다.
+
+두 가지 판이 함께 나옵니다. **실제 제작판**(`cad/out/build/`)은 지금 살 수 있는 부품(19" LCD 패널, 12 V 어댑터, MX 스위치 등)과 256 mm급 3D 프린터로 만드는 구성입니다. 베드에 맞게 자동 분할된 출력 STL 94조각, 구매 목록, 출력 계획, 스위치 플레이트 DXF가 포함됩니다. **컨셉판**(`cad/out/`)은 워크벤치가 시뮬레이션하는 CRT 설계입니다. Chassis 탭에서 두 판을 골라 볼 수 있습니다.
 
 ```
 ./cad/build.sh rust          # Only Rust
 ./cad/build.sh csharp-rust   # Rust + C# 검증 (기본값)
 ```
 
-실물 참고 사진에서 배운 내용, 검사 항목, 한계는 [cad/README.md](cad/README.md)에 있습니다.
+실물 참고 사진에서 배운 내용, 조립 순서, 검사 항목, 한계는 [cad/README.md](cad/README.md)에 있습니다.
+
+## 레퍼런스 이미지 수집
+
+`./run.sh`로 연 서버의 `/refs.html`에서 웹 이미지 검색 결과를 모아 분석할 수 있습니다. 검색 결과 페이지를 브라우저에서 직접 열고, 페이지의 **수집 스크립트 복사** 버튼으로 받은 스크립트를 그 페이지의 개발자 도구 콘솔에서 실행하면 목록이 로컬 서버로 전송됩니다. **다운로드 · 분석**을 누르면 원본 사이트에서 이미지를 받아 중복 제거, 색 분석, 비교표를 만듭니다. 공개 라이선스 사진은 `python3 tools/refs/commons.py`로 Wikimedia Commons에서 대량으로 받을 수 있습니다. 이미지는 `references/`(git 제외)에 저장되고, 요약은 [environments/chassis/references-web.md](environments/chassis/references-web.md)에 생성됩니다.
 
 ## 다섯 환경
 
@@ -52,7 +58,8 @@ src/
 environments/              환경별 설계 문서 (사양, SPICE 넷리스트, CSV, JSON)
 tools/export-data.js       src/js/data → environments/*.json·csv·md 재생성
 cad/                       CAD v3: spec.json · rust(형상 · 검사 · 내보내기) · csharp(검증) · out(STEP · URDF · USDA · GLB)
-run.sh                     워크벤치 로컬 서버 (Open Integrated Browser 주소 출력)
+run.sh                     워크벤치 로컬 서버 (Open Integrated Browser 주소 출력) — tools/serve.py
+refs.html · tools/refs/    레퍼런스 이미지 수집 페이지 · 브라우저 수집 스크립트 · 다운로드/분석 · Commons 수집
 ```
 
 ## 데이터 동기화

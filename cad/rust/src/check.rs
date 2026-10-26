@@ -145,10 +145,13 @@ pub struct Clash { pub a: String, pub b: String, pub mm3: f64 }
 #[derive(serde::Serialize)]
 pub struct SweepResult { pub joint: String, pub kind: String, pub poses: Vec<f64>, pub clashes: Vec<(f64, Clash)> }
 
+/// Parts printed as one body (same group) may overlap by design.
+fn fused(grp: &[Option<String>], i: usize, j: usize) -> bool { grp[i].is_some() && grp[i] == grp[j] }
+
 /// All part pairs at the nominal pose.
-pub fn nominal(names: &[String], bodies: &[Body], threshold: f64) -> Vec<Clash> {
+pub fn nominal(names: &[String], bodies: &[Body], grp: &[Option<String>], threshold: f64) -> Vec<Clash> {
     let pairs: Vec<(usize, usize)> = (0..bodies.len()).flat_map(|i| (i + 1..bodies.len()).map(move |j| (i, j)))
-        .filter(|&(i, j)| bodies[i].bb.overlaps(&bodies[j].bb, 0.01)).collect();
+        .filter(|&(i, j)| !fused(grp, i, j) && bodies[i].bb.overlaps(&bodies[j].bb, 0.01)).collect();
     let mut out: Vec<Clash> = pairs.par_iter().filter_map(|&(i, j)| {
         let v = overlap(&bodies[i], &bodies[j]);
         (v > threshold).then(|| Clash { a: names[i].clone(), b: names[j].clone(), mm3: (v * 10.0).round() / 10.0 })
@@ -176,7 +179,7 @@ fn poses(j: &Joint) -> Vec<f64> {
 }
 
 /// Move each joint to its limits (others nominal) and test the moving subtree against the rest.
-pub fn sweeps(model: &Model, names: &[String], links: &[String], bodies: &[Body], threshold: f64) -> Vec<SweepResult> {
+pub fn sweeps(model: &Model, names: &[String], links: &[String], bodies: &[Body], grp: &[Option<String>], threshold: f64) -> Vec<SweepResult> {
     let origin = |l: &str| model.links.iter().find(|x| x.name == l).unwrap().origin;
     model.joints.par_iter().filter(|j| j.kind != "fixed").map(|j| {
         let sub = subtree(model, &j.child);
@@ -189,7 +192,7 @@ pub fn sweeps(model: &Model, names: &[String], links: &[String], bodies: &[Body]
             for &i in &moving {
                 let mb = Body::new(bodies[i].mesh.map(f));
                 for &k in &fixed {
-                    if !mb.bb.overlaps(&bodies[k].bb, 0.01) { continue; }
+                    if fused(grp, i, k) || !mb.bb.overlaps(&bodies[k].bb, 0.01) { continue; }
                     let v = overlap(&mb, &bodies[k]);
                     if v > threshold { clashes.push((q, Clash { a: names[i].clone(), b: names[k].clone(), mm3: (v * 10.0).round() / 10.0 })); }
                 }

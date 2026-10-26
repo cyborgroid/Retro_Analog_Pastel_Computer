@@ -1,6 +1,6 @@
 ﻿// Pastella.Validate — independent C# validator for the Rust CAD build (cad/rust).
-// It never regenerates geometry: it re-reads cad/out (URDF + STL, USDA, STEP, GLB, report.json)
-// and cross-checks them against each other and against cad/spec.json.
+// It never regenerates geometry: it re-reads cad/out (concept) and cad/out/build (real build: URDF + STL, USDA,
+// STEP, GLB, report.json, print pieces, BOM, DXF) and cross-checks them against each other and against cad/spec.json.
 // Usage: dotnet run --project cad/csharp/Pastella.Validate -- [--root <repo>]   (exit code 1 on failure)
 
 using System.Globalization;
@@ -10,116 +10,165 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 var root = Arg("--root") ?? FindRoot();
-var outDir = Path.Combine(root, "cad", "out");
 var v = new Validator();
-
 var spec = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "cad", "spec.json"))).RootElement;
-var report = JsonDocument.Parse(File.ReadAllText(Path.Combine(outDir, "report.json"))).RootElement;
-var urdf = Urdf.Load(Path.Combine(outDir, "urdf", "pastella84.urdf"));
-var usd = Usda.Load(Path.Combine(outDir, "pastella84.usda"));
-
-v.Section("report.json");
-v.Check("Rust self-checks passed (watertight, interference, joint sweeps)", report.GetProperty("checks").GetProperty("ok").GetBoolean());
-
-v.Section("URDF tree");
-v.Check("link names unique", urdf.Links.Select(l => l.Name).Distinct().Count() == urdf.Links.Count);
-v.Check("joint names unique", urdf.Joints.Select(j => j.Name).Distinct().Count() == urdf.Joints.Count);
-v.Check("joints reference existing links", urdf.Joints.All(j => urdf.Has(j.Parent) && urdf.Has(j.Child)));
-var roots = urdf.Links.Where(l => urdf.Joints.All(j => j.Child != l.Name)).Select(l => l.Name).ToList();
-v.Check($"single root 'desk' (found: {string.Join(", ", roots)})", roots.Count == 1 && roots[0] == "desk");
-v.Check("every non-root link has exactly one parent", urdf.Links.Where(l => l.Name != "desk").All(l => urdf.Joints.Count(j => j.Child == l.Name) == 1));
-v.Check("tree reaches every link (acyclic)", urdf.Reachable("desk").Count == urdf.Links.Count);
-
-v.Section("URDF physics");
-foreach (var l in urdf.Links.Where(l => l.Mass is not null))
+int keysTotal = spec.GetProperty("keyboard").GetProperty("rows").EnumerateArray().Sum(r => r.GetArrayLength());
+foreach (var (tag, rel) in new[] { ("concept", "cad/out"), ("build", "cad/out/build") })
 {
-    var ev = Linalg.EigSym(l.Inertia!);
-    v.Check($"{l.Name}: mass > 0", l.Mass > 0, quiet: true);
-    v.Check($"{l.Name}: inertia positive definite", ev.All(e => e > 0), quiet: true);
-    v.Check($"{l.Name}: inertia triangle inequality", ev[0] + ev[1] >= ev[2] * (1 - 1e-6) && ev[1] + ev[2] >= ev[0] * (1 - 1e-6) && ev[0] + ev[2] >= ev[1] * (1 - 1e-6), quiet: true);
+    var outDir = Path.Combine(root, rel);
+    v.Prefix = tag + " · ";
+    var report = JsonDocument.Parse(File.ReadAllText(Path.Combine(outDir, "report.json"))).RootElement;
+    var urdf = Urdf.Load(Path.Combine(outDir, "urdf", "pastella84.urdf"));
+    var usd = Usda.Load(Path.Combine(outDir, "pastella84.usda"));
+
+    v.Section("report.json");
+    v.Check("Rust self-checks passed (watertight, interference, joint sweeps)", report.GetProperty("checks").GetProperty("ok").GetBoolean());
+
+    v.Section("URDF tree");
+    v.Check("link names unique", urdf.Links.Select(l => l.Name).Distinct().Count() == urdf.Links.Count);
+    v.Check("joint names unique", urdf.Joints.Select(j => j.Name).Distinct().Count() == urdf.Joints.Count);
+    v.Check("joints reference existing links", urdf.Joints.All(j => urdf.Has(j.Parent) && urdf.Has(j.Child)));
+    var roots = urdf.Links.Where(l => urdf.Joints.All(j => j.Child != l.Name)).Select(l => l.Name).ToList();
+    v.Check($"single root 'desk' (found: {string.Join(", ", roots)})", roots.Count == 1 && roots[0] == "desk");
+    v.Check("every non-root link has exactly one parent", urdf.Links.Where(l => l.Name != "desk").All(l => urdf.Joints.Count(j => j.Child == l.Name) == 1));
+    v.Check("tree reaches every link (acyclic)", urdf.Reachable("desk").Count == urdf.Links.Count);
+
+    v.Section("URDF physics");
+    foreach (var l in urdf.Links.Where(l => l.Mass is not null))
+    {
+        var ev = Linalg.EigSym(l.Inertia!);
+        v.Check($"{l.Name}: mass > 0", l.Mass > 0, quiet: true);
+        v.Check($"{l.Name}: inertia positive definite", ev.All(e => e > 0), quiet: true);
+        v.Check($"{l.Name}: inertia triangle inequality", ev[0] + ev[1] >= ev[2] * (1 - 1e-6) && ev[1] + ev[2] >= ev[0] * (1 - 1e-6) && ev[0] + ev[2] >= ev[1] * (1 - 1e-6), quiet: true);
+    }
+    v.Check($"{urdf.Links.Count(l => l.Mass is not null)} massive links: mass > 0, inertia PD + triangle inequality", true);
+    foreach (var j in urdf.Joints.Where(j => j.Type != "fixed"))
+    {
+        v.Check($"{j.Name}: unit axis", Math.Abs(Linalg.Norm(j.Axis) - 1) < 1e-4, quiet: true);
+        if (j.Type is "revolute" or "prismatic") v.Check($"{j.Name}: lower < upper", j.Lower < j.Upper, quiet: true);
+    }
+    v.Check($"{urdf.Joints.Count(j => j.Type != "fixed")} movable joints: unit axes, ordered limits", true);
+
+    v.Section("URDF meshes (binary STL)");
+    int stlFiles = 0, stlTris = 0;
+    foreach (var file in urdf.Links.SelectMany(l => l.Meshes))
+    {
+        var path = Path.Combine(outDir, "urdf", file);
+        if (!File.Exists(path)) { v.Check($"{file} exists", false); continue; }
+        var (tris, closed, finite) = Stl.Inspect(path);
+        stlFiles++; stlTris += tris;
+        v.Check($"{file}: size matches triangle count, finite", finite, quiet: true);
+        v.Check($"{file}: watertight (every edge used twice)", closed, quiet: true);
+    }
+    v.Check($"{stlFiles} STL files, {stlTris} triangles: exist, finite, watertight", stlFiles == urdf.Links.Sum(l => l.Meshes.Count));
+
+    v.Section("URDF vs spec.json");
+    var kb = spec.GetProperty("keyboard");
+    int keys = kb.GetProperty("rows").EnumerateArray().Sum(r => r.GetArrayLength());
+    var keyJoints = urdf.Joints.Where(j => j.Name.StartsWith("key_")).ToList();
+    v.Check($"one prismatic joint per key ({keyJoints.Count} / {keys})", keyJoints.Count == keys && keyJoints.All(j => j.Type == "prismatic"));
+    double travel = kb.GetProperty("travel").GetDouble() / 1000;
+    v.Check($"key travel = {travel * 1000} mm", keyJoints.All(j => Math.Abs(j.Upper - travel) < 1e-9 && j.Lower == 0));
+    var mon = spec.GetProperty("monitor");
+    var tilt = urdf.Joint("monitor_tilt_joint");
+    v.Check("monitor tilt limits = spec.tilt_deg", Near(tilt.Lower, Rad(mon, "tilt_deg", 0)) && Near(tilt.Upper, Rad(mon, "tilt_deg", 1)));
+    var swivel = urdf.Joint("monitor_swivel_joint");
+    v.Check("monitor swivel limits = spec.swivel_deg", Near(swivel.Lower, Rad(mon, "swivel_deg", 0)) && Near(swivel.Upper, Rad(mon, "swivel_deg", 1)));
+    double heavy = tag == "concept" ? mon.GetProperty("tube_mass_kg").GetDouble() : spec.GetProperty("build").GetProperty("panel").GetProperty("mass_kg").GetDouble();
+    v.Check($"monitor body carries the {heavy} kg {(tag == "concept" ? "CRT" : "LCD panel")}", urdf.Links.First(l => l.Name == "monitor_body").Mass > heavy);
+
+    v.Section("USDA vs URDF");
+    v.Check("stage: upAxis Z, metersPerUnit 1, kilogramsPerUnit 1", usd.UpAxis == "Z" && usd.MetersPerUnit == 1 && usd.KgPerUnit == 1);
+    var massive = urdf.Links.Where(l => l.Mass is not null).ToList();
+    v.Check($"same rigid bodies ({usd.Masses.Count} / {massive.Count})", usd.Masses.Count == massive.Count && massive.All(l => usd.Masses.ContainsKey(l.Name)));
+    double worst = massive.Where(l => usd.Masses.ContainsKey(l.Name)).Select(l => Math.Abs(usd.Masses[l.Name] - l.Mass!.Value) / l.Mass.Value).DefaultIfEmpty(1).Max();
+    v.Check($"masses agree (worst relative difference {worst:E1})", worst < 1e-5);
+    v.Check($"same joints ({usd.Joints.Count} / {urdf.Joints.Count})", usd.Joints.Count == urdf.Joints.Count && urdf.Joints.All(j => usd.Joints.ContainsKey(j.Name)));
+    bool typesOk = true, limitsOk = true, bodiesOk = true;
+    foreach (var j in urdf.Joints)
+    {
+        if (!usd.Joints.TryGetValue(j.Name, out var u)) continue;
+        string want = j.Type switch { "fixed" => "PhysicsFixedJoint", "prismatic" => "PhysicsPrismaticJoint", _ => "PhysicsRevoluteJoint" };
+        typesOk &= u.Type == want;
+        bodiesOk &= u.Body1 == j.Child && (j.Parent == "desk" ? u.Body0 is null : u.Body0 == j.Parent);
+        if (j.Type == "revolute") limitsOk &= Near(u.Lower!.Value, j.Lower * 180 / Math.PI, 1e-3) && Near(u.Upper!.Value, j.Upper * 180 / Math.PI, 1e-3);
+        if (j.Type == "prismatic") limitsOk &= Near(u.Lower!.Value, j.Lower) && Near(u.Upper!.Value, j.Upper);
+    }
+    v.Check("joint types match", typesOk);
+    v.Check("joint bodies match parent/child (world-fixed roots have no body0)", bodiesOk);
+    v.Check("joint limits match (USD degrees vs URDF radians)", limitsOk);
+    v.Check($"articulation roots on the world-fixed joints ({usd.ArticulationRoots})", usd.ArticulationRoots == urdf.Joints.Count(j => j.Parent == "desk"));
+
+    v.Section("STEP (AP214)");
+    var step = File.ReadAllText(Path.Combine(outDir, "pastella84.step"));
+    var parts = report.GetProperty("parts").EnumerateArray().Select(p => p.GetProperty("name").GetString()!).ToList();
+    v.Check("schema AUTOMOTIVE_DESIGN (AP214)", step.Contains("FILE_SCHEMA(('AUTOMOTIVE_DESIGN"));
+    v.Check("units: millimetre", step.Contains("SI_UNIT(.MILLI.,.METRE.)"));
+    var solidNames = Regex.Matches(step, @"MANIFOLD_SOLID_BREP\('([^']*)'").Select(m => m.Groups[1].Value).ToList();
+    int solidsExpected = report.GetProperty("counts").GetProperty("solids").GetInt32();
+    var nameSet = solidNames.ToHashSet();
+    v.Check($"named solids for every part ({solidNames.Count} solids / {solidsExpected} expected, {parts.Count} parts)",
+        solidNames.Count == solidsExpected && parts.All(p => nameSet.Contains(p) || nameSet.Contains(p + "_0")));
+    v.Check("every solid has a colour (STYLED_ITEM)", Regex.Matches(step, @"= STYLED_ITEM\(").Count == solidNames.Count);
+    var defined = new HashSet<int>(Regex.Matches(step, @"^#(\d+) =", RegexOptions.Multiline).Select(m => int.Parse(m.Groups[1].Value)));
+    var referenced = Regex.Matches(step, @"#(\d+)").Select(m => int.Parse(m.Groups[1].Value)).Distinct();
+    v.Check("all entity references resolve", referenced.All(defined.Contains));
+
+    v.Section("GLB (web)");
+    var glb = Glb.Load(Path.Combine(outDir, "web", "pastella84.glb"));
+    v.Check("glTF 2.0 binary, JSON + BIN chunks", glb.Ok);
+    v.Check($"one node per part ({parts.Count(glb.NodeNames.Contains)} / {parts.Count})", parts.All(glb.NodeNames.Contains));
+    v.Check("link nodes for every URDF link", urdf.Links.All(l => glb.NodeNames.Contains("link:" + l.Name)));
+
+    v.Section("web data");
+    var cadJs = File.ReadAllText(Path.Combine(root, "src", "js", "data", "cad.js"));
+    v.Check("src/js/data/cad.js points at this GLB and matches report revision", cadJs.Contains(rel + "/web/pastella84.glb") && cadJs.Contains($"\"revision\": \"{report.GetProperty("revision").GetString()}\""));
 }
-v.Check($"{urdf.Links.Count(l => l.Mass is not null)} massive links: mass > 0, inertia PD + triangle inequality", true);
-foreach (var j in urdf.Joints.Where(j => j.Type != "fixed"))
+
+// ---- build variant: printed pieces, BOM, DXF
 {
-    v.Check($"{j.Name}: unit axis", Math.Abs(Linalg.Norm(j.Axis) - 1) < 1e-4, quiet: true);
-    if (j.Type is "revolute" or "prismatic") v.Check($"{j.Name}: lower < upper", j.Lower < j.Upper, quiet: true);
+    v.Prefix = "build · ";
+    var bdir = Path.Combine(root, "cad", "out", "build");
+    var report = JsonDocument.Parse(File.ReadAllText(Path.Combine(bdir, "report.json"))).RootElement;
+    var b = spec.GetProperty("build");
+    var bed = b.GetProperty("printer").GetProperty("bed").EnumerateArray().Select(x => x.GetDouble()).ToArray();
+    double margin = b.GetProperty("printer").GetProperty("margin").GetDouble();
+    var pieces = report.GetProperty("fab").GetProperty("plan").GetProperty("pieces").EnumerateArray().ToList();
+    v.Section("3D print pieces (STL)");
+    int ok = 0;
+    foreach (var pc in pieces)
+    {
+        var f = Path.Combine(bdir, "print", pc.GetProperty("file").GetString()!);
+        if (!File.Exists(f)) { v.Check($"{f} exists", false); continue; }
+        var (tris, closed, finite) = Stl.Inspect(f);
+        var (lo, hi) = Stl.Bounds(f);
+        bool fits = hi[0] - lo[0] <= bed[0] - 2 * margin + 1e-3 && hi[1] - lo[1] <= bed[1] - 2 * margin + 1e-3 && hi[2] - lo[2] <= bed[2] + 1e-3;
+        bool onBed = Math.Abs(lo[2]) < 1e-3;
+        v.Check($"{pc.GetProperty("file").GetString()}: watertight, finite", closed && finite && tris > 0, quiet: true);
+        v.Check($"{pc.GetProperty("file").GetString()}: fits the {bed[0]} mm bed, lies on it", fits && onBed, quiet: true);
+        if (closed && finite && fits && onBed) ok++;
+    }
+    v.Check($"{ok} / {pieces.Count} pieces: watertight, fit the bed, lie on it", ok == pieces.Count && pieces.Count > 0);
+    v.Check("every split seam has joints (housings)", report.GetProperty("fab").GetProperty("plan").GetProperty("seams").EnumerateArray()
+        .Where(sm => !sm.GetProperty("group").GetString()!.StartsWith("stand") && !sm.GetProperty("group").GetString()!.StartsWith("m"))
+        .All(sm => sm.GetProperty("joints").GetInt32() > 0));
+    v.Check("print plan has no errors", report.GetProperty("fab").GetProperty("plan").GetProperty("errors").GetArrayLength() == 0);
+    v.Section("BOM · DXF");
+    var bom = File.ReadAllLines(Path.Combine(bdir, "bom.csv")).Skip(1).ToList();
+    int Qty(string key) => bom.Where(l => l.Contains(key)).Select(l => int.Parse(l[(l.LastIndexOf(',') + 1)..])).Sum();
+    v.Check("bom.csv lists the LCD panel and its controller board", Qty("M190PW01") >= 2);
+    v.Check($"bom.csv: one MX switch per key ({Qty("MX 호환 스위치")} / {keysTotal})", Qty("MX 호환 스위치") == keysTotal);
+    v.Check($"bom.csv: keycaps for every key ({Qty("키캡 PBT")} / {keysTotal})", Qty("키캡 PBT") == keysTotal);
+    v.Check($"bom.csv: heat-set inserts listed ({Qty("열압입 인서트")})", Qty("열압입 인서트") > 0);
+    v.Check("bom.csv lists every printed piece", pieces.All(pc => bom.Any(l => l.Contains(pc.GetProperty("file").GetString()!))));
+    var dxf = File.ReadAllText(Path.Combine(bdir, "fab", "kb_plate.dxf"));
+    int cut = Regex.Matches(dxf, "8\nCUTOUT\n66").Count, holes = Regex.Matches(dxf, "0\nCIRCLE\n").Count;
+    v.Check($"kb_plate.dxf: outline, {cut} switch/stabiliser cut-outs (>= {keysTotal}), {holes} screw holes", dxf.Contains("OUTLINE") && cut >= keysTotal && holes == 4 && dxf.TrimEnd().EndsWith("EOF"));
+    v.Check("print-plan.md present", File.Exists(Path.Combine(bdir, "print-plan.md")));
 }
-v.Check($"{urdf.Joints.Count(j => j.Type != "fixed")} movable joints: unit axes, ordered limits", true);
-
-v.Section("URDF meshes (binary STL)");
-int stlFiles = 0, stlTris = 0;
-foreach (var file in urdf.Links.SelectMany(l => l.Meshes))
-{
-    var path = Path.Combine(outDir, "urdf", file);
-    if (!File.Exists(path)) { v.Check($"{file} exists", false); continue; }
-    var (tris, closed, finite) = Stl.Inspect(path);
-    stlFiles++; stlTris += tris;
-    v.Check($"{file}: size matches triangle count, finite", finite, quiet: true);
-    v.Check($"{file}: watertight (every edge used twice)", closed, quiet: true);
-}
-v.Check($"{stlFiles} STL files, {stlTris} triangles: exist, finite, watertight", stlFiles == urdf.Links.Sum(l => l.Meshes.Count));
-
-v.Section("URDF vs spec.json");
-var kb = spec.GetProperty("keyboard");
-int keys = kb.GetProperty("rows").EnumerateArray().Sum(r => r.GetArrayLength());
-var keyJoints = urdf.Joints.Where(j => j.Name.StartsWith("key_")).ToList();
-v.Check($"one prismatic joint per key ({keyJoints.Count} / {keys})", keyJoints.Count == keys && keyJoints.All(j => j.Type == "prismatic"));
-double travel = kb.GetProperty("travel").GetDouble() / 1000;
-v.Check($"key travel = {travel * 1000} mm", keyJoints.All(j => Math.Abs(j.Upper - travel) < 1e-9 && j.Lower == 0));
-var mon = spec.GetProperty("monitor");
-var tilt = urdf.Joint("monitor_tilt_joint");
-v.Check("monitor tilt limits = spec.tilt_deg", Near(tilt.Lower, Rad(mon, "tilt_deg", 0)) && Near(tilt.Upper, Rad(mon, "tilt_deg", 1)));
-var swivel = urdf.Joint("monitor_swivel_joint");
-v.Check("monitor swivel limits = spec.swivel_deg", Near(swivel.Lower, Rad(mon, "swivel_deg", 0)) && Near(swivel.Upper, Rad(mon, "swivel_deg", 1)));
-double tube = mon.GetProperty("tube_mass_kg").GetDouble();
-v.Check($"monitor body carries the {tube} kg CRT", urdf.Links.First(l => l.Name == "monitor_body").Mass > tube);
-
-v.Section("USDA vs URDF");
-v.Check("stage: upAxis Z, metersPerUnit 1, kilogramsPerUnit 1", usd.UpAxis == "Z" && usd.MetersPerUnit == 1 && usd.KgPerUnit == 1);
-var massive = urdf.Links.Where(l => l.Mass is not null).ToList();
-v.Check($"same rigid bodies ({usd.Masses.Count} / {massive.Count})", usd.Masses.Count == massive.Count && massive.All(l => usd.Masses.ContainsKey(l.Name)));
-double worst = massive.Where(l => usd.Masses.ContainsKey(l.Name)).Select(l => Math.Abs(usd.Masses[l.Name] - l.Mass!.Value) / l.Mass.Value).DefaultIfEmpty(1).Max();
-v.Check($"masses agree (worst relative difference {worst:E1})", worst < 1e-5);
-v.Check($"same joints ({usd.Joints.Count} / {urdf.Joints.Count})", usd.Joints.Count == urdf.Joints.Count && urdf.Joints.All(j => usd.Joints.ContainsKey(j.Name)));
-bool typesOk = true, limitsOk = true, bodiesOk = true;
-foreach (var j in urdf.Joints)
-{
-    if (!usd.Joints.TryGetValue(j.Name, out var u)) continue;
-    string want = j.Type switch { "fixed" => "PhysicsFixedJoint", "prismatic" => "PhysicsPrismaticJoint", _ => "PhysicsRevoluteJoint" };
-    typesOk &= u.Type == want;
-    bodiesOk &= u.Body1 == j.Child && (j.Parent == "desk" ? u.Body0 is null : u.Body0 == j.Parent);
-    if (j.Type == "revolute") limitsOk &= Near(u.Lower!.Value, j.Lower * 180 / Math.PI, 1e-3) && Near(u.Upper!.Value, j.Upper * 180 / Math.PI, 1e-3);
-    if (j.Type == "prismatic") limitsOk &= Near(u.Lower!.Value, j.Lower) && Near(u.Upper!.Value, j.Upper);
-}
-v.Check("joint types match", typesOk);
-v.Check("joint bodies match parent/child (world-fixed roots have no body0)", bodiesOk);
-v.Check("joint limits match (USD degrees vs URDF radians)", limitsOk);
-v.Check($"articulation roots on the world-fixed joints ({usd.ArticulationRoots})", usd.ArticulationRoots == urdf.Joints.Count(j => j.Parent == "desk"));
-
-v.Section("STEP (AP214)");
-var step = File.ReadAllText(Path.Combine(outDir, "pastella84.step"));
-var parts = report.GetProperty("parts").EnumerateArray().Select(p => p.GetProperty("name").GetString()!).ToList();
-v.Check("schema AUTOMOTIVE_DESIGN (AP214)", step.Contains("FILE_SCHEMA(('AUTOMOTIVE_DESIGN"));
-v.Check("units: millimetre", step.Contains("SI_UNIT(.MILLI.,.METRE.)"));
-var solidNames = Regex.Matches(step, @"MANIFOLD_SOLID_BREP\('([^']*)'").Select(m => m.Groups[1].Value).ToList();
-v.Check($"one named solid per part ({solidNames.Count} / {parts.Count})", solidNames.Count == parts.Count && parts.All(solidNames.Contains));
-v.Check("every solid has a colour (STYLED_ITEM)", Regex.Matches(step, @"= STYLED_ITEM\(").Count == solidNames.Count);
-var defined = new HashSet<int>(Regex.Matches(step, @"^#(\d+) =", RegexOptions.Multiline).Select(m => int.Parse(m.Groups[1].Value)));
-var referenced = Regex.Matches(step, @"#(\d+)").Select(m => int.Parse(m.Groups[1].Value)).Distinct();
-v.Check("all entity references resolve", referenced.All(defined.Contains));
-
-v.Section("GLB (web)");
-var glb = Glb.Load(Path.Combine(outDir, "web", "pastella84.glb"));
-v.Check("glTF 2.0 binary, JSON + BIN chunks", glb.Ok);
-v.Check($"one node per part ({parts.Count(glb.NodeNames.Contains)} / {parts.Count})", parts.All(glb.NodeNames.Contains));
-v.Check("link nodes for every URDF link", urdf.Links.All(l => glb.NodeNames.Contains("link:" + l.Name)));
-
-v.Section("web data");
-var cadJs = File.ReadAllText(Path.Combine(root, "src", "js", "data", "cad.js"));
-v.Check("src/js/data/cad.js points at the GLB and matches report revision", cadJs.Contains("cad/out/web/pastella84.glb") && cadJs.Contains($"\"revision\": \"{report.GetProperty("revision").GetString()}\""));
 
 var md = v.Markdown(root);
-File.WriteAllText(Path.Combine(outDir, "validation.md"), md);
+File.WriteAllText(Path.Combine(root, "cad", "out", "validation.md"), md);
 Console.WriteLine(v.Summary());
 return v.Failed == 0 ? 0 : 1;
 
@@ -137,8 +186,9 @@ sealed class Validator
 {
     readonly List<(string Section, string Name, bool Ok)> rows = new();
     string section = "";
+    public string Prefix = "";
     public int Failed => rows.Count(r => !r.Ok);
-    public void Section(string s) => section = s;
+    public void Section(string s) => section = Prefix + s;
     public void Check(string name, bool ok, bool quiet = false)
     {
         if (!quiet || !ok) rows.Add((section, name, ok));
@@ -247,6 +297,18 @@ sealed class Usda
 
 static class Stl
 {
+    public static (double[], double[]) Bounds(string path)
+    {
+        var b = File.ReadAllBytes(path);
+        int n = BitConverter.ToInt32(b, 80);
+        var lo = new[] { double.MaxValue, double.MaxValue, double.MaxValue }; var hi = new[] { double.MinValue, double.MinValue, double.MinValue };
+        for (int i = 0; i < n; i++) for (int k = 0; k < 3; k++) for (int a = 0; a < 3; a++)
+        {
+            double x = BitConverter.ToSingle(b, 84 + i * 50 + 12 + k * 12 + a * 4);
+            lo[a] = Math.Min(lo[a], x); hi[a] = Math.Max(hi[a], x);
+        }
+        return (lo, hi);
+    }
     /// Binary STL: (triangles, watertight after welding, size consistent + finite)
     public static (int, bool, bool) Inspect(string path)
     {

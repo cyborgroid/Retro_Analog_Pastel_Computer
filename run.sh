@@ -11,14 +11,7 @@ url="http://localhost:$port/index.html"
 echo "PASTELLA 84 워크벤치"
 echo "  Open Integrated Browser: $url"
 echo "  CAD 출력(STEP/URDF/USDA): http://localhost:$port/cad/out/"
+echo "  레퍼런스 이미지 수집: http://localhost:$port/refs.html"
+# static files (UTF-8) + reference-image API, see tools/serve.py
 echo "  종료: Ctrl+C"
-# UTF-8 for every text type (the UI is Korean), proper types for the CAD outputs
-exec python3 -c '
-import http.server, sys
-H = http.server.SimpleHTTPRequestHandler
-H.extensions_map = {**H.extensions_map, **{e: t + "; charset=utf-8" for e, t in {
-    ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".md": "text/markdown",
-    ".csv": "text/csv", ".urdf": "application/xml", ".usda": "text/plain", ".qasm": "text/plain", ".cir": "text/plain"}.items()},
-    ".glb": "model/gltf-binary", ".step": "model/step", ".stl": "model/stl"}
-http.server.ThreadingHTTPServer(("127.0.0.1", int(sys.argv[1])), H).serve_forever()
-' "$port"
+exec python3 tools/serve.py "$port"

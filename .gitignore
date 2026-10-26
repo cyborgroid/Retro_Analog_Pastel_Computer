@@ -11,3 +11,6 @@ cad/csharp/**/obj/
 
 # scratch build output (cad/out is the published output)
 cad/out_*/
+
+# reference images collected from the browser (URLs, downloads, analysis cache)
+references/

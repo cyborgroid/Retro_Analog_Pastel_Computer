@@ -336,21 +336,58 @@ impl Cup {
     }
 }
 
-/// Open-front tapered shell along local -Z: front loop at z = 0, back loop at z = -len (closed),
-/// wall t; `back_holes` are plan profiles (local XY) cut through the back plate.
-pub fn tapered_shell(front: (f64, f64, f64), back: (f64, f64, f64), cy_back: f64, len: f64, t: f64, back_holes: &[Loop]) -> Solid {
-    let of = rrect(0.0, 0.0, front.0, front.1, front.2, 0.0);
-    let ifr = rrect(0.0, 0.0, front.0 - 2.0 * t, front.1 - 2.0 * t, front.2 - t, 0.0);
+/// Open-front tapered shell along local -Z: front loop at z = 0, an optional straight section of
+/// `straight` mm, then a taper to the back loop at z = -len. Wall t. With `open_back` the back is a
+/// rim (for a separate cover); otherwise it is closed by a plate with `back_holes` (local XY plan profiles).
+#[allow(clippy::too_many_arguments)]
+pub fn tapered_shell(front: (f64, f64, f64), back: (f64, f64, f64), cy_back: f64, len: f64, t: f64, back_holes: &[Loop],
+                     straight: f64, open_back: bool) -> Solid {
+    let out = |z: f64| rrect(0.0, 0.0, front.0, front.1, front.2, z);
+    let inn = |z: f64| rrect(0.0, 0.0, front.0 - 2.0 * t, front.1 - 2.0 * t, front.2 - t, z);
+    let (of, ifr) = (out(0.0), inn(0.0));
     let ob = rrect(0.0, cy_back, back.0, back.1, back.2, -len);
-    let ib = rrect(0.0, cy_back, back.0 - 2.0 * t, back.1 - 2.0 * t, back.2 - t, -len + t);
-    let holes: Vec<Hole> = back_holes.iter().map(|h| Hole { outer: h.map(tr(0.0, 0.0, -len)), inner: h.map(tr(0.0, 0.0, -len + t)) }).collect();
+    let zib = if open_back { -len } else { -len + t };
+    let ib = rrect(0.0, cy_back, back.0 - 2.0 * t, back.1 - 2.0 * t, back.2 - t, zib);
     let mut f = vec![plane_of(&of, &[&ifr])];
-    f.extend(ruled(&of, &ob));
-    f.extend(ruled(&ifr, &ib));
-    f.push(plane_of(&ob, &holes.iter().map(|h| &h.outer).collect::<Vec<_>>()));
-    f.push(plane_of(&ib, &holes.iter().map(|h| &h.inner).collect::<Vec<_>>()));
-    for h in &holes { f.extend(ruled(&h.outer, &h.inner)); }
+    if straight > 0.0 {
+        let (om, im) = (out(-straight), inn(-straight));
+        f.extend(ruled(&of, &om)); f.extend(ruled(&om, &ob));
+        f.extend(ruled(&ifr, &im)); f.extend(ruled(&im, &ib));
+    } else {
+        f.extend(ruled(&of, &ob));
+        f.extend(ruled(&ifr, &ib));
+    }
+    if open_back {
+        f.push(plane_of(&ob, &[&ib]));
+    } else {
+        let holes: Vec<Hole> = back_holes.iter().map(|h| Hole { outer: h.map(tr(0.0, 0.0, -len)), inner: h.map(tr(0.0, 0.0, -len + t)) }).collect();
+        f.push(plane_of(&ob, &holes.iter().map(|h| &h.outer).collect::<Vec<_>>()));
+        f.push(plane_of(&ib, &holes.iter().map(|h| &h.inner).collect::<Vec<_>>()));
+        for h in &holes { f.extend(ruled(&h.outer, &h.inner)); }
+    }
     close(f, "tapered shell")
+}
+
+/// Boss along local +Z from 0 to `len` with a blind hole (radius rh, depth hd) opening at z = len.
+pub fn boss(r: f64, rh: f64, len: f64, hd: f64) -> Solid {
+    if rh <= 0.0 { return turned(&[(r, 0.0, len)]); }
+    let (b0, b1) = (circle(0.0, 0.0, r, 0.0, 8), circle(0.0, 0.0, r, len, 8));
+    let (h0, h1) = (circle(0.0, 0.0, rh, len, 8), circle(0.0, 0.0, rh, len - hd, 8));
+    let mut f = vec![plane_of(&b0, &[])];
+    f.extend(ruled(&b0, &b1));
+    f.push(plane_of(&b1, &[&h0]));
+    f.extend(ruled(&h0, &h1));
+    f.push(plane_of(&h1, &[]));
+    close(f, "boss")
+}
+
+/// Frame with local +Z along `z`, local +X as close as possible to `x`, origin `o` (world).
+pub fn frame(o: [f64; 3], z: [f64; 3], x: [f64; 3]) -> Matrix4 {
+    let z = Vector3::new(z[0], z[1], z[2]).normalize();
+    let mut x = Vector3::new(x[0], x[1], x[2]);
+    x = (x - z * x.dot(z)).normalize();
+    let y = z.cross(x);
+    Matrix4::from_cols(x.extend(0.0), y.extend(0.0), z.extend(0.0), Vector3::new(o[0], o[1], o[2]).extend(1.0))
 }
 
 /// Bezel: outer frame, stepped recess and through opening, front at z = 0, back at z = -depth.

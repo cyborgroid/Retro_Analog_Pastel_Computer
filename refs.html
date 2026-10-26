@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PASTELLA 84 레퍼런스</title>
+<link rel="stylesheet" href="src/css/tokens.css">
+<link rel="stylesheet" href="src/css/base.css">
+<style>
+  body { background: var(--bg); margin: 0; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 48px; display: grid; gap: 14px; }
+  ol { margin: 6px 0 0; padding-left: 20px; line-height: 1.7; font-size: 13.5px; }
+  code { font-family: var(--f-mono); font-size: 12.5px; background: var(--panel-2); padding: 1px 5px; border-radius: 5px; }
+  #drop { border: 2px dashed var(--line); border-radius: 12px; padding: 22px; text-align: center; color: var(--muted); }
+  #drop.over { border-color: var(--accent); background: var(--accent-soft); }
+  .sw { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; margin: 4px; font: 11px var(--f-mono); }
+  .sw i { width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--line); }
+  .sheets { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .sheets img { width: 100%; border-radius: 8px; border: 1px solid var(--line); }
+  @media (max-width: 640px) { .wrap { padding: 16px; } }
+</style>
+<div class="wrap">
+  <div class="card">
+    <h3>레퍼런스 이미지 수집 <span class="tag bg-sky">브라우저 → 로컬 서버</span></h3>
+    <p class="desc">원하는 이미지 검색 결과 페이지를 브라우저에서 직접 연 뒤, 아래 스크립트를 그 페이지의 개발자 도구 콘솔에 붙여 넣으세요. 페이지가 이미 불러온 이미지 목록만 읽고(스크롤로 더 불러옴) 이 서버로 보냅니다. 검색어 하나는 보통 수백 장에서 끝나므로, 많이 모으려면 관련 검색어로 여러 번 실행하세요. 중복은 자동으로 합쳐집니다.</p>
+    <ol>
+      <li>검색 결과 페이지를 엽니다 (예: Google 이미지 탭).</li>
+      <li><b>수집 스크립트 복사</b>를 누르고, 그 페이지에서 F12 → Console에 붙여 넣고 Enter.</li>
+      <li>오른쪽 아래 배지에 개수가 오르다 멈추면 자동 전송됩니다. 전송이 막히면 JSON 파일이 저장되니 아래 칸에 끌어다 놓으세요.</li>
+      <li><b>다운로드 · 분석 시작</b>을 누르면 원본 사이트에서 받아 중복 제거 · 색 분석 · 비교표를 만듭니다.</li>
+    </ol>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="copy">수집 스크립트 복사</button>
+      <button class="btn" id="ingest">다운로드 · 분석 시작</button>
+      <span class="note" id="msg"></span>
+    </div>
+  </div>
+  <div class="card"><div id="drop">수집 JSON 파일을 여기에 끌어다 놓기</div></div>
+  <div class="card">
+    <h3>상태</h3>
+    <dl class="kv" id="st"></dl>
+  </div>
+  <div class="card">
+    <h3>학습한 파스텔 팔레트</h3>
+    <div id="pal" class="note">분석 후 표시됩니다.</div>
+  </div>
+  <div class="card">
+    <h3>비교표 (100장씩)</h3>
+    <div class="sheets" id="sheets"></div>
+  </div>
+</div>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const PHASE = { start: '준비', download: '다운로드 중', analyse: '분석 중', sheets: '비교표 생성', done: '완료', error: '오류' };
+async function refresh() {
+  let s;
+  try { s = await (await fetch('api/refs/status')).json(); } catch { $('#st').innerHTML = '<dt>서버</dt><dd>tools/serve.py 가 아닙니다 — ./run.sh 로 여세요</dd>'; return; }
+  $('#st').innerHTML = [['받은 파일', s.inbox_files], ['받은 항목', s.inbox_items], ['단계', (PHASE[s.phase] || '대기') + (s.running ? ' (실행 중)' : '')],
+    ['다운로드', s.downloaded != null ? `${s.downloaded} / ${s.total} (실패 ${s.failed || 0})` : '—'], ['중복 제거 후', s.unique ?? '—'], ['오류', s.error || '—']]
+    .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+  if (s.palette && s.palette.length) $('#pal').innerHTML = s.palette.map(([c, w]) => `<span class="sw"><i style="background:${c}"></i>${c}<br>${(w * 100).toFixed(1)}%</span>`).join('');
+  if (s.sheets) $('#sheets').innerHTML = Array.from({ length: s.sheets }, (_, i) => `<a href="references/sheets/sheet_${String(i).padStart(2, '0')}.jpg" target="_blank"><img loading="lazy" src="references/sheets/sheet_${String(i).padStart(2, '0')}.jpg?${s.updated}" alt="비교표 ${i + 1}"></a>`).join('');
+}
+$('#copy').onclick = async () => {
+  const src = (await (await fetch('tools/refs/collect.js')).text()).replaceAll('__ENDPOINT__', new URL('api/refs', location.href).href);
+  try { await navigator.clipboard.writeText(src); $('#msg').textContent = '복사했습니다. 검색 결과 페이지의 콘솔에 붙여 넣으세요.'; }
+  catch { const t = document.createElement('textarea'); t.value = src; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); $('#msg').textContent = '복사했습니다.'; }
+};
+$('#ingest').onclick = async () => { const r = await fetch('api/refs/ingest', { method: 'POST' }); $('#msg').textContent = r.status === 202 ? '시작했습니다.' : '이미 실행 중입니다.'; refresh(); };
+const drop = $('#drop');
+drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
+drop.ondragleave = () => drop.classList.remove('over');
+drop.ondrop = async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  for (const f of e.dataTransfer.files) {
+    const r = await fetch('api/refs', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: await f.text() });
+    $('#msg').textContent = r.ok ? `${f.name} 받음` : `${f.name}: 형식 오류`;
+  }
+  refresh();
+};
+refresh(); setInterval(refresh, 2000);
+</script>
