@@ -63,6 +63,28 @@
       "mouse": "#e0ecfa",
       "trim": "#ffdf86",
       "desk": "#edf0f8"
+    },
+    {
+      "n": "Archive Beige",
+      "base": "#cfc3ac",
+      "monitor": "#ded2bb",
+      "keyboard": "#c0b4a1",
+      "keyA": "#efe5cd",
+      "keyB": "#e0a087",
+      "mouse": "#ded2bb",
+      "trim": "#81abd0",
+      "desk": "#f2efe9"
+    },
+    {
+      "n": "Archive Pastel",
+      "base": "#ebdfc8",
+      "monitor": "#f5e9d2",
+      "keyboard": "#ebddc9",
+      "keyA": "#f5ebd3",
+      "keyB": "#ebab92",
+      "mouse": "#f5e9d2",
+      "trim": "#93c2eb",
+      "desk": "#f4f1ec"
     }
   ]
 }

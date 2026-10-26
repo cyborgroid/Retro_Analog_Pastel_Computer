@@ -5,7 +5,10 @@
     { n: 'Lavender Haze', base: '#d9cffb', monitor: '#ebe5ff', keyboard: '#ddd5fb', keyA: '#fbf9ff', keyB: '#ffd4a3', mouse: '#ebe5ff', trim: '#9fd3ef', desk: '#f3eefb' },
     { n: 'Peach Fuzz', base: '#ffd6c0', monitor: '#ffe8da', keyboard: '#ffdac6', keyA: '#fffaf5', keyB: '#a4dbc6', mouse: '#ffe8da', trim: '#c2b2f4', desk: '#f6eef0' },
     { n: 'Lemon Sherbet', base: '#f9ecaa', monitor: '#fff5cc', keyboard: '#f7e7a8', keyA: '#fffdf2', keyB: '#b4c6f6', mouse: '#fff5cc', trim: '#f4a6bf', desk: '#f4f1e8' },
-    { n: 'Baby Blue', base: '#c9def5', monitor: '#e0ecfa', keyboard: '#cfe2f6', keyA: '#f8fbff', keyB: '#ffc0d2', mouse: '#e0ecfa', trim: '#ffdf86', desk: '#edf0f8' }
+    { n: 'Baby Blue', base: '#c9def5', monitor: '#e0ecfa', keyboard: '#cfe2f6', keyA: '#f8fbff', keyB: '#ffc0d2', mouse: '#e0ecfa', trim: '#ffdf86', desk: '#edf0f8' },
+    /* learned from 568 reference photos of real machines (tools/refs/palette.py, references/analysis.json) */
+    { n: 'Archive Beige', base: '#cfc3ac', monitor: '#ded2bb', keyboard: '#c0b4a1', keyA: '#efe5cd', keyB: '#e0a087', mouse: '#ded2bb', trim: '#81abd0', desk: '#f2efe9' },
+    { n: 'Archive Pastel', base: '#ebdfc8', monitor: '#f5e9d2', keyboard: '#ebddc9', keyA: '#f5ebd3', keyB: '#ebab92', mouse: '#f5e9d2', trim: '#93c2eb', desk: '#f4f1ec' }
   ];
   PX.DATA.roles = [['base', '본체'], ['monitor', '모니터'], ['keyboard', '키보드'], ['mouse', '마우스'], ['keyA', '키캡'], ['keyB', '포인트 키'], ['trim', '다이얼']];
 })(window.PX);

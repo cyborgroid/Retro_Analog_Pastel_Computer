@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Download and analyse the reference images collected in references/inbox/ (see tools/refs/collect.js).
+Usage: python3 tools/refs/ingest.py [--analyse-only]
 
 Images come from their original sites (or the page's own thumbnail as a fallback), never from a search query.
 Outputs (references/ is git-ignored; the summary is committed):
@@ -118,13 +119,18 @@ def sheet(recs, idx):
 def main():
     for d in (CACHE, SHEETS): os.makedirs(d, exist_ok=True)
     items = load_items()
-    save_status(phase='download', total=len(items))
     recs = []
-    with cf.ThreadPoolExecutor(4) as ex:
-        for i, r in enumerate(ex.map(download, items)):
-            if r: recs.append(r)
-            if i % 20 == 0: save_status(downloaded=len(recs), failed=i + 1 - len(recs))
-    save_status(phase='analyse', downloaded=len(recs), failed=len(items) - len(recs))
+    if '--analyse-only' in sys.argv:   # use what is already downloaded (downloads may still be running)
+        for it in items:
+            name = hashlib.sha1((it.get('original') or it.get('thumb')).encode()).hexdigest()[:20] + '.jpg'
+            if os.path.exists(os.path.join(CACHE, name)): recs.append(dict(it, file=name, source='cache'))
+    else:
+        save_status(phase='download', total=len(items))
+        with cf.ThreadPoolExecutor(4) as ex:
+            for i, r in enumerate(ex.map(download, items)):
+                if r: recs.append(r)
+                if i % 20 == 0: save_status(downloaded=len(recs), failed=i + 1 - len(recs))
+        save_status(phase='analyse', downloaded=len(recs), failed=len(items) - len(recs))
     out, seen = [], []
     for r in recs:
         try: a = analyse(r)

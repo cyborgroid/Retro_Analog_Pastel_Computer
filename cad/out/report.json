@@ -560,9 +560,9 @@
   "fab": null,
   "files": {
     "glb": "cad/out/web/pastella84.glb",
-    "glb_bytes": 2238016,
+    "glb_bytes": 2238044,
     "step": "cad/out/pastella84.step",
-    "step_bytes": 19600081,
+    "step_bytes": 19600096,
     "urdf": "cad/out/urdf/pastella84.urdf",
     "usda": "cad/out/pastella84.usda"
   },
@@ -2403,7 +2403,7 @@
     132.5
   ],
   "name": "PASTELLA 84",
-  "palette": "Mint Soda",
+  "palette": "Archive Pastel",
   "parts": [
     {
       "explicit_mass": false,

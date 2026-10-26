@@ -34,9 +34,9 @@
       },
       "files": {
         "glb": "cad/out/build/web/pastella84.glb",
-        "glb_bytes": 3015352,
+        "glb_bytes": 3015384,
         "step": "cad/out/build/pastella84.step",
-        "step_bytes": 31000432,
+        "step_bytes": 31000447,
         "urdf": "cad/out/build/urdf/pastella84.urdf",
         "usda": "cad/out/build/pastella84.usda"
       },
@@ -75,7 +75,7 @@
           "mass_kg": 0.076
         }
       },
-      "palette": "Mint Soda",
+      "palette": "Archive Pastel",
       "print": {
         "bomLines": 41,
         "costKrw": 98100.0,
@@ -118,9 +118,9 @@
       },
       "files": {
         "glb": "cad/out/web/pastella84.glb",
-        "glb_bytes": 2238016,
+        "glb_bytes": 2238044,
         "step": "cad/out/pastella84.step",
-        "step_bytes": 19600081,
+        "step_bytes": 19600096,
         "urdf": "cad/out/urdf/pastella84.urdf",
         "usda": "cad/out/pastella84.usda"
       },
@@ -159,7 +159,7 @@
           "mass_kg": 0.085
         }
       },
-      "palette": "Mint Soda",
+      "palette": "Archive Pastel",
       "print": null,
       "revision": "v3",
       "variant": "concept"

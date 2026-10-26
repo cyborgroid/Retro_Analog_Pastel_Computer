@@ -2,7 +2,7 @@
   "name": "PASTELLA 84",
   "revision": "v3",
   "frame": "X = user's right, Y = away from the user (front faces -Y), Z = up, desk top at Z = 0, mm",
-  "palette": { "source": "environments/chassis/colorways.json", "default": "Mint Soda" },
+  "palette": { "source": "environments/chassis/colorways.json", "default": "Archive Pastel" },
   "tessellation_mm": 0.12,
   "clash_threshold_mm3": 1.0,
   "base": {

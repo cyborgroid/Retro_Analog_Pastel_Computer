@@ -3,7 +3,9 @@
   'use strict';
   const { U, S, C, DATA } = PX, { $, $$ } = U;
   const V = PX.viewer;
-  let palIdx = U.clamp(U.store.get('pal', 0) | 0, 0, DATA.palettes.length - 1);
+  // first visit: the colourway learned from reference photos (tools/refs/palette.py); a stored choice wins
+  const learned = Math.max(0, DATA.palettes.findIndex(p => p.n === 'Archive Pastel'));
+  let palIdx = U.clamp(U.store.get('pal', learned) | 0, 0, DATA.palettes.length - 1);
   PX.palette = { ...DATA.palettes[palIdx] };
   const saved = U.store.get('monitor', null);
   if (saved && C.ASPECTS[saved.aspect]) { Object.assign(S.monitor, saved); PX.screen.resize(C.ASPECTS[S.monitor.aspect]); }
